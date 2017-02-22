@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import { showAction, hideAction, nextConnect} from '../stores/store.js';
 import withRedux from 'next-redux-wrapper';
-import * as Types from '../constants/ActionTypes';
+import * as ActionTypes from '../constants/ActionTypes';
+import stylesheet from '../scss/index.scss';
 
 class Comp extends Component {
   static getInitialProps ({ store, isServer }) {
+    store.subscribe(() => {
+      console.log(store.getState());
+    });
     return { isServer, shown: true };
   }
 
@@ -14,15 +18,17 @@ class Comp extends Component {
       shown,
     } = this.props;
 
-    let startClock = () => 
+    let startClock = () => dispatch => {
+      dispatch({ type: ActionTypes.SHOW});
+    }
 
     dispatch(startClock());
   }
 
   toggle() {
     let { shown, dispatch } = this.props;
-    let type = shown ? Types.HIDE : Types.SHOW;
-    
+    let type = shown ? ActionTypes.HIDE : ActionTypes.SHOW;
+
     dispatch(() => {
       return () => {
         dispatch({ type });
@@ -41,10 +47,16 @@ class Comp extends Component {
 
     return (
       <div className={isServer}>
+        <style dangerouslySetInnerHTML={{ __html: stylesheet }} />
         <button onClick={that.toggle.bind(that)}>
           SHOW
         </button>
-
+        <div>
+          Hello guy!
+          <span>
+            It's a span for testing
+          </span>
+        </div>
         <button onClick={null}>
           HIDE
         </button>
