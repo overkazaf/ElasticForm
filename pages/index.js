@@ -1,68 +1,62 @@
-import React, {Component} from 'react';
-import { showAction, hideAction, nextConnect} from '../stores/store.js';
+import React, { Component } from 'react';
+import { initStore } from '../store';
 import withRedux from 'next-redux-wrapper';
-import * as ActionTypes from '../constants/ActionTypes';
-import stylesheet from '../scss/index.scss';
+import fetch from 'isomorphic-fetch';
 
-class Comp extends Component {
+import Counter from '../components/Counter';
+
+class MainPage extends Component {
   static getInitialProps ({ store, isServer }) {
+
     store.subscribe(() => {
       console.log(store.getState());
     });
-    return { isServer, shown: true };
+
+    return { 
+      isServer, 
+      counter: 0,
+    };
   }
 
-  componentDidMount () {
-    let {
-      dispatch,
-      shown,
-    } = this.props;
-
-    let startClock = () => dispatch => {
-      dispatch({ type: ActionTypes.SHOW});
-    }
-
-    dispatch(startClock());
-  }
-
-  toggle() {
-    let { shown, dispatch } = this.props;
-    let type = shown ? ActionTypes.HIDE : ActionTypes.SHOW;
-
-    dispatch(() => {
-      return () => {
-        dispatch({ type });
-      }
+  increase() {
+    this.props.dispatch({
+      type: 'INC',
+      payload: 1,
     });
   }
 
-  render () {
-    let {
-      isServer,
-      dispatch,
-      shown,
-    } = this.props;
+  decrease() {
+    this.props.dispatch({
+      type: 'INC',
+      payload: -1,
+    });
+  }
 
-    let that = this;
+  handleClick() {
+    console.log('handle');
+    this.props.dispatch({
+      type: 'INC',
+      payload: 3,
+    });
+  }
+
+  render() {
+
+    let { 
+      counter,
+      isServer,
+    } = this.props;
 
     return (
       <div className={isServer}>
-        <style dangerouslySetInnerHTML={{ __html: stylesheet }} />
-        <button onClick={that.toggle.bind(that)}>
-          SHOW
-        </button>
-        <div>
-          Hello guy!
-          <span>
-            It's a span for testing
-          </span>
-        </div>
-        <button onClick={null}>
-          HIDE
-        </button>
+        <div onClick={this.handleClick.bind(this)}>aaaaa</div>
+        <Counter 
+          increase={this.increase.bind(this)}
+          decrease={this.decrease.bind(this)}
+          counter={counter}/>
       </div>
     )
   }
 }
 
-export default nextConnect((state) => state)(Comp);
+export default withRedux(initStore)(MainPage);

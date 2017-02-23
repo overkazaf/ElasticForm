@@ -1,9 +1,5 @@
-$primary-color: red;
-div {
-  font-size: xx-large;
-  color: $primary-color;
+$primary-color: green;
 
-  span {
-      color: #00009f;
-  }
+p {
+	color: $primary-color;
 }

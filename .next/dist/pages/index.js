@@ -28,103 +28,82 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _store = require('../stores/store.js');
+var _store = require('../store');
 
 var _nextReduxWrapper = require('next-redux-wrapper');
 
 var _nextReduxWrapper2 = _interopRequireDefault(_nextReduxWrapper);
 
-var _ActionTypes = require('../constants/ActionTypes');
+var _isomorphicFetch = require('isomorphic-fetch');
 
-var ActionTypes = _interopRequireWildcard(_ActionTypes);
+var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-var _index = require('../scss/index.scss');
+var _Counter = require('../components/Counter');
 
-var _index2 = _interopRequireDefault(_index);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+var _Counter2 = _interopRequireDefault(_Counter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _jsxFileName = '/Users/overkazaf/Desktop/codes/git/playGround/IntelliForm/pages/index.js?entry';
 
 
-var Comp = function (_Component) {
-  (0, _inherits3.default)(Comp, _Component);
+var MainPage = function (_Component) {
+  (0, _inherits3.default)(MainPage, _Component);
 
-  function Comp() {
-    (0, _classCallCheck3.default)(this, Comp);
+  function MainPage() {
+    (0, _classCallCheck3.default)(this, MainPage);
 
-    return (0, _possibleConstructorReturn3.default)(this, (Comp.__proto__ || (0, _getPrototypeOf2.default)(Comp)).apply(this, arguments));
+    return (0, _possibleConstructorReturn3.default)(this, (MainPage.__proto__ || (0, _getPrototypeOf2.default)(MainPage)).apply(this, arguments));
   }
 
-  (0, _createClass3.default)(Comp, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _props = this.props,
-          dispatch = _props.dispatch,
-          shown = _props.shown;
-
-      var startClock = function startClock() {
-        return function (dispatch) {
-          dispatch({ type: ActionTypes.SHOW });
-        };
-      };
-
-      dispatch(startClock());
+  (0, _createClass3.default)(MainPage, [{
+    key: 'increase',
+    value: function increase() {
+      this.props.dispatch({
+        type: 'INC',
+        payload: 1
+      });
     }
   }, {
-    key: 'toggle',
-    value: function toggle() {
-      var _props2 = this.props,
-          shown = _props2.shown,
-          dispatch = _props2.dispatch;
-
-      var type = shown ? ActionTypes.HIDE : ActionTypes.SHOW;
-
-      dispatch(function () {
-        return function () {
-          dispatch({ type: type });
-        };
+    key: 'decrease',
+    value: function decrease() {
+      this.props.dispatch({
+        type: 'INC',
+        payload: -1
+      });
+    }
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      console.log('handle');
+      this.props.dispatch({
+        type: 'INC',
+        payload: 3
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _props3 = this.props,
-          isServer = _props3.isServer,
-          dispatch = _props3.dispatch,
-          shown = _props3.shown;
-
-      var that = this;
+      var _props = this.props,
+          counter = _props.counter,
+          isServer = _props.isServer;
 
       return _react2.default.createElement('div', { className: isServer, __source: {
           fileName: _jsxFileName,
-          lineNumber: 49
-        }
-      }, _react2.default.createElement('style', { dangerouslySetInnerHTML: { __html: _index2.default }, __source: {
-          fileName: _jsxFileName,
-          lineNumber: 50
-        }
-      }), _react2.default.createElement('button', { onClick: that.toggle.bind(that), __source: {
-          fileName: _jsxFileName,
           lineNumber: 51
         }
-      }, 'SHOW'), _react2.default.createElement('div', {
-        __source: {
+      }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this), __source: {
           fileName: _jsxFileName,
-          lineNumber: 54
+          lineNumber: 52
         }
-      }, 'Hello guy!', _react2.default.createElement('span', {
-        __source: {
+      }, 'aaaaa'), _react2.default.createElement(_Counter2.default, {
+        increase: this.increase.bind(this),
+        decrease: this.decrease.bind(this),
+        counter: counter, __source: {
           fileName: _jsxFileName,
-          lineNumber: 56
+          lineNumber: 53
         }
-      }, 'It\'s a span for testing')), _react2.default.createElement('button', { onClick: null, __source: {
-          fileName: _jsxFileName,
-          lineNumber: 60
-        }
-      }, 'HIDE'));
+      }));
     }
   }], [{
     key: 'getInitialProps',
@@ -135,13 +114,15 @@ var Comp = function (_Component) {
       store.subscribe(function () {
         console.log(store.getState());
       });
-      return { isServer: isServer, shown: true };
+
+      return {
+        isServer: isServer,
+        counter: 0
+      };
     }
   }]);
 
-  return Comp;
+  return MainPage;
 }(_react.Component);
 
-exports.default = (0, _store.nextConnect)(function (state) {
-  return state;
-})(Comp);
+exports.default = (0, _nextReduxWrapper2.default)(_store.initStore)(MainPage);
