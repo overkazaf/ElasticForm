@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
-
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -54,40 +50,25 @@ var Star = function (_Component) {
   }
 
   (0, _createClass3.default)(Star, [{
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      console.log('nextProps', nextProps);
-    }
-  }, {
     key: 'handleClick',
     value: function handleClick(type) {
       this.props.dispatch({
         type: 'UPDATE',
-        data: {
-          stars: 3
-        }
+        payload: 3
       });
     }
   }, {
     key: 'render',
     value: function render() {
-
-      return _react2.default.createElement('div', { className: 'aaa' }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this) }, '\u70B9\u6211'), _react2.default.createElement('span', null, 'Next.js has ', this.props.stars, ' \u2B50\uFE0F'));
-    }
-  }], [{
-    key: 'getInitialProps',
-    value: function getInitialProps(_ref) {
-      var store = _ref.store,
-          isServer = _ref.isServer;
-
-      return { stars: 0 };
+      return _react2.default.createElement('div', { className: 'm-star' }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this) }, '\u70B9\u6211'), _react2.default.createElement('span', null, 'Next.js has ', this.props.stars, ' \u2B50\uFE0F'));
     }
   }]);
 
   return Star;
 }(_react.Component);
 
-var mapStateToProps = function mapStateToProps(state) {
-  return (0, _extends3.default)({}, state);
+var mapStateToProps = function mapStateToProps($$state) {
+  return $$state.get('starReducer').toJS();
 };
+
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(Star);

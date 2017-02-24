@@ -5,31 +5,27 @@ import fetch from 'isomorphic-fetch';
 import NoSSR from 'react-no-ssr';
 
 import Counter from '../components/Counter';
+import Star from '../components/Star';
 
 class MainPage extends Component {
-  static getInitialProps ({ store, isServer }) {
+  static async getInitialProps ({ store, isServer }) {
+
+    const res = await fetch('https://api.github.com/repos/developit/preact');
+    const json = await res.json();
 
     store.subscribe(() => {
       console.log(store.getState());
     });
 
-    return { 
+    return Immutable.fromJS({ 
       isServer, 
       counter: 0,
-    };
+      stars: json.stargazers_count || 12,
+    });
   }
-
 
   componentDidMount() {
     let { dispatch } = this.props;
-
-    setTimeout(() => {
-      dispatch({
-        type: 'INC',
-        payload: 10,
-      });
-      console.log('dispatched');
-    }, 2000);
   }
 
   increase() {
@@ -70,6 +66,8 @@ class MainPage extends Component {
           decrease={this.decrease.bind(this)}
           counter={counter}/>
         </NoSSR>
+
+        <Star />
       </div>
     )
   }

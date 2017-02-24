@@ -3,19 +3,6 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 
 class Counter extends Component {
-  componentDidMount() {
-    let { dispatch, increase } = this.props;
-
-    setTimeout(() => {
-      dispatch({
-        type: 'TEST',
-        data: {
-          counter: 90
-        }
-      })
-    }, 3000);
-  }
-
 
   render () {
     let { increase, decrease, counter } = this.props;
@@ -30,6 +17,8 @@ class Counter extends Component {
   }
 }
 
-const mapStateToProps = ($$state, ownProps) => $$state;
+const mapStateToProps = ($$state, ownProps) => {
+  return $$state.get('counterReducer').toJS();
+};
 
-export default connect(mapStateToProps)(Counter)
+export default connect(mapStateToProps)(Counter);

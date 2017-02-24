@@ -5,27 +5,16 @@ import Immutable from 'immutable';
 
 class Star extends Component {
 
-  static getInitialProps ({ store, isServer }) {
-    return { stars: 0 };
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('nextProps', nextProps);
-  }
-
   handleClick(type) {
     this.props.dispatch({
       type: 'UPDATE',
-      data: {
-        stars: 3,
-      }
-    })
+      payload: 3,
+    });
   }
 
   render() {
-
     return (
-      <div className={'aaa'}>
+      <div className="m-star">
         <div onClick={this.handleClick.bind(this)}>
         点我
         </div>
@@ -35,7 +24,8 @@ class Star extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-    return { ...state };
+const mapStateToProps = ($$state) => {
+    return $$state.get('starReducer').toJS();
 };
+
 export default connect(mapStateToProps)(Star);

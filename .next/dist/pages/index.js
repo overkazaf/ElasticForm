@@ -4,6 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -46,10 +54,11 @@ var _Counter = require('../components/Counter');
 
 var _Counter2 = _interopRequireDefault(_Counter);
 
+var _Star = require('../components/Star');
+
+var _Star2 = _interopRequireDefault(_Star);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _jsxFileName = '/Users/overkazaf/Desktop/codes/git/playGround/IntelliForm/pages/index.js?entry';
-
 
 var MainPage = function (_Component) {
   (0, _inherits3.default)(MainPage, _Component);
@@ -64,14 +73,6 @@ var MainPage = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       var dispatch = this.props.dispatch;
-
-      setTimeout(function () {
-        dispatch({
-          type: 'INC',
-          payload: 10
-        });
-        console.log('dispatched');
-      }, 2000);
     }
   }, {
     key: 'increase',
@@ -105,42 +106,57 @@ var MainPage = function (_Component) {
           counter = _props.counter,
           isServer = _props.isServer;
 
-      return _react2.default.createElement('div', { className: isServer, __source: {
-          fileName: _jsxFileName,
-          lineNumber: 65
-        }
-      }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this), __source: {
-          fileName: _jsxFileName,
-          lineNumber: 66
-        }
-      }, 'aaaaa'), _react2.default.createElement(_reactNoSsr2.default, { onSSR: null, __source: {
-          fileName: _jsxFileName,
-          lineNumber: 67
-        }
-      }, _react2.default.createElement(_Counter2.default, {
+      return _react2.default.createElement('div', { className: isServer }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this) }, 'aaaaa'), _react2.default.createElement(_reactNoSsr2.default, { onSSR: null }, _react2.default.createElement(_Counter2.default, {
         increase: this.increase.bind(this),
         decrease: this.decrease.bind(this),
-        counter: counter, __source: {
-          fileName: _jsxFileName,
-          lineNumber: 68
-        }
-      })));
+        counter: counter })), _react2.default.createElement(_Star2.default, null));
     }
   }], [{
     key: 'getInitialProps',
-    value: function getInitialProps(_ref) {
-      var store = _ref.store,
-          isServer = _ref.isServer;
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(_ref2) {
+        var store = _ref2.store,
+            isServer = _ref2.isServer;
+        var res, json;
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return (0, _isomorphicFetch2.default)('https://api.github.com/repos/developit/preact');
 
-      store.subscribe(function () {
-        console.log(store.getState());
-      });
+              case 2:
+                res = _context.sent;
+                _context.next = 5;
+                return res.json();
 
-      return {
-        isServer: isServer,
-        counter: 0
-      };
-    }
+              case 5:
+                json = _context.sent;
+
+                store.subscribe(function () {
+                  console.log(store.getState());
+                });
+
+                return _context.abrupt('return', Immutable.fromJS({
+                  isServer: isServer,
+                  counter: 0,
+                  stars: json.stargazers_count || 12
+                }));
+
+              case 8:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function getInitialProps(_x) {
+        return _ref.apply(this, arguments);
+      }
+
+      return getInitialProps;
+    }()
   }]);
 
   return MainPage;

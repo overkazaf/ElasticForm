@@ -36,9 +36,6 @@ var _immutable2 = _interopRequireDefault(_immutable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _jsxFileName = '/Users/overkazaf/Desktop/codes/git/playGround/IntelliForm/components/Counter.js';
-
-
 var Counter = function (_Component) {
   (0, _inherits3.default)(Counter, _Component);
 
@@ -49,47 +46,14 @@ var Counter = function (_Component) {
   }
 
   (0, _createClass3.default)(Counter, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _props = this.props,
-          dispatch = _props.dispatch,
-          increase = _props.increase;
-
-      setTimeout(function () {
-        dispatch({
-          type: 'TEST',
-          data: {
-            counter: 90
-          }
-        });
-      }, 3000);
-    }
-  }, {
     key: 'render',
     value: function render() {
-      var _props2 = this.props,
-          increase = _props2.increase,
-          decrease = _props2.decrease,
-          counter = _props2.counter;
+      var _props = this.props,
+          increase = _props.increase,
+          decrease = _props.decrease,
+          counter = _props.counter;
 
-      return _react2.default.createElement('div', { className: 'm-counter', __source: {
-          fileName: _jsxFileName,
-          lineNumber: 24
-        }
-      }, _react2.default.createElement('span', { onClick: increase, className: 'btn', __source: {
-          fileName: _jsxFileName,
-          lineNumber: 25
-        }
-      }, ' + '), _react2.default.createElement('span', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 26
-        }
-      }, ' ', counter, ' '), _react2.default.createElement('span', { onClick: decrease, className: 'btn', __source: {
-          fileName: _jsxFileName,
-          lineNumber: 27
-        }
-      }, ' - '));
+      return _react2.default.createElement('div', { className: 'm-counter' }, _react2.default.createElement('span', { onClick: increase, className: 'btn' }, ' + '), _react2.default.createElement('span', null, ' ', counter, ' '), _react2.default.createElement('span', { onClick: decrease, className: 'btn' }, ' - '));
     }
   }]);
 
@@ -97,7 +61,7 @@ var Counter = function (_Component) {
 }(_react.Component);
 
 var mapStateToProps = function mapStateToProps($$state, ownProps) {
-  return $$state;
+  return $$state.get('counterReducer').toJS();
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(Counter);
