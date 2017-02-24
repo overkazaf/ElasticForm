@@ -40,9 +40,6 @@ var _Page2 = _interopRequireDefault(_Page);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _jsxFileName = '/Users/overkazaf/Desktop/codes/git/playGround/IntelliForm/pages/ssr.js?entry';
-
-
 var Comp = function (_Component) {
   (0, _inherits3.default)(Comp, _Component);
 
@@ -75,16 +72,7 @@ var Comp = function (_Component) {
     value: function render() {
       var shown = this.props.shown;
 
-      return _react2.default.createElement('div', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 37
-        }
-      }, _react2.default.createElement(_Page2.default, { title: 'SSR Page', pageOnClick: this.onPageClick.bind(this), linkTo: '/index', __source: {
-          fileName: _jsxFileName,
-          lineNumber: 38
-        }
-      }));
+      return _react2.default.createElement('div', null, _react2.default.createElement(_Page2.default, { title: 'SSR Page', pageOnClick: this.onPageClick.bind(this), linkTo: '/index' }));
     }
   }], [{
     key: 'getInitialProps',

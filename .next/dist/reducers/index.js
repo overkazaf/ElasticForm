@@ -15,6 +15,11 @@ var initState = {
   counter: 1
 };
 
+var $$map = _immutable2.default.fromJS({ 'a': 1 });
+var $$map2 = _immutable2.default.fromJS($$map);
+console.log('Immutable.is($$map, $$map2)', _immutable2.default.is($$map, $$map2));
+console.log('Immutable.is($$map, $$map2)', $$map === $$map2);
+
 var reducer = exports.reducer = function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _immutable2.default.fromJS(initState);
   var action = arguments[1];
@@ -24,10 +29,14 @@ var reducer = exports.reducer = function reducer() {
       {
         var $$state = _immutable2.default.fromJS(state);
         var $$newState = $$state.set('counter', $$state.get('counter') + action.payload);
-        console.log($$state.get('counter'));
         return $$newState.toObject();
       }
+    case 'TEST':
+      {
+        console.log('state in TEST', state);
+        return action.data;
+      }
     default:
-      return state;
+      return _immutable2.default.fromJS(state);
   }
 };

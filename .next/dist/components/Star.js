@@ -44,9 +44,6 @@ var _immutable2 = _interopRequireDefault(_immutable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _jsxFileName = '/Users/overkazaf/Desktop/codes/git/playGround/IntelliForm/components/Star.js';
-
-
 var Star = function (_Component) {
   (0, _inherits3.default)(Star, _Component);
 
@@ -75,20 +72,7 @@ var Star = function (_Component) {
     key: 'render',
     value: function render() {
 
-      return _react2.default.createElement('div', { className: 'aaa', __source: {
-          fileName: _jsxFileName,
-          lineNumber: 28
-        }
-      }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this), __source: {
-          fileName: _jsxFileName,
-          lineNumber: 29
-        }
-      }, '\u70B9\u6211'), _react2.default.createElement('span', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 32
-        }
-      }, 'Next.js has ', this.props.stars, ' \u2B50\uFE0F'));
+      return _react2.default.createElement('div', { className: 'aaa' }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this) }, '\u70B9\u6211'), _react2.default.createElement('span', null, 'Next.js has ', this.props.stars, ' \u2B50\uFE0F'));
     }
   }], [{
     key: 'getInitialProps',

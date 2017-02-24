@@ -19,8 +19,6 @@ var _nextConnectRedux2 = _interopRequireDefault(_nextConnectRedux);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log(_reducers.reducer);
-
 var initStore = exports.initStore = function initStore(initialState) {
   return (0, _redux.createStore)(_reducers.reducer, initialState, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 };

@@ -40,9 +40,6 @@ var _reactRedux = require('react-redux');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _jsxFileName = '/Users/overkazaf/Desktop/codes/git/playGround/IntelliForm/components/Page.js';
-
-
 var Page = function (_Component) {
   (0, _inherits3.default)(Page, _Component);
 
@@ -69,35 +66,7 @@ var Page = function (_Component) {
           linkTo = _props.linkTo,
           shown = _props.shown;
 
-      return _react2.default.createElement('div', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 27
-        }
-      }, _react2.default.createElement('h1', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 28
-        }
-      }, title), '`isShown ', shown ? 'true' : 'false', '`', _react2.default.createElement('nav', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 30
-        }
-      }, _react2.default.createElement(_link2.default, { href: linkTo, __source: {
-          fileName: _jsxFileName,
-          lineNumber: 31
-        }
-      }, _react2.default.createElement('a', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 31
-        }
-      }, 'Navigate'))), _react2.default.createElement('button', { onClick: this.handleClick.bind(this), __source: {
-          fileName: _jsxFileName,
-          lineNumber: 33
-        }
-      }, 'click me'));
+      return _react2.default.createElement('div', null, _react2.default.createElement('h1', null, title), '`isShown ', shown ? 'true' : 'false', '`', _react2.default.createElement('nav', null, _react2.default.createElement(_link2.default, { href: linkTo }, _react2.default.createElement('a', null, 'Navigate'))), _react2.default.createElement('button', { onClick: this.handleClick.bind(this) }, 'click me'));
     }
   }]);
 

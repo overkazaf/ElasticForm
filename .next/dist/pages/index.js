@@ -38,6 +38,10 @@ var _isomorphicFetch = require('isomorphic-fetch');
 
 var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
+var _reactNoSsr = require('react-no-ssr');
+
+var _reactNoSsr2 = _interopRequireDefault(_reactNoSsr);
+
 var _Counter = require('../components/Counter');
 
 var _Counter2 = _interopRequireDefault(_Counter);
@@ -57,6 +61,19 @@ var MainPage = function (_Component) {
   }
 
   (0, _createClass3.default)(MainPage, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var dispatch = this.props.dispatch;
+
+      setTimeout(function () {
+        dispatch({
+          type: 'INC',
+          payload: 10
+        });
+        console.log('dispatched');
+      }, 2000);
+    }
+  }, {
     key: 'increase',
     value: function increase() {
       this.props.dispatch({
@@ -90,20 +107,24 @@ var MainPage = function (_Component) {
 
       return _react2.default.createElement('div', { className: isServer, __source: {
           fileName: _jsxFileName,
-          lineNumber: 51
+          lineNumber: 65
         }
       }, _react2.default.createElement('div', { onClick: this.handleClick.bind(this), __source: {
           fileName: _jsxFileName,
-          lineNumber: 52
+          lineNumber: 66
         }
-      }, 'aaaaa'), _react2.default.createElement(_Counter2.default, {
+      }, 'aaaaa'), _react2.default.createElement(_reactNoSsr2.default, { onSSR: null, __source: {
+          fileName: _jsxFileName,
+          lineNumber: 67
+        }
+      }, _react2.default.createElement(_Counter2.default, {
         increase: this.increase.bind(this),
         decrease: this.decrease.bind(this),
         counter: counter, __source: {
           fileName: _jsxFileName,
-          lineNumber: 53
+          lineNumber: 68
         }
-      }));
+      })));
     }
   }], [{
     key: 'getInitialProps',

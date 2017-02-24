@@ -3,6 +3,20 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 
 class Counter extends Component {
+  componentDidMount() {
+    let { dispatch, increase } = this.props;
+
+    setTimeout(() => {
+      dispatch({
+        type: 'TEST',
+        data: {
+          counter: 90
+        }
+      })
+    }, 3000);
+  }
+
+
   render () {
     let { increase, decrease, counter } = this.props;
 

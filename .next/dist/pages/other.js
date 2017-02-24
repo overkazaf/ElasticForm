@@ -56,9 +56,6 @@ var _Star2 = _interopRequireDefault(_Star);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _jsxFileName = '/Users/overkazaf/Desktop/codes/git/playGround/IntelliForm/pages/other.js?entry';
-
-
 var Comp = function (_Component) {
   (0, _inherits3.default)(Comp, _Component);
 
@@ -97,17 +94,7 @@ var Comp = function (_Component) {
           stars = _props.stars;
 
       console.log('reRender', stars);
-      return _react2.default.createElement('div', {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 52
-        }
-      }, _react2.default.createElement(_Star2.default, {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 53
-        }
-      }));
+      return _react2.default.createElement('div', null, _react2.default.createElement(_Star2.default, null));
     }
   }], [{
     key: 'getInitialProps',
