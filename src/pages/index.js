@@ -3,9 +3,12 @@ import { initStore } from '../store';
 import withRedux from 'next-redux-wrapper';
 import fetch from 'isomorphic-fetch';
 import NoSSR from 'react-no-ssr';
-
+import Immutable from 'immutable';
 import Counter from '../components/Counter';
 import Star from '../components/Star';
+
+
+import indexStyle from '../scss/index.scss';
 
 class MainPage extends Component {
   static async getInitialProps ({ store, isServer }) {
@@ -66,8 +69,9 @@ class MainPage extends Component {
           decrease={this.decrease.bind(this)}
           counter={counter}/>
         </NoSSR>
-
-        <Star />
+        <NoSSR>
+          <Star />
+        </NoSSR>
       </div>
     )
   }

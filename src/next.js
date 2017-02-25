@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
   webpack: (config, { dev }) => {
     config.module.rules.push(
@@ -10,6 +11,7 @@ module.exports = {
         loader: 'babel-loader!raw-loader!sass-loader'
       }
     )
+
     return config
   }
 }

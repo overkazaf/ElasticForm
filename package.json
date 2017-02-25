@@ -6,9 +6,9 @@
   "author": "overkazaf",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
+    "dev": "next src",
     "build": "next build",
-    "start": "next start"
+    "start": "next start src"
   },
   "dependencies": {
     "babel-eslint": "^7.1.1",
