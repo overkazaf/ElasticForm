@@ -68,7 +68,8 @@ class MainPage extends Component {
 
     return (
       <div className="">
-      <NoSSR onSSR={<Loading />}>
+        <style dangerouslySetInnerHTML={{ __html: indexStyle }} />
+        <NoSSR onSSR={<Loading />}>
         <Counter 
           increase={this.increase.bind(this)}
           decrease={this.decrease.bind(this)}
