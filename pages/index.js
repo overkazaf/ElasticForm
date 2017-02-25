@@ -6,9 +6,9 @@ import NoSSR from 'react-no-ssr';
 import Immutable from 'immutable';
 import Counter from '../components/Counter';
 import Star from '../components/Star';
-
-
+import Loading from '../components/Loading';
 import indexStyle from '../scss/index.scss';
+
 
 class MainPage extends Component {
   static async getInitialProps ({ store, isServer }) {
@@ -20,10 +20,15 @@ class MainPage extends Component {
       console.log(store.getState());
     });
 
+    store.dispatch({
+      type: 'UPDATE',
+      payload: json.stargazers_count,
+    })
+
     return Immutable.fromJS({ 
       isServer, 
       counter: 0,
-      stars: json.stargazers_count || 12,
+      stars: json.stargazers_count,
     });
   }
 
@@ -58,20 +63,19 @@ class MainPage extends Component {
     let { 
       counter,
       isServer,
+      stars,
     } = this.props;
 
     return (
-      <div className={isServer}>
-        <div onClick={this.handleClick.bind(this)}>aaaaa</div>
-        <NoSSR onSSR={null}>
-          <Counter 
+      <div className="">
+      <NoSSR onSSR={<Loading />}>
+        <Counter 
           increase={this.increase.bind(this)}
           decrease={this.decrease.bind(this)}
           counter={counter}/>
         </NoSSR>
-        <NoSSR>
-          <Star />
-        </NoSSR>
+        
+        <Star />
       </div>
     )
   }
