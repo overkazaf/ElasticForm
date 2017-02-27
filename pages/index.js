@@ -7,8 +7,9 @@ import Immutable from 'immutable';
 import Counter from '../components/Counter';
 import Star from '../components/Star';
 import Loading from '../components/Loading';
-import indexStyle from '../scss/index.scss';
+import Drag from '../components/Drag';
 
+import antdStyle from '../scss/index.min.scss';
 
 class MainPage extends Component {
   static async getInitialProps ({ store, isServer }) {
@@ -43,6 +44,12 @@ class MainPage extends Component {
     });
   }
 
+  collapse() {
+    this.props.dispatch({
+      type: 'COLLAPSED',
+    });
+  }
+
   decrease() {
     this.props.dispatch({
       type: 'INC',
@@ -67,16 +74,11 @@ class MainPage extends Component {
     } = this.props;
 
     return (
-      <div className="">
-        <style dangerouslySetInnerHTML={{ __html: indexStyle }} />
-        <NoSSR onSSR={<Loading />}>
-        <Counter 
-          increase={this.increase.bind(this)}
-          decrease={this.decrease.bind(this)}
-          counter={counter}/>
-        </NoSSR>
-        
-        <Star />
+      <div className="p-main">
+        <style dangerouslySetInnerHTML={{ __html: antdStyle}} />
+        <Drag 
+          collapse={this.collapse.bind(this)}
+        />
       </div>
     )
   }

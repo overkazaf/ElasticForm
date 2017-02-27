@@ -11,7 +11,7 @@ module.exports = {
     ,
       {
         test: /\.css$/,
-        loader: 'babel-loader!raw-loader'
+        loader: 'sass-loader'
       }
     ,
       {

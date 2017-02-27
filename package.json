@@ -5,20 +5,26 @@
   "main": "index.js",
   "author": "overkazaf",
   "license": "MIT",
+  "tags" : [
+    "react", "redux", "immutalbe", "antd", "next.js", "koa", "mocha", "gulp", "webpack"
+  ],
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "antd": "^2.7.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.3.2",
+    "babel-plugin-import": "^1.1.1",
     "babel-plugin-wrap-in-js": "^1.1.0",
     "css-loader": "^0.26.2",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
+    "extract-text-webpack-plugin": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-sequence": "^0.4.6",
     "immutable": "^3.8.1",
@@ -47,5 +53,6 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.2"
-  }
+  },
+  "devDependencies": {}
 }

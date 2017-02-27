@@ -15,7 +15,7 @@ function genDefered(cmd, callback) {
 		const defered = Q.defer();
 		const task = exec(cmd, function(err, stdout, stderr){
 			if (err) {
-				console.err(err);
+				console.log(err);
 				defered.reject(stderr);
 				throw err;
 			}
@@ -58,8 +58,8 @@ gulp.task('next-start', genDefered('npm run start', noop));
 
 gulp.task('build', function() {
 	const d = Q.defer();
-	runSequence('next-build', 'next-start', function() {
-		console.log('Successfully execute');
+	runSequence('next-build', function() {
+		console.log('Project has been successfully built');
 		d.resolve();
 	});
 
