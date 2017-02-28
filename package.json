@@ -5,8 +5,16 @@
   "main": "index.js",
   "author": "overkazaf",
   "license": "MIT",
-  "tags" : [
-    "react", "redux", "immutalbe", "antd", "next.js", "koa", "mocha", "gulp", "webpack"
+  "tags": [
+    "react",
+    "redux",
+    "immutalbe",
+    "antd",
+    "next.js",
+    "koa",
+    "mocha",
+    "gulp",
+    "webpack"
   ],
   "scripts": {
     "dev": "next",
@@ -51,6 +59,7 @@
     "redux": "^3.6.0",
     "redux-immutable": "^3.1.0",
     "redux-thunk": "^2.2.0",
+    "rxjs": "^5.2.0",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.2"
   },

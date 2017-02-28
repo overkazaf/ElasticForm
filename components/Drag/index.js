@@ -5,6 +5,9 @@ import {
 	Layout,
 	Menu, 
 	Icon, 
+	Row,
+	Col,
+	Button,
 } from 'antd';
 
 const { 
@@ -15,6 +18,8 @@ const {
 } = Layout;
 
 import IntelliDatePicker from '../Forms/InteliDatePicker.js';
+import InteliCollapse from '../Layout/InteliCollapse.js';
+import SmartTable from '../Forms/SmartTable.js';
 
 import './index.scss';
 
@@ -62,14 +67,40 @@ class Drag extends Component {
 			        </Sider>
 			        <Layout>
 			          <Header style={{ background: '#fff', padding: 0 }}>
-			            <Icon
-			              className="trigger"
-			              type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-			              onClick={collapse}
-			            />
+			         	<Row>
+					      <Col span={16}>
+				            <Icon
+				              className="trigger"
+				              type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
+				              onClick={collapse}
+				            />
+				          </Col>
+				          <Col span={8}>
+				          	<Button type="primary">
+					          Export IntelliForm
+					        </Button>
+				          </Col>
+				        </Row>
+			           
 			          </Header>
 			          <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-			            <IntelliDatePicker />
+			            <br />
+			            <Row>
+					      <Col span={16}>
+					      	<SmartTable />
+					      </Col>
+					      <Col span={1}>
+					      	
+					      </Col>
+					      <Col span={7}>
+					     	<IntelliDatePicker />
+							<br />
+							<br />
+							<br />
+							<InteliCollapse />
+					      </Col>
+					    </Row>
+			            
 			          </Content>
 			        </Layout>
 			      </Layout>

@@ -50,7 +50,7 @@ gulp.task('open', function() {
 		open('http://localhost:3000');
 		console.log('Broswer has been succefully opened');
 		defered.resolve();
-	}, 12000);
+	}, 25000);
 
 	return defered.promise;
 });
