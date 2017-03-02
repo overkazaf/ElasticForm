@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { initStore } from '../store';
+import { initStore } from '../src/javascript/store';
 import withRedux from 'next-redux-wrapper';
 
-import Page from '../components/Page';
+import Page from '../src/javascript/components/Page';
 
 class Comp extends Component {
   static getInitialProps ({ store, isServer }) {

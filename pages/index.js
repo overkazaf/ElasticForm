@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { initStore } from '../store';
+import { initStore } from '../src/javascript/store';
 import withRedux from 'next-redux-wrapper';
 import fetch from 'isomorphic-fetch';
 import NoSSR from 'react-no-ssr';
 import Immutable from 'immutable';
-import Counter from '../components/Counter';
-import Star from '../components/Star';
-import Loading from '../components/Loading';
-import Drag from '../components/Drag';
+import Counter from '../src/javascript/components/Counter';
+import Star from '../src/javascript/components/Star';
+import Loading from '../src/javascript/components/Loading';
+import InteliCollapse from '../src/javascript/components/Layout/InteliCollapse';
+import Rx from 'rxjs/Rx';
 
-import antdStyle from '../scss/index.min.scss';
+import antdStyle from '../src/css/index.min.css';
 
 class MainPage extends Component {
   static async getInitialProps ({ store, isServer }) {
@@ -34,7 +35,28 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    let { dispatch } = this.props;
+
+    // let button = document.querySelector('button');
+    // Rx.Observable.fromEvent(button, 'click')
+    // .subscribe('click', () => console.log('Button has been clicked'));
+
+    //console.log('Rx.Observable.of(1,2,3)', Rx.Observable.of(1,2,3));
+    setTimeout(() => {
+      // let myObservable = new Rx.Subject();
+
+      // myObservable.subscribe(value => console.log(value))
+      // myObservable.next('fuck you');
+      // 
+      var myObservable = Rx.Observable.create(observer => {
+        observer.next('foo');
+        setTimeout(() => observer.next('bar'), 1000);
+      });
+      myObservable.subscribe(value => console.log(value));
+    }, 3000);
+
+    // of, from, fromPromise, fromEvent
+    // 
+
   }
 
   increase() {
@@ -73,12 +95,18 @@ class MainPage extends Component {
       stars,
     } = this.props;
 
+    /**
+     * <Drag 
+          collapse={this.collapse.bind(this)}
+        />
+     */
+
     return (
       <div className="p-main">
         <style dangerouslySetInnerHTML={{ __html: antdStyle}} />
-        <Drag 
-          collapse={this.collapse.bind(this)}
-        />
+        <Star />c
+        <button id="a" ref="btn">点我</button>
+        <InteliCollapse />
       </div>
     )
   }
