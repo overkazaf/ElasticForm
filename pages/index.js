@@ -5,7 +5,7 @@ import fetch from 'isomorphic-fetch';
 import NoSSR from 'react-no-ssr';
 import Immutable from 'immutable';
 import Counter from '../src/javascript/components/Counter';
-import Star from '../src/javascript/components/Star';
+import Drag from '../src/javascript/components/Drag';
 import Loading from '../src/javascript/components/Loading';
 import InteliCollapse from '../src/javascript/components/Layout/InteliCollapse';
 import Rx from 'rxjs/Rx';
@@ -104,9 +104,9 @@ class MainPage extends Component {
     return (
       <div className="p-main">
         <style dangerouslySetInnerHTML={{ __html: antdStyle}} />
-        <Star />c
-        <button id="a" ref="btn">点我</button>
-        <InteliCollapse />
+        <Drag 
+          collapse={this.collapse.bind(this)}
+        />
       </div>
     )
   }
