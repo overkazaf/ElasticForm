@@ -1,12 +1,21 @@
-import { Component } from 'react';
+import IFBaseComponent from '../Base/IFBaseComponent';
 import { connect } from 'react-redux';
 
-class Loading extends Component {
+class Loading extends IFBaseComponent {
+
+  constructor(props) {
+    super(props);
+  }
 
   render() {
+  	let styleObj = this.props.style;
+  	let { uuid } = this.props;
+
+  	console.log('uuid');
+
     return (
-      <div className="m-loading">
-        <img src="/static/loading.gif" />
+      <div id={uuid} className="m-loading" style={styleObj}>
+      	Loading
       </div>
     )
   }
