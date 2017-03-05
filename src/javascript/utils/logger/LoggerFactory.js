@@ -2,7 +2,7 @@ const LEVEL = {
 	DEV: 0,
 	TEST: 1,
 	ONLINE: 2,
-}
+};
 
 export default
 class LoggerFactory {
@@ -22,8 +22,6 @@ class Logger {
 
 	log(...args) {
 		const { level } = this;
-		if () {
 
-		}
 	}
 }

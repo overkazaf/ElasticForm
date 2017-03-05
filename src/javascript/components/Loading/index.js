@@ -11,7 +11,7 @@ class Loading extends IFBaseComponent {
   	let styleObj = this.props.style;
   	let { uuid } = this.props;
 
-  	console.log('uuid');
+  	console.log('uuid', uuid);
 
     return (
       <div id={uuid} className="m-loading" style={styleObj}>
