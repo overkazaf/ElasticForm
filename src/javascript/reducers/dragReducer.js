@@ -1,13 +1,13 @@
 import Immutable from 'immutable';
 
 const $$initState = Immutable.fromJS({
-    collapsed: false,
+    collapsed: '',
 });
 
 export const dragReducer = (state = $$initState, action) => {
     switch (action.type) {
         case 'COLLAPSED':{
-            return state.set('collapsed', !state.get('collapsed'));
+            return state.set('collapsed', action.payload);
         }
         default: return state;
     }

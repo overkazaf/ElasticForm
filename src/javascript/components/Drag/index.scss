@@ -24,3 +24,77 @@
 #components-layout-demo-custom-trigger .ant-layout-sider-collapsed .nav-text {
   display: none;
 }
+
+
+
+
+
+.drag-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100px;
+  width: 100%;
+    
+  .toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    border: 1px solid #ddd;
+    background: #ccc;
+  }
+
+  .tools {
+    position: absolute;
+    left: 0;
+    top: 50px;
+    width: 300px;
+    height: 720px;
+    padding: 10px;
+    border: 1px solid #aaa;
+
+    .comp-list {
+
+      li {
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px dashed #aaa;
+      }
+    }
+  }
+
+
+  .device {
+    width: 960px;
+    height: 680px;
+    position: absolute;
+    left: 320px;
+    top: 70px;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+  }
+
+
+  .drag-comp {
+    width: 200px;
+    border: 2px dotted #aaa;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #fff;
+    opacify: 0.8;
+
+    label {
+      font-weight: bold;
+      margin-right: 4px;
+    }
+
+    .inp {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 2px;
+    }
+  }
+}

@@ -23,7 +23,6 @@ class IFBaseComponent extends Component {
 	render() {
 		return (
 			<div className="if-comp">
-				BaseComponent
 			</div>
 		)
 	}
