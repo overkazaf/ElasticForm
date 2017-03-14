@@ -117,3 +117,34 @@ onXXX = function ([currentKey, refsKeys], callback) {
 ```
 
 (0303和纯庆讨论后，审核相关的事件本期暂时可以不做，只需要处理加载、保存、值更新三类事件)
+
+
+
+
+
+##事件的钩子可考虑React生命周期进行注入
+*  componentWillMount
+*  componentDidMount
+*  componentWillUpdate
+*  componentWillReceiveProps
+*  shouldComponentUpdate
+*  componentDidUpdate
+*  componentWillUnmount
+
+
+##事件的类型可映射React提供的事件列表
+[React事件系统](http://reactjs.cn/react/docs/events.html)
+
+###keybord events
+* onKeyDown 
+* onKeyPress 
+* onKeyUp
+
+### focus events
+* onFocus 
+* onBlur
+
+### form events
+* onChange 
+* onInput 
+* onSubmit
