@@ -12,10 +12,8 @@ import {
 	Row,
 	Col,
 	Button,
-	Form,
 } from 'antd';
 
-const FormItem = Form.Item;
 const {
 	Header,
 	Sider,
@@ -23,10 +21,13 @@ const {
 	Footer,
 } = Layout;
 
+
 import IntelliDatePicker from '../Forms/InteliDatePicker.js';
 import InteliCollapse from '../Layout/InteliCollapse.js';
 import SmartTable from '../Forms/SmartTable.js';
 import Draggable from 'react-draggable';
+import IFTextInput from '../Forms/IFTextInput.js';
+import _ from 'lodash';
 
 import indexStyle from './index.scss';
 
@@ -34,75 +35,94 @@ const {
 	is
 } = Immutable;
 
-
 class Drag extends Component {
 
 	static getInitialProps() {
 		return Immutable.fromJS({
-			collapsed: false,
+			collapsed: '',
+			components: [],
 		});
 	}
-
-	eventLogger = (e: MouseEvent, data: Object) => {};
 
 	handleDrag(e: MouseEvent, data: Object) {}
 
 	handleStart(e: MouseEvent, data: Object) {}
 
-	handleStop(e: MouseEvent, data: Object) {
-		console.log(e, data);
+	handleStop(uuid, e: MouseEvent, data: Object) {
+		const { x, y } = data;
 
-		let newPosition = {
-			x: data.x,
-			y: data.y,
-		};
+		const el = document.getElementById('device');
+
+		console.log('arguments', arguments);
 
 		this.props.dispatch({
-			type: 'COLLAPSED',
+			type: 'UPDATE_POS',
 			payload: {
-				x: data.x,
-				y: data.y,
-			}
-		})
-
-		console.log('newPosition', newPosition);
+				id: uuid,
+				comp: (
+					<Draggable
+				        axis="both"
+				        handle=".drag-comp"
+				        defaultPosition={{x: 0, y: 0}}
+				        position={{x: x, y: y}}
+				        grid={[10, 10]}
+				        bounds={{top: 0, left: 0, right: 660, bottom: 500}}
+				        offsetParent={el}
+				        zIndex={100}
+				        onStart={this.handleStart.bind(this)}
+				        onDrag={this.handleDrag.bind(this)}
+				        onStop={this.handleStop.bind(this, uuid)}
+				        >
+				        <div className="drag-comp">
+				        	<IFTextInput />
+				        </div>
+				    </Draggable>
+				)
+			},
+		});
 	}
 
-	genComponent({x, y}) {
-		let styleObj = {
-			position: 'absolute',
-			left: `${x - 310}px`,
-			top: `${y}px`,
-			border: '1px soild #ddd'
-		};
-
-		let formItemLayout = {
-	      labelCol: { span: 6 },
-	      wrapperCol: { span: 14 },
-	    };
-	    let { getFieldDecorator } = this.props.form;
-		return (
-			<FormItem
-	          {...formItemLayout}
-	          label="E-mail"
-	          hasFeedback
-	        >
-	          {getFieldDecorator('email', {
-	            rules: [{
-	              type: 'email', message: 'The input is not valid E-mail!',
-	            }, {
-	              required: true, message: 'Please input your E-mail!',
-	            }],
-	          })(
-	            <Input />
-	          )}
-	        </FormItem>
-		)
+	genComponent() {
+		const el = document.getElementById('device');
+		const uuid = _.uniqueId();
+		this.props.dispatch({
+			type: 'APPEND',
+			payload: {
+				id: uuid,
+				comp: (
+					<Draggable
+				        axis="both"
+				        handle=".drag-comp"
+				        defaultPosition={{x: 0, y: 0}}
+				        position={{x: 0, y: 0}}
+				        grid={[10, 10]}
+				        bounds={{top: 0, left: 0, right: 660, bottom: 500}}
+				        offsetParent={el}
+				        zIndex={100}
+				        onStart={this.handleStart.bind(this)}
+				        onDrag={this.handleDrag.bind(this)}
+				        onStop={this.handleStop.bind(this, uuid)}
+				        >
+				        <div className="drag-comp">
+				        	<IFTextInput />
+				        </div>
+				    </Draggable>
+				)
+			}
+		})
 	}
 
 	render() {
-
-		let components = this.genComponent(this.props.collapsed);
+		let handleClick = () => {
+			this.genComponent();
+		};
+	
+		let components = () => {
+			return this.props.components.map(function(item, index) {
+				let key = `item-${index}`;
+				return item.comp;
+			});
+		};
 
 		return (
 			<div className="drag-container">
@@ -114,43 +134,23 @@ class Drag extends Component {
 				<h2>组件库</h2>
 				<div>
 					<ul className="comp-list">
-						<li>
-							<Draggable
-						        axis="both"
-						        handle=".drag-comp"
-						        defaultPosition={{x: 0, y: 0}}
-						        position={{x: 0, y: 0}}
-						        grid={[10, 10]}
-						        zIndex={100}
-						        onStart={this.handleStart.bind(this)}
-						        onDrag={this.handleDrag.bind(this)}
-						        onStop={this.handleStop.bind(this)}>
-						        <div className="drag-comp">
-						          <label>Text</label>
-						        </div>
-						    </Draggable>
+						<li onClick={handleClick}>
+							Email
 					    </li>
-					    <li>
-							<Draggable
-						        axis="both"
-						        handle=".drag-comp"
-						        defaultPosition={{x: 0, y: 0}}
-						        position={{x: 0, y: 0}}
-						        grid={[10, 10]}
-						        zIndex={100}
-						        onStart={this.handleStart.bind(this)}
-						        onDrag={this.handleDrag.bind(this)}
-						        onStop={this.handleStop.bind(this)}>
-						        <div className="drag-comp">
-						          <label>Number</label>
-						        </div>
-						    </Draggable>
+					    <li onClick={handleClick}>
+							Email
+					    </li>
+					    <li onClick={handleClick}>
+							Email
+					    </li>
+					    <li onClick={handleClick}>
+							Email
 					    </li>
 				    </ul>
 				    </div>
 			    </div>
-			    <div className="device">
-					{components}
+			    <div id="device" className="device">
+					{components()}
 			    </div>
 			    <footer>
 			    	<h2>状态栏</h2>
