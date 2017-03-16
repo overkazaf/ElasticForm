@@ -27,9 +27,6 @@ class IFTextInput extends Component {
 			getFieldDecorator
 		} = this.props.form;
 
-
-		console.log('this.props', this.props);
-
 		return (
 			<FormItem
 	          {...formItemLayout}

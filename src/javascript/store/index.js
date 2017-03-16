@@ -5,7 +5,7 @@ import nextConnectRedux from 'next-connect-redux';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import Immutable from 'immutable';
-import starEpic from '../epics/starEpic';
+import dragEpic from '../epics/dragEpic';
 import rootEpics from '../epics';
 
 // It will raise an error while running in server side enviroment

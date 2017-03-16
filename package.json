@@ -14,7 +14,9 @@
     "koa",
     "mocha",
     "gulp",
-    "webpack"
+    "webpack",
+    "rxjs",
+    "redux-observable"
   ],
   "scripts": {
     "dev": "next",

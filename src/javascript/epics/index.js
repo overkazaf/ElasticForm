@@ -1,7 +1,7 @@
-import starEpic from './starEpic';
+import dragEpic from './dragEpic';
 
 const rootEpics = [
-	starEpic,
+	dragEpic,
 ];
 
 export default rootEpics;

@@ -74,17 +74,29 @@
     top: 70px;
     border-radius: 10px;
     border: 1px solid #aaa;
+    padding: 2px;
+    box-shadow: 0 0 5px #000;
+
+    &.ip6 {
+      width: 375px;
+      height: 667px;
+    }
   }
 
-
   .drag-comp {
+    position: absolute;
     width: 300px;
     border: 2px dotted #aaa;
     padding: 5px;
     border-radius: 5px;
     cursor: pointer;
     background: #fff;
-    opacify: 0.8;
+    box-sizing: border-box;
+
+    &.dragging {
+      background: #e5e5e5;
+      opacity: 0.8;
+    }
 
     label {
       font-weight: bold;

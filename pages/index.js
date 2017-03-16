@@ -13,24 +13,24 @@ import Rx from 'rxjs/Rx';
 import antdStyle from '../src/css/index.min.css';
 
 class MainPage extends Component {
-  static async getInitialProps ({ store, isServer }) {
+  static getInitialProps ({ store, isServer }) {
 
-    const res = await fetch('https://api.github.com/repos/developit/preact');
-    const json = await res.json();
+    // const res = await fetch('https://api.github.com/repos/developit/preact');
+    // const json = await res.json();
 
     store.subscribe(() => {
       console.log(store.getState());
     });
 
-    store.dispatch({
-      type: 'UPDATE',
-      payload: json.stargazers_count,
-    })
+    // store.dispatch({
+    //   type: 'UPDATE',
+    //   payload: json.stargazers_count,
+    // })
 
     return Immutable.fromJS({ 
       isServer, 
       counter: 0,
-      stars: json.stargazers_count,
+      stars: 0,
     });
   }
 
@@ -59,33 +59,6 @@ class MainPage extends Component {
 
   }
 
-  increase() {
-    this.props.dispatch({
-      type: 'INC',
-      payload: 1,
-    });
-  }
-
-  collapse() {
-    this.props.dispatch({
-      type: 'COLLAPSED',
-    });
-  }
-
-  decrease() {
-    this.props.dispatch({
-      type: 'INC',
-      payload: -1,
-    });
-  }
-
-  handleClick() {
-    console.log('handle');
-    this.props.dispatch({
-      type: 'INC',
-      payload: 3,
-    });
-  }
 
   render() {
 
@@ -94,12 +67,6 @@ class MainPage extends Component {
       isServer,
       stars,
     } = this.props;
-
-    /**
-     * <Drag 
-          collapse={this.collapse.bind(this)}
-        />
-     */
 
     return (
       <div className="p-main">

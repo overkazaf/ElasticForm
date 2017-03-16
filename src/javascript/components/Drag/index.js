@@ -50,10 +50,7 @@ class Drag extends Component {
 
 	handleStop(uuid, e: MouseEvent, data: Object) {
 		const { x, y } = data;
-
-		const el = document.getElementById('device');
-
-		console.log('arguments', arguments);
+		const el = this.refs['device'];
 
 		this.props.dispatch({
 			type: 'UPDATE_POS',
@@ -66,12 +63,13 @@ class Drag extends Component {
 				        defaultPosition={{x: 0, y: 0}}
 				        position={{x: x, y: y}}
 				        grid={[10, 10]}
-				        bounds={{top: 0, left: 0, right: 660, bottom: 500}}
 				        offsetParent={el}
-				        zIndex={100}
+				        defaultClassNameDragging="dragging"
 				        onStart={this.handleStart.bind(this)}
 				        onDrag={this.handleDrag.bind(this)}
 				        onStop={this.handleStop.bind(this, uuid)}
+				        key={uuid}
+				        bounds={{left: 0, top: 0, right: 750, bottom: 480}}
 				        >
 				        <div className="drag-comp">
 				        	<IFTextInput />
@@ -83,8 +81,9 @@ class Drag extends Component {
 	}
 
 	genComponent() {
-		const el = document.getElementById('device');
+		const el = this.refs['device'];
 		const uuid = _.uniqueId();
+
 		this.props.dispatch({
 			type: 'APPEND',
 			payload: {
@@ -96,12 +95,13 @@ class Drag extends Component {
 				        defaultPosition={{x: 0, y: 0}}
 				        position={{x: 0, y: 0}}
 				        grid={[10, 10]}
-				        bounds={{top: 0, left: 0, right: 660, bottom: 500}}
 				        offsetParent={el}
-				        zIndex={100}
+				        defaultClassNameDragging="dragging"
 				        onStart={this.handleStart.bind(this)}
 				        onDrag={this.handleDrag.bind(this)}
 				        onStop={this.handleStop.bind(this, uuid)}
+				        key={uuid}
+				        bounds={{left: 0, top: 0, right: 750, bottom: 480}}
 				        >
 				        <div className="drag-comp">
 				        	<IFTextInput />
@@ -112,6 +112,14 @@ class Drag extends Component {
 		})
 	}
 
+	switchDevice() {
+		const devicePanel = this.refs['device'];
+
+		devicePanel.className = 'device ip6';
+
+		console.log('devicePanel', devicePanel);
+	}
+
 	render() {
 		let handleClick = () => {
 			this.genComponent();
@@ -119,7 +127,6 @@ class Drag extends Component {
 	
 		let components = () => {
 			return this.props.components.map(function(item, index) {
-				let key = `item-${index}`;
 				return item.comp;
 			});
 		};
@@ -128,7 +135,11 @@ class Drag extends Component {
 			<div className="drag-container">
 			    <style dangerouslySetInnerHTML={{ __html: indexStyle}} />
 			    <div className="toolbar">
-			    	<h2>工具栏</h2>
+			    	<span>工具栏</span>
+			    	<Button 
+			    		type="primary"
+			    		onClick={this.switchDevice.bind(this)}
+			    	>Switch Device</Button>
 			    </div>
 				<div className="tools">
 				<h2>组件库</h2>
@@ -149,7 +160,7 @@ class Drag extends Component {
 				    </ul>
 				    </div>
 			    </div>
-			    <div id="device" className="device">
+			    <div ref="device" id="device" className="device">
 					{components()}
 			    </div>
 			    <footer>
@@ -157,10 +168,6 @@ class Drag extends Component {
 			    </footer>
 			</div>
 		);
-	}
-
-	componentWillReceiveProps(nextProps) {
-		console.log('nextProps', nextProps);
 	}
 }
 
