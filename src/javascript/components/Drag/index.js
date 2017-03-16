@@ -12,7 +12,18 @@ import {
 	Row,
 	Col,
 	Button,
+	Modal,
+	DatePicker,
+	TreeSelect,
+	Select,
+	Table,
+	Tabs,
 } from 'antd';
+
+let { RangePicker } = DatePicker;
+let { TreeNode } = TreeSelect;
+let { Option } = Select;
+let { TabPane } = Tabs;
 
 const {
 	Header,
@@ -20,7 +31,6 @@ const {
 	Content,
 	Footer,
 } = Layout;
-
 
 import IntelliDatePicker from '../Forms/InteliDatePicker.js';
 import InteliCollapse from '../Layout/InteliCollapse.js';
@@ -35,12 +45,111 @@ const {
 	is
 } = Immutable;
 
+const dataSource = [{
+  key: '1',
+  name: 'Mike',
+  age: 32,
+  address: '10 Downing Street'
+}, {
+  key: '2',
+  name: 'John',
+  age: 42,
+  address: '10 Downing Street'
+}];
+
+const columns = [{
+  title: 'Name',
+  dataIndex: 'name',
+  key: 'name',
+}, {
+  title: 'Age',
+  dataIndex: 'age',
+  key: 'age',
+}, {
+  title: 'Address',
+  dataIndex: 'address',
+  key: 'address',
+}];
+
+const componentMap = {
+	'email': () => {
+		return (<IFTextInput />)
+	},
+	'date': () => {
+		return (<DatePicker size="default" />)
+	},
+	'table': () => {
+		return (
+			<Table dataSource={dataSource} columns={columns} />
+		)
+	},
+	'treeSet': () => {
+		return (
+			<TreeSelect
+		        showSearch
+		        style={{ width: 280 }}
+		        value={null}
+		        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+		        placeholder="Please select"
+		        allowClear
+		        treeDefaultExpandAll
+		      >
+		        <TreeNode value="parent 1" title="parent 1" key="0-1">
+		          <TreeNode value="parent 1-0" title="parent 1-0" key="0-1-1">
+		            <TreeNode value="leaf1" title="my leaf" key="random" />
+		            <TreeNode value="leaf2" title="your leaf" key="random1" />
+		          </TreeNode>
+		          <TreeNode value="parent 1-1" title="parent 1-1" key="random2">
+		            <TreeNode value="sss" title={<b style={{ color: '#08c' }}>sss</b>} key="random3" />
+		          </TreeNode>
+		        </TreeNode>
+		      </TreeSelect>
+		)
+	},
+	'select': () => {
+		return (
+			<Select
+		    showSearch
+		    style={{ width: 200 }}
+		    placeholder="Select a person"
+		    optionFilterProp="children"
+		    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+		  >
+		    <Option value="jack">Jack</Option>
+		    <Option value="lucy">Lucy</Option>
+		    <Option value="tom">Tom</Option>
+		  </Select>
+		)
+	},
+	'rangePicker': () => {
+		return (<RangePicker />)
+	}
+};
+
+const componentMenus =[
+	{type: 'email', label: 'Email'},
+	{type: 'treeSet', label: 'TreeSet'},
+	{type: 'date', label: 'DatePicker'},
+	{type: 'rangePicker', label: 'RangePicker'},
+	{type: 'select', label: 'Select'},
+	{type: 'table', label: 'SmartTable'},
+];
+
+const idTypeMap = {};
+
 class Drag extends Component {
 
 	static getInitialProps() {
 		return Immutable.fromJS({
 			collapsed: '',
 			components: [],
+			shown: false,
+		});
+	}
+
+	handleCompClick() {
+		this.props.dispatch({
+			type: 'SHOW',
 		});
 	}
 
@@ -51,6 +160,11 @@ class Drag extends Component {
 	handleStop(uuid, e: MouseEvent, data: Object) {
 		const { x, y } = data;
 		const el = this.refs['device'];
+
+		let handleCompClick = () => { this.handleCompClick(); };
+		
+		e.preventDefault();
+		e.stopPropagation();
 
 		this.props.dispatch({
 			type: 'UPDATE_POS',
@@ -71,8 +185,8 @@ class Drag extends Component {
 				        key={uuid}
 				        bounds={{left: 0, top: 0, right: 750, bottom: 480}}
 				        >
-				        <div className="drag-comp">
-				        	<IFTextInput />
+				        <div className="drag-comp" onDoubleClick={handleCompClick}>
+				        	{componentMap[idTypeMap[uuid]]()}
 				        </div>
 				    </Draggable>
 				)
@@ -80,14 +194,19 @@ class Drag extends Component {
 		});
 	}
 
-	genComponent() {
+	genComponent( componentType ) {
 		const el = this.refs['device'];
 		const uuid = _.uniqueId();
+
+		idTypeMap[uuid] = componentType;
+	
+		let handleCompClick = () => { this.handleCompClick(); };
 
 		this.props.dispatch({
 			type: 'APPEND',
 			payload: {
 				id: uuid,
+				type: componentType,
 				comp: (
 					<Draggable
 				        axis="both"
@@ -103,8 +222,8 @@ class Drag extends Component {
 				        key={uuid}
 				        bounds={{left: 0, top: 0, right: 750, bottom: 480}}
 				        >
-				        <div className="drag-comp">
-				        	<IFTextInput />
+				        <div className="drag-comp" onDoubleClick={handleCompClick}>
+				        	{componentMap[componentType]()}
 				        </div>
 				    </Draggable>
 				)
@@ -120,16 +239,59 @@ class Drag extends Component {
 		console.log('devicePanel', devicePanel);
 	}
 
+	handleModal() {
+		this.props.dispatch({
+			type: 'SHOW'
+		});
+	}
+
 	render() {
-		let handleClick = () => {
-			this.genComponent();
-		};
+		let {
+			shown,
+			dispatch,
+		} = this.props;
+		
+		let a = [
+			{name: 'a', label: 'btn1', clazz: 'a'},
+			{name: 'a', label: 'btn2'},
+			{name: 'a', label: 'btn3'},
+			{name: 'a', label: 'btn4'},
+		];
 	
+		let btns = a.map(function(item, index) {
+			return (
+				<button ref={item.name} className={item.clazz} key={index}>
+					{item.label}
+				</button>
+			)
+		});
+
 		let components = () => {
 			return this.props.components.map(function(item, index) {
 				return item.comp;
 			});
 		};
+
+		let handleOk = () => {
+			dispatch({
+				type: 'SHOW',
+			});
+		};
+		let handleCancel = () => {
+			dispatch({
+				type: 'HIDE',
+			});
+		};
+
+		let that = this;
+
+		let menuList = componentMenus.map((item, index) => {
+			return (
+				<li key={index} onClick={that.genComponent.bind(that, `${item.type}`)}>
+					{item.label}
+				</li>
+			)
+		});
 
 		return (
 			<div className="drag-container">
@@ -139,29 +301,47 @@ class Drag extends Component {
 			    	<Button 
 			    		type="primary"
 			    		onClick={this.switchDevice.bind(this)}
-			    	>Switch Device</Button>
+			    	>
+			    		Switch Device
+			    	</Button>
+					
+					<Button 
+			    		type="primary"
+			    		onClick={this.handleModal.bind(this)}
+			    	>
+			    		Handle Modal
+			    	</Button>
+					
+
+			    	<Modal title="Config Modal" visible={shown}
+			    	  width="750"
+			          onOk={handleOk} onCancel={handleCancel}
+			        >
+			          <Tabs onChange={null} type="card">
+					    <TabPane tab="基本设置" key="1"></TabPane>
+					    <TabPane tab="基础资料" key="6"></TabPane>
+					    <TabPane tab="样式设置" key="2"></TabPane>
+					    <TabPane tab="动作设置" key="3"></TabPane>
+					    <TabPane tab="关联设置" key="4"></TabPane>
+					    <TabPane tab="规则设置" key="5"></TabPane>
+					    <TabPane tab="过滤方案" key="6"></TabPane>
+					    <TabPane tab="下推方案" key="6"></TabPane>
+					  </Tabs>
+			        </Modal>
 			    </div>
 				<div className="tools">
 				<h2>组件库</h2>
 				<div>
 					<ul className="comp-list">
-						<li onClick={handleClick}>
-							Email
-					    </li>
-					    <li onClick={handleClick}>
-							Email
-					    </li>
-					    <li onClick={handleClick}>
-							Email
-					    </li>
-					    <li onClick={handleClick}>
-							Email
-					    </li>
+						{menuList}
 				    </ul>
 				    </div>
 			    </div>
 			    <div ref="device" id="device" className="device">
 					{components()}
+			    </div>
+			    <div className="property-panel">
+					属性窗口
 			    </div>
 			    <footer>
 			    	<h2>状态栏</h2>

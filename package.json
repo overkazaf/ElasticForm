@@ -19,7 +19,7 @@
     "redux-observable"
   ],
   "scripts": {
-    "dev": "next",
+    "dev": "pm2 start index.js",
     "build": "next build",
     "start": "next start"
   },
