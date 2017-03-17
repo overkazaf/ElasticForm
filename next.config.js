@@ -1,4 +1,4 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
 module.exports = {
   webpack: (config, { dev }) => {
     config.module.rules.push(
@@ -19,6 +19,16 @@ module.exports = {
         loader: 'babel-loader!raw-loader!sass-loader'
       }
     )
+
+    config.plugins.push(
+      new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: false
+          }
+        })
+      );
+
+    console.log('config', config);
     return config
   }
 }

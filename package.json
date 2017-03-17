@@ -19,7 +19,7 @@
     "redux-observable"
   ],
   "scripts": {
-    "dev": "pm2 start index.js",
+    "dev": "next",
     "build": "next build",
     "start": "next start"
   },
@@ -62,6 +62,7 @@
     "react-draggable": "^2.2.3",
     "react-no-ssr": "^1.1.0",
     "react-redux": "^5.0.2",
+    "react-resizable": "^1.6.0",
     "redux": "^3.6.0",
     "redux-devtools-extension": "^2.13.0",
     "redux-immutable": "^3.1.0",

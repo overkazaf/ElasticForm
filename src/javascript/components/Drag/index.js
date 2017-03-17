@@ -38,6 +38,7 @@ import SmartTable from '../Forms/SmartTable.js';
 import Draggable from 'react-draggable';
 import IFTextInput from '../Forms/IFTextInput.js';
 import _ from 'lodash';
+import { Resizable, ResizableBox } from 'react-resizable';
 
 import indexStyle from './index.scss';
 
@@ -319,13 +320,13 @@ class Drag extends Component {
 			        >
 			          <Tabs onChange={null} type="card">
 					    <TabPane tab="基本设置" key="1"></TabPane>
-					    <TabPane tab="基础资料" key="6"></TabPane>
-					    <TabPane tab="样式设置" key="2"></TabPane>
-					    <TabPane tab="动作设置" key="3"></TabPane>
-					    <TabPane tab="关联设置" key="4"></TabPane>
-					    <TabPane tab="规则设置" key="5"></TabPane>
-					    <TabPane tab="过滤方案" key="6"></TabPane>
-					    <TabPane tab="下推方案" key="6"></TabPane>
+					    <TabPane tab="基础资料" key="2"></TabPane>
+					    <TabPane tab="样式设置" key="3"></TabPane>
+					    <TabPane tab="动作设置" key="4"></TabPane>
+					    <TabPane tab="关联设置" key="5"></TabPane>
+					    <TabPane tab="规则设置" key="6"></TabPane>
+					    <TabPane tab="过滤方案" key="7"></TabPane>
+					    <TabPane tab="下推方案" key="8"></TabPane>
 					  </Tabs>
 			        </Modal>
 			    </div>

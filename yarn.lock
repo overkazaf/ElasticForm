@@ -4683,7 +4683,7 @@ react-redux@^5.0.2:
     lodash-es "^4.2.0"
     loose-envify "^1.1.0"
 
-react-resizable@^1.4.2:
+react-resizable@^1.4.2, react-resizable@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-1.6.0.tgz#7968c456538a349db1742680f9a05dc9780e6188"
   dependencies:
