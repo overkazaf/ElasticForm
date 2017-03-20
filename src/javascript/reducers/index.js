@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux-immutable';
 import { counterReducer } from './counterReducer';
-import { starReducer } from './starReducer';
+import { testReducer } from './testReducer';
 import { dragReducer } from './dragReducer';
 
 
 const rootReducer = combineReducers({
 	counterReducer,
-	starReducer,
+	testReducer,
 	dragReducer,
 });
 

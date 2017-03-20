@@ -10,7 +10,6 @@ export const starReducer = ($$state = $$initState, action) => {
             return $$state.set('stars', $$state.get('stars') + action.payload);
         }
         case 'HHHH': {
-        	console.log('heheheh');
         	return $$state;
         }
         default: return $$state;

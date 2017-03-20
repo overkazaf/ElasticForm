@@ -8,6 +8,8 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
+const mongoose = require('mongoose');
+
 const ssrCache = new LRUCache({
   max: 100,
   maxAge: 1000 * 60 * 60 // 1hour
@@ -17,6 +19,16 @@ app.prepare()
 .then(() => {
   const server = new Koa()
   const router = new Router()
+  
+  mongoose.connect('mongodb://localhost/test');
+  const db = mongoose.connection;
+
+
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function (callback) {
+    // yay!
+    console.log('yay');
+  });
 
   // page routers
   router.get('/index', function *() {
@@ -36,8 +48,13 @@ app.prepare()
   // interface routers
   router.get('/user/:id', function *(id) {
     let { req, res, params} = this;
-    console.log(params.id)
-    res.end('Bye')
+
+    res.send(500, {'error': 'holy shit'});
+
+    res.end(JSON.stringify({
+      username: 'John Doe ' + ~~(100 * Math.random()),
+      age: 45,
+    }))
   })
 
   router.get('*', function *() {

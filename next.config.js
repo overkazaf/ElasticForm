@@ -20,6 +20,7 @@ module.exports = {
       }
     )
 
+    // compress and uglify the codes
     config.plugins.push(
       new webpack.optimize.UglifyJsPlugin({
           compress: {
@@ -27,8 +28,6 @@ module.exports = {
           }
         })
       );
-
-    console.log('config', config);
     return config
   }
 }

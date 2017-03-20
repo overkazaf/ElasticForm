@@ -6,7 +6,7 @@ import NoSSR from 'react-no-ssr';
 import Immutable from 'immutable';
 import Counter from '../src/javascript/components/Counter';
 import Drag from '../src/javascript/components/Drag';
-import Loading from '../src/javascript/components/Loading';
+import Test from '../src/javascript/components/Test';
 import InteliCollapse from '../src/javascript/components/Layout/InteliCollapse';
 import Rx from 'rxjs/Rx';
 
@@ -41,18 +41,18 @@ class MainPage extends Component {
     // .subscribe('click', () => console.log('Button has been clicked'));
 
     //console.log('Rx.Observable.of(1,2,3)', Rx.Observable.of(1,2,3));
-    setTimeout(() => {
-      // let myObservable = new Rx.Subject();
+    // setTimeout(() => {
+    //   // let myObservable = new Rx.Subject();
 
-      // myObservable.subscribe(value => console.log(value))
-      // myObservable.next('fuck you');
-      // 
-      var myObservable = Rx.Observable.create(observer => {
-        observer.next('foo');
-        setTimeout(() => observer.next('bar'), 1000);
-      });
-      myObservable.subscribe(value => console.log(value));
-    }, 3000);
+    //   // myObservable.subscribe(value => console.log(value))
+    //   // myObservable.next('fuck you');
+    //   // 
+    //   var myObservable = Rx.Observable.create(observer => {
+    //     observer.next('foo');
+    //     setTimeout(() => observer.next('bar'), 1000);
+    //   });
+    //   myObservable.subscribe(value => console.log(value));
+    // }, 3000);
 
     // of, from, fromPromise, fromEvent
     // 
@@ -71,7 +71,7 @@ class MainPage extends Component {
     return (
       <div className="p-main">
         <style dangerouslySetInnerHTML={{ __html: antdStyle}} />
-        <Drag />
+        <Test />
       </div>
     )
   }
