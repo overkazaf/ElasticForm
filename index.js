@@ -1,33 +1,60 @@
-const Koa = require('koa')
-const next = require('next')
-const Router = require('koa-router')
-const LRUCache = require('lru-cache')
-const logger = require('koa-logger')
+const Koa = require('koa');
+const next = require('next');
+const Router = require('koa-router');
+const LRUCache = require('lru-cache');
+const logger = require('koa-logger');
+const provider = require('./src/middleware/config/config.js');
 
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
 const mongoose = require('mongoose');
+
+const serviceFactory = require('./src/middleware/services/ServiceFactory.js');
 
 const ssrCache = new LRUCache({
   max: 100,
   maxAge: 1000 * 60 * 60 // 1hour
-})
+});
 
 app.prepare()
 .then(() => {
-  const server = new Koa()
-  const router = new Router()
+  const server = new Koa();
+  const router = new Router();
   
   mongoose.connect('mongodb://localhost/test');
   const db = mongoose.connection;
 
 
-  db.on('error', console.error.bind(console, 'connection error:'));
+  db.on('error', function(err) {
+    console.error('error occurs:', JSON.stringify(err));
+    mongoose.disconnect();
+  });
+
+
+  const userService = serviceFactory.create('User');
+
+  userService.find({name: 'John'}, function(data) {
+    console.log('user John has been found:', data);
+  });
+
   db.once('open', function (callback) {
     // yay!
     console.log('yay');
+    //const User = mongoose.model('User');
+    // const userId = mongoose.Types.ObjectId();
+    // const john = new User({
+    //   _id: userId,
+    //   name: 'John',
+    //   nickName: 'John Doe',
+    //   password: 'xxyyzz',
+    // });
+
+    // john.save(function (err, john) {
+    //   if (err) return console.error(err);
+    //   console.log('User john has been successfully saved...', john);
+    // });
   });
 
   // page routers
