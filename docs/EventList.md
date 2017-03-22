@@ -32,13 +32,13 @@ v1.0.0版本仅提供表单事件和字段事件
 
 
 ###字段事件
-+ 携带基础资料 ```onBringBase```
-+ 计算 ```onCalc```
-+ 锁定字段 ```onLock```
-+ 字段显示|隐藏 ```onShow|onHide```
-+ 校验合法性 ```onValidate```
-+ 校验相等性 ```onValidateEquality```
-+ 设置值到指定字段 ```onSetToTarget```
++ 携带基础资料 ```bringBase```
++ 计算 ```doCalc```
++ 锁定字段 ```doLock```
++ 字段显示|隐藏 ```doShow|doHide```
++ 校验合法性 ```doValidate```
++ 校验相等性 ```doValidateEquality```
++ 设置值到指定字段 ```doSetToTarget```
 
 ###插件事件
 + 表单保存前置事件 ```onBeforeSave```
@@ -62,16 +62,16 @@ onXXX = function ([currentKey, refsKeys], callback) {
 	key="form"
 	name="form"
 	label="表单主体"
-	actions=[
+	events=[
 		{
 			name: "onLoad",
 			callbacks: [
 				{
 					refKeys: ['fee1'],
-					actionRules: null,
-					actions: [
+					eventRules: null,
+					events: [
 						"bringBase"
-					]					
+					]			
 				}
 			]
 		}

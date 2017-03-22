@@ -15,7 +15,7 @@ const firstCharToUpperCase = function(str) {
  */
 const precheckServiceName = function(serviceName) {
 	return true;
-}
+};
 
 module.exports.create = function(serviceName) {
 	if (!precheckServiceName(serviceName)) {

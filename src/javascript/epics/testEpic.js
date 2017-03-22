@@ -11,7 +11,6 @@ const fetchUserFulfilled = payload => ({ type: FETCH_USER_FULFILLED, payload });
 const cancelFetchUser = () => ({ type: FETCH_USER_CANCELLED });
 
 
-
 const testEpic = action$ =>
   action$.ofType(FETCH_USER)
   .mergeMap(action => 
@@ -26,5 +25,13 @@ const testEpic = action$ =>
             error: true
         }))
   )
+
+export FETCH_USER;
+export FETCH_USER_FULFILLED;
+export FETCH_USER_REJECTED;
+export FETCH_USER_CANCELLED;
+
+
+export fetchUser;
 
 export default testEpic;
