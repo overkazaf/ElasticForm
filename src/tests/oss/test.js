@@ -3,7 +3,6 @@ const OSS = require('ali-oss').Wrapper;
 
 const client = new OSS({
   region: 'oss-cn-shanghai',
-  
   bucket: 'jonong-test'
 });
 
@@ -24,12 +23,16 @@ client.list().then(function (result) {
 // });
 
 
-// const objId = _.uniqueId();
-// client.put(objId, 'testing.txt')
-// .then(function(val) {
-// 	console.log(val.res);
-// 	return client.get(objId);
-// }).then(function(val) {
-// 	console.log(val.res);
-//   	console.log(val.content.toString());
-// });
+const objId = 1;
+client.put(objId, 'test.js')
+.then(function(val) {
+	console.log(val.res);
+	return client.get(objId);
+}, function (err) {
+	throw err;
+}).then(function(val) {
+	console.log(val.res);
+  	console.log(val.content.toString());
+}, function (err) {
+	throw err;
+});
