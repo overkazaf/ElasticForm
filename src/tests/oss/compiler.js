@@ -256,15 +256,35 @@ function compiler(input) {
   return output;
 }
 
-const testCase = [
-  "(add (sub (mul 3 4)))",
-  "(div (sub (mul 3 4)))",
-  "(pow (sub (mul 3 4)))"
-];
+function fns() {
+  var fn = [];
+  fn.push('function add(x, y){return x + y;}');
+  fn.push('function sub(x, y){return x - y;}');
+  fn.push('function mul(x, y){return x * y;}');
+  fn.push('function div(x, y){return x / y;}');
+  fn.push('function pow(x, y){return Math.pow(x, y);}');
+  return fn;
+}
 
-testCase.map(function(test, i) {
-  console.log(compiler(test));
-});
+function main() {
+  const str = [
+    "(div 40 (mul 2 (add 40 (sub 4 5))))",
+    "(add 3 (sub 4 (mul 3 4)))",
+    "(div 5 (sub 5 (mul 3 4)))",
+    "(pow 9 (sub 6 (mul 3 4)))"
+  ];
+
+  str.map(function(item) {
+    let tokens = tokenizer(item);
+    let ast = parser(tokens);
+    let newAst = transformer(ast);
+    let output = codeGenerator(newAst);
+    output += fns().join(';');
+    console.log(eval(output))
+  });
+}
+
+main();
 
 module.exports = {
   tokenizer: tokenizer,
