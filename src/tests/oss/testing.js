@@ -11,57 +11,134 @@ function lexer(input) {
 
 	while (cursor < input.length) {
 		let char = input[cursor];
-		let substr = input.slice(cursor);
+
 		if (regMap.WHITE_SPACE.test(char)) {
-			cursor += substr.match(regMap.WHITE_SPACE)[0].length;
+			let substr = input.slice(cursor);
+			let l = substr.match(regMap.WHITE_SPACE)[0].length;
+			cursor += l;
 			continue;
 		}
 
 		if (regMap.INTEGER.test(char)) {
-			let value = substr.match(regMap.INTEGER)[0];
+			let substr = input.slice(cursor);
+			let l = substr.match(regMap.INTEGER)[0].length;
+
 			tokens.push({
 				type: 'INTEGER',
-				value: value
+				value: input.substr(cursor, l)
 			});
-			cursor += value.length;
-			continue;
-		}
 
-		if (regMap.ID.test(char)) {
-			let value = substr.match(regMap.ID)[0];
-
-			tokens.push({
-				type: 'ID',
-				value: value
-			});
-			cursor += value.length;
+			cursor += l;
 			continue;
 		}
 
 		if (regMap.PAREN.test(char)) {
+			cursor++;
 			tokens.push({
 				type: 'PAREN',
 				value: char
 			});
-			cursor++
+
 			continue;
 		}
 
-		throw new Error('Unexpected character:' + char);
+		if (regMap.ID.test(char)) {
+			let substr = input.slice(cursor);
+			let l = substr.match(regMap.ID)[0].length;
+
+			tokens.push({
+				type: 'ID',
+				value: input.substr(cursor, l)
+			});
+
+			cursor += l;
+			continue;
+		}
+
+		throw new Error('Unsupported character:' + char);
 	}
+
 
 	return tokens;
 }
 
+function parser(tokens) {
+	let ast = {
+		type: 'Program',
+		body: []
+	};
+
+	let cursor = 0;
+
+	function walk() {
+		let token = tokens[cursor];
+
+		if (token.type === 'INTEGER') {
+			cursor++;
+
+			let node = {
+				type: 'NumberLiteral',
+				value: token.value
+			};
+
+			return node;
+		}
+
+
+		if (token.type === 'PAREN' && token.value === '(') {
+			token = tokens[++cursor];
+
+			let node = {
+				type: 'CallExpression',
+				name: token.value,
+				params: []
+			};
+
+			token = tokens[++cursor];
+
+			while (token.type !== 'PAREN' || (token.type === 'PAREN' && token.value === '(')) {
+				node.params.push(walk());
+				token = tokens[cursor];
+			}
+
+			// 跳过 ')'
+			++cursor;
+
+			return node;
+		}
+
+		if (token.type === 'ID') {
+			cursor++;
+
+			let node = {
+				type: 'Identifier',
+				name: token.value
+			};
+
+			return node;
+		}
+
+		throw new Error('Unsupported token:' + token.type);
+	}
+
+
+	while (cursor < tokens.length) {
+		ast.body.push(walk());
+	}
+
+	return ast;
+}
 
 function main() {
 	const testCases = [
-		'(addD213123DsW_ 1 4)'
+		'(a (b (c (d (e 1 4)))))',
+		'(print t 1 4)'
 	];
 
 	testCases.map(function (item) {
 		const tokens = lexer(item);
-		console.log(tokens);
+		const ast = parser(tokens);
+		console.log(ast);
 	});
 }
 

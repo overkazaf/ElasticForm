@@ -229,16 +229,16 @@ function transformer(ast) {
 function codeGenerator(node) {
   switch (node.type) {
     case 'Program':
-      return node.body.map(codeGenerator).join('\n');
+    return node.body.map(codeGenerator).join('\n');
 
     case 'ExpressionStatement':
-      return codeGenerator(node.expression) + ';'
+      return codeGenerator(node.expression) + ';';
 
     case 'CallExpression':
-      return codeGenerator(node.callee) + '(' + node.arguments.map(codeGenerator).join(', ') + ')';
+    return codeGenerator(node.callee) + '<b class="paren">(</b>' + node.arguments.map(codeGenerator).join(', ') + '<b class="paren">)</b>';
 
     case 'Identifier':
-      return node.name;
+      return '<span class="fn">' + node.name + '</span>';
 
     case 'NumberLiteral':
       return node.value;
@@ -266,12 +266,20 @@ function fns() {
   return fn;
 }
 
+function tpls() {
+  var tpl = [];
+
+  tpl.push('<style type="text/css">');
+  tpl.push('.fn{color: #222;font-weight:bold;font-size: 14px;margin-left: 5px;cursor: pointer;}');
+  tpl.push('.paren{color:blue;font-size:16px;}');
+  tpl.push('</style>');
+
+  return tpl;
+}
+
 function main() {
   const str = [
-    "(div 40 (mul 2 (add 40 (sub 4 5))))",
-    "(add 3 (sub 4 (mul 3 4)))",
-    "(div 5 (sub 5 (mul 3 4)))",
-    "(pow 9 (sub 6 (mul 3 4)))"
+    "(div 40 (mul 2 (add 40 (sub 4 5))))"
   ];
 
   str.map(function(item) {
@@ -279,8 +287,9 @@ function main() {
     let ast = parser(tokens);
     let newAst = transformer(ast);
     let output = codeGenerator(newAst);
-    output += fns().join(';');
-    console.log(eval(output))
+
+    output = '<!Doctype><html><body>' + tpls().join('') + output + '</body></html>';
+    console.log(output)
   });
 }
 

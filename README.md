@@ -1,5 +1,4 @@
-# IntelliForm
-[![Build Status](https://travis-ci.org/overkazaf/IntelliForm.svg?branch=master)](https://travis-ci.org/overkazaf/IntelliForm)
+# IntelliForm [![Build Status](https://travis-ci.org/overkazaf/IntelliForm.svg?branch=master)](https://travis-ci.org/overkazaf/IntelliForm)
 This app provide powerful enviroment for dynamic workflow forms building
 
 ## How to use
