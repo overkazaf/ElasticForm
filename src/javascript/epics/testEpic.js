@@ -26,12 +26,4 @@ const testEpic = action$ =>
         }))
   )
 
-export FETCH_USER;
-export FETCH_USER_FULFILLED;
-export FETCH_USER_REJECTED;
-export FETCH_USER_CANCELLED;
-
-
-export fetchUser;
-
 export default testEpic;

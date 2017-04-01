@@ -18,6 +18,7 @@ import {
 	Select,
 	Table,
 	Tabs,
+	Transfer,
 } from 'antd';
 
 let { RangePicker } = DatePicker;
@@ -31,6 +32,22 @@ const {
 	Content,
 	Footer,
 } = Layout;
+
+const mockData = [];
+for (let i = 0; i < 20; i++) {
+  mockData.push({
+    key: i.toString(),
+    title: `基础资料${i + 1}`,
+    description: `基础资料${i + 1}描述详情`,
+    disabled: i % 3 < 1,
+  });
+}
+
+const targetKeys = mockData
+        .filter(item => +item.key % 3 > 1)
+        .map(item => item.key);
+
+import { SketchPicker } from 'react-color';
 
 import IntelliDatePicker from '../Forms/InteliDatePicker.js';
 import InteliCollapse from '../Layout/InteliCollapse.js';
@@ -319,8 +336,24 @@ class Drag extends Component {
 			          onOk={handleOk} onCancel={handleCancel}
 			        >
 			          <Tabs onChange={null} type="card">
-					    <TabPane tab="基本设置" key="1"></TabPane>
-					    <TabPane tab="基础资料" key="2"></TabPane>
+					    <TabPane tab="基本设置" key="1">
+							<Row gutter={16}>
+							  <Col span={12}>
+							  	<SketchPicker />
+							  </Col>
+							</Row>
+							
+					    </TabPane>
+					    <TabPane tab="基础资料" key="2">
+							<Transfer
+						        dataSource={mockData}
+						        titles={['Source', 'Target']}
+						        targetKeys={[]}
+						        selectedKeys={[]}
+						        render={item => item.title}
+						      />
+
+					    </TabPane>
 					    <TabPane tab="样式设置" key="3"></TabPane>
 					    <TabPane tab="动作设置" key="4"></TabPane>
 					    <TabPane tab="关联设置" key="5"></TabPane>

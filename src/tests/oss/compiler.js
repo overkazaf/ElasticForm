@@ -288,8 +288,8 @@ function main() {
     let newAst = transformer(ast);
     let output = codeGenerator(newAst);
 
-    output = '<!Doctype><html><body>' + tpls().join('') + output + '</body></html>';
-    console.log(output)
+    output = '<!DOCTYPE html><html><body>' + tpls().join('') + output + '</body></html>';
+    console.log(output);
   });
 }
 
