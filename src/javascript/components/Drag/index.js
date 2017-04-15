@@ -375,7 +375,7 @@ class Drag extends Component {
 					{components()}
 			    </div>
 			    <div className="property-panel">
-					属性窗口
+					属性窗口p[[]]
 			    </div>
 			    <footer>
 			    	<h2>状态栏</h2>
