@@ -5,11 +5,11 @@ import fetch from 'isomorphic-fetch';
 import NoSSR from 'react-no-ssr';
 import Immutable from 'immutable';
 import Counter from '../src/javascript/components/Counter';
-import Drag from '../src/javascript/components/Drag';
-import Test from '../src/javascript/components/Test';
-import InteliCollapse from '../src/javascript/components/Layout/InteliCollapse';
-import Rx from 'rxjs/Rx';
 
+//import Test from '../src/javascript/components/Test';
+//import InteliCollapse from '../src/javascript/components/Layout/InteliCollapse';
+import MainLayout from '../src/javascript/layouts/MainLayout';
+import Rx from 'rxjs/Rx';
 import antdStyle from '../src/css/index.min.css';
 
 class MainPage extends Component {
@@ -71,7 +71,7 @@ class MainPage extends Component {
     return (
       <div className="p-main">
         <style dangerouslySetInnerHTML={{ __html: antdStyle}} />
-        <Drag />
+        <MainLayout />
       </div>
     )
   }
