@@ -12,8 +12,14 @@ class ComponentSider extends Component {
 		mode: 'inline',
 	};
 
-	render() {
+	handleMenuClick(...args) {
+		console.log(...args);
+	}
 
+	render() {
+		const handleMenuClick = (...args) => {
+			this.handleMenuClick(...args);
+		};
 		const siderMenuArray = [
 			{
 				name: '页面布局',
@@ -94,7 +100,9 @@ class ComponentSider extends Component {
 		let siderMenus = siderMenuArray.map((subMenu, index) => {
 			let menuItems = subMenu.children.map((menuItem, idx) => {
 				return (
-					<Menu.Item key={`submenu-${idx}`}>
+					<Menu.Item 
+						key={`submenu-${idx}`}
+						>
 						<Icon type={menuItem.icon} />
 						{menuItem.name}
 					</Menu.Item>
@@ -104,6 +112,7 @@ class ComponentSider extends Component {
 			return (
 				<SubMenu
 	              key={`menu-${index}`}
+	              onTitleClick={handleMenuClick}
 	              title={<span><Icon type={subMenu.icon} /><span className="nav-text">{subMenu.name}</span></span>}
 	            >
 	              {menuItems}
@@ -112,7 +121,10 @@ class ComponentSider extends Component {
 		});
 
 		return (
-			<Menu theme="dark" mode={this.state.mode}>
+			<Menu 
+				onClick={handleMenuClick}
+				theme="dark" 
+				mode={this.state.mode}>
 	            {siderMenus}
 	        </Menu>
 		)

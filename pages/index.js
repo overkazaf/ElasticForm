@@ -34,32 +34,6 @@ class MainPage extends Component {
     });
   }
 
-  componentDidMount() {
-
-    // let button = document.querySelector('button');
-    // Rx.Observable.fromEvent(button, 'click')
-    // .subscribe('click', () => console.log('Button has been clicked'));
-
-    //console.log('Rx.Observable.of(1,2,3)', Rx.Observable.of(1,2,3));
-    // setTimeout(() => {
-    //   // let myObservable = new Rx.Subject();
-
-    //   // myObservable.subscribe(value => console.log(value))
-    //   // myObservable.next('fuck you');
-    //   // 
-    //   var myObservable = Rx.Observable.create(observer => {
-    //     observer.next('foo');
-    //     setTimeout(() => observer.next('bar'), 1000);
-    //   });
-    //   myObservable.subscribe(value => console.log(value));
-    // }, 3000);
-
-    // of, from, fromPromise, fromEvent
-    // 
-
-  }
-
-
   render() {
 
     let { 

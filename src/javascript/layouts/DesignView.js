@@ -2,17 +2,20 @@ import { Component } from 'react';
 import { Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 
+import ComponentFactory from '../factory/ComponentFactory.js';
+import LayoutEngine from '../engine/LayoutEngine.js';
+import mock from '../mock/test.js';
+
 export default
 class DesignView extends Component {
   constructor(props) {
     super(props);
     this.newTabIndex = 0;
-    const panes = [
-      { title: 'Tab 1', content: 'Content of Tab 1', key: '1', closable: false },
-      { title: 'Tab 2', content: 'Content of Tab 2', key: '2' },
-    ];
+
+    const panes = [];
+    
     this.state = {
-      activeKey: panes[0].key,
+      activeKey: 'pane1',
       panes,
     };
   }
@@ -20,15 +23,18 @@ class DesignView extends Component {
   onChange = (activeKey) => {
     this.setState({ activeKey });
   }
+
   onEdit = (targetKey, action) => {
     this[action](targetKey);
   }
+
   add = () => {
     const panes = this.state.panes;
     const activeKey = `newTab${this.newTabIndex++}`;
     panes.push({ title: 'New Tab', content: 'Content of new Tab', key: activeKey });
     this.setState({ panes, activeKey });
   }
+
   remove = (targetKey) => {
     let activeKey = this.state.activeKey;
     let lastIndex;
@@ -43,7 +49,45 @@ class DesignView extends Component {
     }
     this.setState({ panes, activeKey });
   }
+
+  _renderDesignView(pageJson) {
+
+    let {
+      header,
+      body,
+      footer,
+    } = pageJson;
+
+    return (
+      <div className="m-designview-container">
+        {
+          header.components.map((item, index) => {
+            let {
+              type,
+              props,
+            } = item;
+
+            return (
+              <div key={`item-${index}`}>
+                {ComponentFactory.create(type, props)}
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+
+  getTmpData() {
+    return mock.data;
+  }
+
   render() {
+    let that = this;
+    let {
+      panes,
+    } = this.props.data;
+
     return (
       <Tabs
         onChange={this.onChange}
@@ -51,7 +95,11 @@ class DesignView extends Component {
         type="editable-card"
         onEdit={this.onEdit}
       >
-        {this.state.panes.map(pane => <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>{pane.content}</TabPane>)}
+        {panes.map(pane => 
+            <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+              {LayoutEngine.renderLayout(pane)}
+              { /* that._renderDesignView(that.getTmpData()) */ }
+            </TabPane>)}
       </Tabs>
     );
   }

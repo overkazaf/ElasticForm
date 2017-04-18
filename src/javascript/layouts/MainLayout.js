@@ -23,6 +23,35 @@ MainLayout extends Component {
   }
 
   render() {
+
+    let data = {
+      panes: [
+        {
+          name: 'pane1', 
+          key: 'pane1',
+          title: 'Tab1',
+          closable: false,
+          layouts: [
+            {
+              name: 'r1-c4',
+              components: [
+                {type: 'IFInputNumber', props: { id: 1}},
+                {type: 'IFRangePicker', props: { id: 2 }},
+                {type: 'IFDropdown', props: { id: 3 }},
+              ]
+            }
+          ]
+        },
+        {
+          name: 'pane2',
+          key: 'pane2',
+          title: 'Tab2',
+          closable: true,
+          layouts: []
+        }
+      ]
+    };
+
     return (
       <Layout>
        <Header style={{ background: 'rgba(0,0,0,0.75)', padding: 0 }} >
@@ -41,8 +70,10 @@ MainLayout extends Component {
         </Sider>
         <Layout>
           <Content style={{ margin: '10px' }}>
-            <div style={{ padding: 4, minHeight: 480 }}>
-              <DesignView />
+            <div style={{ padding: 4, background: '#fff', minHeight: 420 }}>
+              <DesignView 
+                data={data}
+              />
             </div>
             <Footer style={{ textAlign: 'center' }}>
               StatusBar: IntelliForm ©2017 Created by John
