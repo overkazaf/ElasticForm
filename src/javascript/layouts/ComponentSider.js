@@ -22,20 +22,20 @@ class ComponentSider extends Component {
 				name: '常用组件',
 				icon: 'rocket',
 				children: [
-					{ name: '数字', icon: 'pay-circle'},
-					{ name: '单价', icon: 'pay-circle-o'},
-					{ name: '电话', icon: 'mobile'},
-					{ name: '邮箱', icon: 'mail' },
-					{ name: '文本' },
+					{ name: '数字', key: 'IFInputNumber', icon: 'pay-circle'},
+					{ name: '单价', key: 'IFInputPrice', icon: 'pay-circle-o'},
+					{ name: '电话', key: 'IFInputPhone', icon: 'mobile'},
+					{ name: '邮箱', key: 'IFInputMail', icon: 'mail' },
+					{ name: '文本', key: 'IFInputText' },
 				]
 			},
 			{
 				name: '日期组件',
 				icon: 'calendar',
 				children: [
-					{ name: '日期选择器' },
-					{ name: '范围选择器' },
-					{ name: '时间选择器' },
+					{ name: '日期选择器', key: 'IFDatePicker' },
+					{ name: '范围选择器', key: 'IFRangePicker' },
+					{ name: '时间选择器', key: 'IFTimePicker' },
 				]
 			},
 			{
@@ -67,8 +67,8 @@ class ComponentSider extends Component {
 				name: '表格组件',
 				icon: 'file-excel',
 				children: [
-					{ name: '智能表格' },
-					{ name: '普通表格' },
+					{ name: '智能表格', key: 'IFTableNormal' },
+					{ name: '普通表格', key: 'IFSmartTable' },
 				]
 			},
 			{
@@ -84,9 +84,10 @@ class ComponentSider extends Component {
 
 		let siderMenus = siderMenuArray.map((subMenu, index) => {
 			let menuItems = subMenu.children.map((menuItem, idx) => {
+				let key = menuItem.key ? menuItem.key : `submenu-${idx}`;
 				return (
 					<Menu.Item 
-						key={`submenu-${idx}`}
+						key={key}
 						>
 						<Icon type={menuItem.icon} />
 						{menuItem.name}

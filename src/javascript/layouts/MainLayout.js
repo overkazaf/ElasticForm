@@ -4,72 +4,42 @@ import Immutable from 'immutable';
 import MenuBar from './MenuBar';
 import ComponentSider from './ComponentSider';
 import DesignView from './DesignView';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import DevTools from '../components/DevTools/index.js';
+import { 
+  Layout, 
+  Menu, 
+  Breadcrumb, 
+  Icon,
+  Input,
+  Table,
+} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
+const Search = Input.Search;
+
+
+const dataSource = [{
+  key: '1',
+  name: '表名',
+  value: 'IntelliForm-0001',
+}, {
+  key: '2',
+  name: '描述',
+  value: '测试用表'
+}];
+
+const columns = [{
+  title: '属性',
+  dataIndex: 'name',
+  key: 'name',
+}, {
+  title: '值',
+  dataIndex: 'value',
+  key: 'value',
+}];
+
 
 class MainLayout extends Component {
-  
-  static getInitialState() {
-    let layouts = [
-      {
-        grid: {i: 'g1', x: 0, y: 0, w: 3, h: 1},
-        component: {
-          type: 'IFInputNumber', 
-          props: { 
-            id: 1, 
-            defaultValue: 0,
-            visibility: true,
-            locked: false,
-          },
-        }
-      },
-      {
-        grid: {i: 'g2', x: 3, y: 0, w: 3, h: 1},
-        component: {
-          type: 'IFRangePicker', 
-          props: { 
-            visibility: true,
-            locked: false,
-          },
-        }
-      },
-      {
-        grid: {i: 'g3', x: 8, y: 0, w: 3, h: 1},
-        component: {
-          type: 'IFInputNumber', 
-          props: { 
-            id: 3, 
-            defaultValue: 1,
-            visibility: true,
-            locked: false,
-          },
-        }
-      }
-    ];
-    let data = {
-      panes: [
-        {
-          name: 'form1', 
-          key: 'form1',
-          title: '测试表单一',
-          closable: false,
-          layouts,
-        }
-      ]
-    };
-
-    this.props.dispatch({
-      type: 'UPDATE_DATA',
-      payload: data,
-    });
-
-    return Immutable.fromJS({
-      collapsed: false,
-      mode: 'inline',
-      data,
-    });
-  }
 
   onCollapse = (collapsed) => {
     this.props.dispatch({
@@ -81,11 +51,12 @@ class MainLayout extends Component {
     });
   }
 
-  handleMenuClick = ({ key }) => {
+  handleMenuClick = (obj) => {
+    console.log('obj in HandleMenuClick', obj.key);
     this.props.dispatch({
       type: 'ADD_COMPONENT',
       payload: {
-        id: key,
+        id: obj.key,
       }
     });
   }
@@ -95,6 +66,7 @@ class MainLayout extends Component {
     let {
       collapsed,
       data,
+      dispatch,
     } = this.props;
 
     console.log('this.props', this.props);
@@ -121,17 +93,33 @@ class MainLayout extends Component {
           <Content style={{ margin: '2px' }}>
             <div style={{ padding: '5px', background: '#fff', minHeight: 420 }}>
               <DesignView 
+                dispatch={dispatch}
                 data={data}
               />
             </div>
             <Footer style={{ textAlign: 'center' }}>
-              StatusBar: IntelliForm ©2017 Created by John
+              StatusBar: IntelliForm ©2017 Created by overkazaf
             </Footer>
           </Content>
           <Sider
               collapsible
+              width={300}
+              style={{ background: '#fff' }}
             >
-              Content
+            <div style={{ positon: 'relative', width: '240px', padding: '5px' }}>
+                <Search
+                  placeholder="input search text"
+                  style={{ width: 160 }}
+                  onSearch={value => console.log(value)}
+                />
+              <div style={{positon: 'absolute', left: 0, bottom: 0}}>
+                <Table 
+                  size="small"
+                  pagination={false}
+                  dataSource={dataSource} 
+                  columns={columns} />
+                </div>
+            </div>
           </Sider>
         </Layout>
       </Layout>

@@ -87,21 +87,24 @@ class DesignView extends Component {
   render() {
     let that = this;
     let {
-      panes,
-    } = this.props.data;
+      data,
+      dispatch,
+    } = this.props;
+
+    let { panes } = data;
 
     return (
       <div>
         <style dangerouslySetInnerHTML={{ __html: designViewStyle}} />
         <Tabs
-          onChange={this.onChange}
+          onChange={this.onChange.bind(this)}
           activeKey={this.state.activeKey}
           type="editable-card"
           onEdit={this.onEdit}
         >
           {panes && panes.map(pane => 
               <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-                {LayoutEngine.renderLayout(pane)}
+                {LayoutEngine.renderLayout(pane, dispatch)}
                 { /* that._renderDesignView(that.getTmpData()) */ }
               </TabPane>)}
         </Tabs>

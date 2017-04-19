@@ -22,7 +22,7 @@ let ResponsiveReactGridLayout = ReactGridLayout.Responsive;
 
 export default
 class LayoutEngine {
-	static renderLayout(page) {
+	static renderLayout(page = {}, dispatch) {
 		let {
 			name,
 			title,
@@ -37,17 +37,22 @@ class LayoutEngine {
 	        	<h1 style={{textAlign: 'center', color: '#fff'}}>{title}</h1>
 	        </Header>
 	        <Content>
-	        	{ LayoutEngine.execRender(layouts) }
+	        	{ LayoutEngine.execRender(layouts, dispatch) }
 	        </Content>
         </Layout>
       </div>
 		)
 	}
 
-	static execRender(layouts = []) {
+	static execRender(layouts = [], dispatch = () => {}) {
 		let gridLayout = layouts.map(layout => layout.grid);
 
-		console.log('gridLayout', gridLayout);
+		let handleLayoutChange = (layouts) => {
+			dispatch({
+				type: 'UPDATE_LAYOUTS',
+				payload: layouts,
+			})
+		}
 
 		return (
 			<ReactGridLayout 
@@ -55,6 +60,7 @@ class LayoutEngine {
 				layout={gridLayout}
 				rowHeight={40} 
 				width={960}
+				onLayoutChange={handleLayoutChange}
 			>
 	      {
 	      	layouts.map((item, index) => {
