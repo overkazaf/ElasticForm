@@ -99,7 +99,7 @@ class DesignView extends Component {
           type="editable-card"
           onEdit={this.onEdit}
         >
-          {panes.map(pane => 
+          {panes && panes.map(pane => 
               <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
                 {LayoutEngine.renderLayout(pane)}
                 { /* that._renderDesignView(that.getTmpData()) */ }

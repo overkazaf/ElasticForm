@@ -9,26 +9,8 @@ const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
 class MainLayout extends Component {
-
+  
   static getInitialState() {
-    return Immutable.fromJS({
-      collapsed: false,
-      mode: 'inline',
-      data: null,
-    });
-  }
-
-  onCollapse = (collapsed) => {
-    this.props.dispatch({
-      type: 'UPDATE_COLLAPSED',
-      payload: {
-        collapsed,
-        mode: collapsed ? 'vertical' : 'inline',
-      }
-    });
-  }
-
-  render() {
     let layouts = [
       {
         grid: {i: 'g1', x: 0, y: 0, w: 3, h: 1},
@@ -77,8 +59,42 @@ class MainLayout extends Component {
       ]
     };
 
+    this.props.dispatch({
+      type: 'UPDATE_DATA',
+      payload: data,
+    });
+
+    return Immutable.fromJS({
+      collapsed: false,
+      mode: 'inline',
+      data,
+    });
+  }
+
+  onCollapse = (collapsed) => {
+    this.props.dispatch({
+      type: 'UPDATE_COLLAPSED',
+      payload: {
+        collapsed,
+        mode: collapsed ? 'vertical' : 'inline',
+      }
+    });
+  }
+
+  handleMenuClick = ({ key }) => {
+    this.props.dispatch({
+      type: 'ADD_COMPONENT',
+      payload: {
+        id: key,
+      }
+    });
+  }
+
+  render() {
+
     let {
       collapsed,
+      data,
     } = this.props;
 
     console.log('this.props', this.props);
@@ -98,7 +114,7 @@ class MainLayout extends Component {
         >
           <div className="logo" />
           <ComponentSider 
-            handleMenuClick={handleMenuClick}
+            handleMenuClick={this.handleMenuClick}
           />
         </Sider>
         <Layout>
@@ -124,14 +140,8 @@ class MainLayout extends Component {
   }
 }
 
-function handleMenuClick({ key }) {
-  console.log(key);
-
-}
-
 const mapStateToProps = ($$state, ownProps) => {
   return $$state.get('mainLayoutReducer').toJS();
 }
 
-export default MainLayout;
-//export default connect(mapStateToProps)(MainLayout);
+export default connect(mapStateToProps)(MainLayout);

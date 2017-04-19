@@ -29,17 +29,13 @@ class MainPage extends Component {
 
     return Immutable.fromJS({ 
       isServer, 
-      counter: 0,
-      stars: 0,
     });
   }
 
   render() {
 
     let { 
-      counter,
       isServer,
-      stars,
     } = this.props;
 
     return (

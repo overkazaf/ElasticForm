@@ -6,6 +6,7 @@ import {
 
 const SubMenu = Menu.SubMenu;
 
+export default
 class ComponentSider extends Component {
 
 	handleMenuClick(...args) {
