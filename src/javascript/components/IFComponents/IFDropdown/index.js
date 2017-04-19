@@ -43,7 +43,7 @@ class IFDropdown extends IFComponentBase {
 		  	defaultSelectedKeys={['1']}
 		  	onClick={this.handleMenuClick.bind(this)}
 		  >
-		    {rawOption.baseData.map((item, index) => {
+		    {rawOption.baseData && rawOption.baseData.map((item, index) => {
 		    	return (
 		    		<Menu.Item key={index} value={item.value}>{item.label}</Menu.Item>
 		    	)

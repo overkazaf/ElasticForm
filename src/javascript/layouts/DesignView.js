@@ -6,6 +6,8 @@ import ComponentFactory from '../factory/ComponentFactory.js';
 import LayoutEngine from '../engine/LayoutEngine.js';
 import mock from '../mock/test.js';
 
+import designViewStyle from './DesignView.scss';
+
 export default
 class DesignView extends Component {
   constructor(props) {
@@ -13,7 +15,7 @@ class DesignView extends Component {
     this.newTabIndex = 0;
 
     const panes = [];
-    
+
     this.state = {
       activeKey: 'pane1',
       panes,
@@ -89,18 +91,21 @@ class DesignView extends Component {
     } = this.props.data;
 
     return (
-      <Tabs
-        onChange={this.onChange}
-        activeKey={this.state.activeKey}
-        type="editable-card"
-        onEdit={this.onEdit}
-      >
-        {panes.map(pane => 
-            <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-              {LayoutEngine.renderLayout(pane)}
-              { /* that._renderDesignView(that.getTmpData()) */ }
-            </TabPane>)}
-      </Tabs>
+      <div>
+        <style dangerouslySetInnerHTML={{ __html: designViewStyle}} />
+        <Tabs
+          onChange={this.onChange}
+          activeKey={this.state.activeKey}
+          type="editable-card"
+          onEdit={this.onEdit}
+        >
+          {panes.map(pane => 
+              <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+                {LayoutEngine.renderLayout(pane)}
+                { /* that._renderDesignView(that.getTmpData()) */ }
+              </TabPane>)}
+        </Tabs>
+      </div>
     );
   }
 }

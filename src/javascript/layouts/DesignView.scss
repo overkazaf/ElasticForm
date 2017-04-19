@@ -1,0 +1,33 @@
+.form-view {
+	cursor: pointer;
+}
+
+.if-row-component {
+	padding: 5px;
+
+	.if-col-component {
+		position: relative;
+		box-sizing: border-box;
+
+		&:hover {
+			background: #ddd;
+			opacity: 0.6;
+			border: 2px dashed #09f;
+
+			.tools {
+				display: block;
+			}
+		}
+
+		.tools {
+			position: absolute;
+			right: 10px;
+			top: 0;
+			width: 120px;
+			height: 20px;
+			color: #fff;
+			background: #999;
+			display: none;
+		}
+	}
+}

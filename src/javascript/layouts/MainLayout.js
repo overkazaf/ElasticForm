@@ -33,11 +33,30 @@ MainLayout extends Component {
           closable: false,
           layouts: [
             {
-              name: 'r1-c4',
+              name: 'r1-c3',
               components: [
-                {type: 'IFInputNumber', props: { id: 1}},
-                {type: 'IFRangePicker', props: { id: 2 }},
-                {type: 'IFDropdown', props: { id: 3 }},
+                {
+                  type: 'IFInputNumber', 
+                  props: { 
+                    id: 1, defaultValue: 0,
+                    visibility: true,
+                    locked: false,
+                  },
+                },
+                {
+                  type: 'IFRangePicker', 
+                  props: { 
+                    id: 2, 
+                  },
+                },
+                {
+                    type: 'IFInputNumber', 
+                    props: { 
+                      id: 3, defaultValue: 0,
+                      visibility: true,
+                      locked: false,
+                    },
+                },
               ]
             }
           ]
@@ -69,8 +88,8 @@ MainLayout extends Component {
           <ComponentSider />
         </Sider>
         <Layout>
-          <Content style={{ margin: '10px' }}>
-            <div style={{ padding: 4, background: '#fff', minHeight: 420 }}>
+          <Content style={{ margin: '2px' }}>
+            <div style={{ padding: '5px', background: '#fff', minHeight: 420 }}>
               <DesignView 
                 data={data}
               />
