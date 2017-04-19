@@ -6,14 +6,10 @@ import {
 
 const SubMenu = Menu.SubMenu;
 
-export default
 class ComponentSider extends Component {
-	state = {
-		mode: 'inline',
-	};
 
 	handleMenuClick(...args) {
-		console.log(...args);
+		this.props.handleMenuClick && this.props.handleMenuClick(...args);
 	}
 
 	render() {
@@ -21,18 +17,6 @@ class ComponentSider extends Component {
 			this.handleMenuClick(...args);
 		};
 		const siderMenuArray = [
-			{
-				name: '页面布局',
-				icon: 'bars',
-				children: [
-					{ name: '1-1-1-1' },
-					{ name: '1-1-1' },
-					{ name: '1-1' },
-					{ name: '1' },
-					{ name: '1-2' },
-					{ name: '2-1' }
-				]
-			},
 			{
 				name: '常用组件',
 				icon: 'rocket',
@@ -112,7 +96,6 @@ class ComponentSider extends Component {
 			return (
 				<SubMenu
 	              key={`menu-${index}`}
-	              onTitleClick={handleMenuClick}
 	              title={<span><Icon type={subMenu.icon} /><span className="nav-text">{subMenu.name}</span></span>}
 	            >
 	              {menuItems}
@@ -124,7 +107,7 @@ class ComponentSider extends Component {
 			<Menu 
 				onClick={handleMenuClick}
 				theme="dark" 
-				mode={this.state.mode}>
+				mode={"inline"}>
 	            {siderMenus}
 	        </Menu>
 		)

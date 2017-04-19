@@ -17,7 +17,7 @@ class DesignView extends Component {
     const panes = [];
 
     this.state = {
-      activeKey: 'pane1',
+      activeKey: 'g1',
       panes,
     };
   }

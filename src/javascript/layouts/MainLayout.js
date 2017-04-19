@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
+import Immutable from 'immutable';
 import MenuBar from './MenuBar';
 import ComponentSider from './ComponentSider';
 import DesignView from './DesignView';
@@ -6,70 +8,80 @@ import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
-export default class 
-MainLayout extends Component {
+class MainLayout extends Component {
 
-  state = {
-    collapsed: false,
-    mode: 'inline',
-  };
+  static getInitialState() {
+    return Immutable.fromJS({
+      collapsed: false,
+      mode: 'inline',
+      data: null,
+    });
+  }
 
   onCollapse = (collapsed) => {
-    console.log(collapsed);
-    this.setState({
-      collapsed,
-      mode: collapsed ? 'vertical' : 'inline',
+    this.props.dispatch({
+      type: 'UPDATE_COLLAPSED',
+      payload: {
+        collapsed,
+        mode: collapsed ? 'vertical' : 'inline',
+      }
     });
   }
 
   render() {
-
+    let layouts = [
+      {
+        grid: {i: 'g1', x: 0, y: 0, w: 3, h: 1},
+        component: {
+          type: 'IFInputNumber', 
+          props: { 
+            id: 1, 
+            defaultValue: 0,
+            visibility: true,
+            locked: false,
+          },
+        }
+      },
+      {
+        grid: {i: 'g2', x: 3, y: 0, w: 3, h: 1},
+        component: {
+          type: 'IFRangePicker', 
+          props: { 
+            visibility: true,
+            locked: false,
+          },
+        }
+      },
+      {
+        grid: {i: 'g3', x: 8, y: 0, w: 3, h: 1},
+        component: {
+          type: 'IFInputNumber', 
+          props: { 
+            id: 3, 
+            defaultValue: 1,
+            visibility: true,
+            locked: false,
+          },
+        }
+      }
+    ];
     let data = {
       panes: [
         {
-          name: 'pane1', 
-          key: 'pane1',
-          title: 'Tab1',
+          name: 'form1', 
+          key: 'form1',
+          title: '测试表单一',
           closable: false,
-          layouts: [
-            {
-              name: 'r1-c3',
-              components: [
-                {
-                  type: 'IFInputNumber', 
-                  props: { 
-                    id: 1, defaultValue: 0,
-                    visibility: true,
-                    locked: false,
-                  },
-                },
-                {
-                  type: 'IFRangePicker', 
-                  props: { 
-                    id: 2, 
-                  },
-                },
-                {
-                    type: 'IFInputNumber', 
-                    props: { 
-                      id: 3, defaultValue: 0,
-                      visibility: true,
-                      locked: false,
-                    },
-                },
-              ]
-            }
-          ]
-        },
-        {
-          name: 'pane2',
-          key: 'pane2',
-          title: 'Tab2',
-          closable: true,
-          layouts: []
+          layouts,
         }
       ]
     };
+
+    let {
+      collapsed,
+    } = this.props;
+
+    console.log('this.props', this.props);
 
     return (
       <Layout>
@@ -80,12 +92,14 @@ MainLayout extends Component {
 
         <Sider
           collapsible
-          collapsed={this.state.collapsed}
+          collapsed={collapsed}
           onCollapse={this.onCollapse}
           style={{ overflow: 'auto' }}
         >
           <div className="logo" />
-          <ComponentSider />
+          <ComponentSider 
+            handleMenuClick={handleMenuClick}
+          />
         </Sider>
         <Layout>
           <Content style={{ margin: '2px' }}>
@@ -109,3 +123,15 @@ MainLayout extends Component {
     )
   }
 }
+
+function handleMenuClick({ key }) {
+  console.log(key);
+
+}
+
+const mapStateToProps = ($$state, ownProps) => {
+  return $$state.get('mainLayoutReducer').toJS();
+}
+
+export default MainLayout;
+//export default connect(mapStateToProps)(MainLayout);

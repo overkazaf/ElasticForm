@@ -29,9 +29,6 @@ const AntdComponents = {
 	IFSmartTable: (option) => <IFSmartTable ref={option.id} option={option} />,
 }
 
-
-
-
 export default
 class ComponentFactory {
 	static create(type, option) {

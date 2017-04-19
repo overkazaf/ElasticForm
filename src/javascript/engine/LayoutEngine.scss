@@ -1,16 +1,47 @@
+.layout {
+	position: relative;
+}
+
 .draggable-item {
-	background: #e5e5e5;
-	transition: all .3s ease-in-out;
+	padding: 5px;
+	background: #f8f8f8;
 
 	&:hover {
 		background: #d8d8d8;
+
+		.ctrl {
+			display: block;
+			opacity: 0.6;
+		}
+	}
+
+	.ctrl {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 56px;
+		height: 20px;
+		display: none;
+		z-index: 2;
+		transition: all .3s ease-in-out;
+		opacity: 0.4;
+		background: #a8a8a8;
+
+		i {
+			margin-left: 5px;
+			margin-right: 2px;
+
+			&:hover {
+				background: #d5d5d5;
+			}
+		}
 	}
 }
 
-.resize-handler {
+.react-resizable-handle {
 	position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     bottom: 0;
     right: 0;
     background: #ddd;
