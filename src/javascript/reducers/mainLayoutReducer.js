@@ -52,6 +52,7 @@ let data = {
 const $$initState = Immutable.fromJS({
     collapsed: false,
     mode: 'inline',
+    eidtModalVisible: false,
     data,
 });
 
@@ -59,8 +60,6 @@ export const mainLayoutReducer = (state = $$initState, action) => {
 	console.log('action in mainLayoutReducer', action.type);
     switch (action.type) {
         case 'ADD_COMPONENT': {
-
-        	console.log('ADD_COMPONENT ==> id', action.payload.id);
 
         	let $$newList = state.getIn(['data', 'panes', 0, 'layouts']);
         		
@@ -96,6 +95,13 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         	});
 
         	return state.setIn(['data', 'panes', 0, 'layouts'], $$newLayout);
+        }
+        case 'EDIT_COMPONENT': {
+        	console.log('editcomponent', action.payload);
+        	return state;
+        }
+        case 'SET_MODAL_VISIBILITY': {
+        	return state.set('editModalVisible', action.payload);
         }
         default: return state;
     }

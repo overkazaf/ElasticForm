@@ -3,6 +3,8 @@ import {
 	Col,
 	Layout,
 	Icon,
+	Button,
+	Popconfirm,
 } from 'antd';
 
 let {
@@ -39,6 +41,9 @@ class LayoutEngine {
 	        <Content>
 	        	{ LayoutEngine.execRender(layouts, dispatch) }
 	        </Content>
+	        <Footer style={{ background: '#e7e7e7'}}>
+	        	<Button type="primary">Submit</Button>
+	        </Footer>
         </Layout>
       </div>
 		)
@@ -52,7 +57,27 @@ class LayoutEngine {
 				type: 'UPDATE_LAYOUTS',
 				payload: layouts,
 			})
-		}
+		};
+
+		let showEditModal = (id, component) => {
+			dispatch({
+				type: 'SET_MODAL_VISIBILITY',
+				payload: {
+					id,
+					component,
+				},
+			});
+		};
+
+		let removeComponent = (id) => {
+			dispatch({
+				type: 'REMOVE_COMPONENT',
+				payload: {
+					id,
+				},
+			})
+		};
+
 
 		return (
 			<ReactGridLayout 
@@ -60,6 +85,7 @@ class LayoutEngine {
 				layout={gridLayout}
 				rowHeight={40} 
 				width={960}
+				height={500}
 				onLayoutChange={handleLayoutChange}
 			>
 	      {
@@ -72,12 +98,27 @@ class LayoutEngine {
 	      		let {
 	      			type,
 	      			props,
+	      			id,
 	      		} = component;
 
 	      		return (
 	      			<div key={grid.i} className="draggable-item">
 			          <span className="ctrl">
-			        		<i><Icon type="edit" /></i><i><Icon type="delete" /></i>
+			        		<i>
+			        			<Icon type="edit" 
+			        				onClick={showEditModal.bind(this, id, component)}
+			        			/>
+			        		</i>
+			        		<i>
+			        			<Popconfirm 
+			        				title="Are you sure to delete this component？" 
+			        				okText="Yes" 
+			        				cancelText="No"
+			        				onConfirm={removeComponent.bind(this, id)}
+			        			>
+								    <Icon type="delete" />
+								</Popconfirm>
+			        		</i>
 			        	</span>
 			        	<span className="if-component-grid">
 			        		{ ComponentFactory.create(type, props) }

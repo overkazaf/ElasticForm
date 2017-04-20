@@ -12,20 +12,42 @@ import {
   Icon,
   Input,
   Table,
+  Modal,
+  Tabs,
 } from 'antd';
+
+import ConfigTable from '../components/Config/ConfigTable.js';
+
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 const Search = Input.Search;
+const TabPane = Tabs.TabPane;
 
 
 const dataSource = [{
   key: '1',
   name: '表名',
   value: 'IntelliForm-0001',
-}, {
+},
+{
   key: '2',
+  name: '标题',
+  value: '测试表一',
+},
+{
+  key: '3',
   name: '描述',
-  value: '测试用表'
+  value: '这一是个测试用表'
+},
+{
+  key: '4',
+  name: '基础资料',
+  value: 'NIL',
+},
+{
+  key: '5',
+  name: '事件',
+  value: 'EVENT_LIST:xxxyyy',
 }];
 
 const columns = [{
@@ -61,12 +83,27 @@ class MainLayout extends Component {
     });
   }
 
+  handleCancel() {
+    this.props.dispatch({
+      type: 'SET_MODAL_VISIBILITY',
+      payload: false,
+    });
+  }
+
+  handleOk() {
+    this.props.dispatch({
+      type: 'SET_MODAL_VISIBILITY',
+      payload: false,
+    });
+  }
+
   render() {
 
     let {
       collapsed,
       data,
       dispatch,
+      editModalVisible,
     } = this.props;
 
     console.log('this.props', this.props);
@@ -91,7 +128,7 @@ class MainLayout extends Component {
         </Sider>
         <Layout>
           <Content style={{ margin: '2px' }}>
-            <div style={{ padding: '5px', background: '#fff', minHeight: 420 }}>
+            <div style={{ padding: '5px', background: '#fff', minHeight: 520 }}>
               <DesignView 
                 dispatch={dispatch}
                 data={data}
@@ -103,8 +140,7 @@ class MainLayout extends Component {
           </Content>
           <Sider
               collapsible
-              width={300}
-              style={{ background: '#fff' }}
+              width={240}
             >
             <div style={{ positon: 'relative', width: '240px', padding: '5px' }}>
                 <Search
@@ -112,9 +148,8 @@ class MainLayout extends Component {
                   style={{ width: 160 }}
                   onSearch={value => console.log(value)}
                 />
-              <div style={{positon: 'absolute', left: 0, bottom: 0}}>
+              <div style={{position: 'absolute', background: '#999', width: '100%',left: 0, bottom: '100px'}}>
                 <Table 
-                  size="small"
                   pagination={false}
                   dataSource={dataSource} 
                   columns={columns} />
@@ -123,6 +158,14 @@ class MainLayout extends Component {
           </Sider>
         </Layout>
       </Layout>
+
+        <Modal title="Modal" visible={editModalVisible}
+          onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
+          okText="OK" cancelText="Cancel"
+          width="750"
+        >
+          <ConfigTable config={{}}/>
+        </Modal>
       </Layout>
     )
   }
