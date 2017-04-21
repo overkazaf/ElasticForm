@@ -18,7 +18,8 @@ let layouts = [
     grid: {i: 'g2', x: 3, y: 0, w: 3, h: 1},
     component: {
       type: 'IFRangePicker', 
-      props: { 
+      props: {
+      	id: 2,
         visibility: true,
         locked: false,
       },
@@ -52,7 +53,7 @@ let data = {
 const $$initState = Immutable.fromJS({
     collapsed: false,
     mode: 'inline',
-    eidtModalVisible: false,
+    editModalVisible: false,
     data,
 });
 
@@ -68,6 +69,7 @@ export const mainLayoutReducer = (state = $$initState, action) => {
 			    component: {
 			      type: 'IFInputNumber', 
 			      props: { 
+			      	id: _.uniqueId('component_'),
 			        visibility: true,
 			        locked: false,
 			      },
@@ -89,18 +91,31 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         	let $$layouts = state.getIn(['data', 'panes', 0, 'layouts']);
         	let $$newLayout = $$layouts.map((item, index) => {
         		let newItem = item.set('grid', Immutable.fromJS(action.payload[index]));
-
-        		console.log('newItem', newItem.toJS());
         		return newItem;
         	});
 
         	return state.setIn(['data', 'panes', 0, 'layouts'], $$newLayout);
         }
         case 'EDIT_COMPONENT': {
-        	console.log('editcomponent', action.payload);
         	return state;
         }
+        case 'REMOVE_COMPONENT': {
+        	console.log('action.payload in REMOVE_COMPONENT', action.payload);
+        	let $$layouts = state.getIn(['data', 'panes', 0, 'layouts']);
+        	let index = $$layouts.findIndex((item) => {
+        		let itemId = item.getIn(['component', 'props', 'id']);
+        		console.log('itemId', itemId);
+        		console.log('action.payload.id', action.payload.id);
+        		return itemId == action.payload.id;
+        	});
+
+        	console.log('deleting index:', index, $$layouts.get(index).toJS());
+        	let $$newLayout = $$layouts.delete(index);
+
+        	return state.setIn(['data', 'panes', 0, 'layouts'], $$newLayout);
+        }
         case 'SET_MODAL_VISIBILITY': {
+          console.log('setModalVisibility', action.payload);
         	return state.set('editModalVisible', action.payload);
         }
         default: return state;

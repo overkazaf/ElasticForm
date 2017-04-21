@@ -3,17 +3,19 @@ import {
     Tabs,
     Switch,
     Form,
-    Layout,
+    Row,
+    Col,
+    Collapse,
+    Select,
+    Input,
+    Icon,
 } from 'antd';
 import IFTransfer from './index.js';
 
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
+const Panel = Collapse.Panel;
 
-let {
-    Row,
-    Col,
-} = Layout;
 
 export default
 class ConfigTable extends Component {
@@ -22,20 +24,54 @@ class ConfigTable extends Component {
         return (
           <Tabs type="card">
             <TabPane tab="基础设置" key="1">
-                <Row>
-                    <Col span={4}>
-                    可视性： <Switch defaultChecked={true} />
-                    </Col>
-                    <Col span={4}>
-                    锁定性：<Switch defaultChecked={false} />
-                    </Col>
-                    <Col span={4}>
-                    必录：<Switch defaultChecked={false} />
-                    </Col>
-                    <Col span={4}>
-                    自动汇总：<Switch defaultChecked={false} />
-                    </Col>
-                </Row>
+                <Collapse defaultActiveKey={['1']}>
+                    <Panel header="值" key="1">
+                    <Form>
+                      <FormItem
+                      >
+                        <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="默认值" />
+                      </FormItem>
+                      <FormItem
+                      >
+                        <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="前缀" />
+                      </FormItem>
+                      <FormItem
+                      >
+                        <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="后缀" />
+                      </FormItem>
+                    </Form>
+                    </Panel>
+                    <Panel header="组件" key="2">
+                      <Row>
+                        <Col span={6}>
+                            可视性： <Switch defaultChecked={true} />
+                            </Col>
+                            <Col span={6}>
+                            锁定性：<Switch defaultChecked={false} />
+                            </Col>
+                            <Col span={6}>
+                            必录：<Switch defaultChecked={false} />
+                            </Col>
+                            <Col span={6}>
+                            自动汇总：<Switch defaultChecked={false} />
+                            </Col>
+                        </Row>
+                    </Panel>
+                    <Panel header="样式" key="3">
+                      <Form>
+                      <FormItem
+                        label="主题"
+                        labelCol={{ span: 4 }}
+                        wrapperCol={{ span: 8 }}
+                      >
+                        <Select placeholder="Select a option and change input text above">
+                          <Option value="male">male</Option>
+                          <Option value="female">female</Option>
+                        </Select>
+                      </FormItem>
+                      </Form>
+                    </Panel>
+                  </Collapse>
               
             </TabPane>
             <TabPane tab="数据源" key="2">

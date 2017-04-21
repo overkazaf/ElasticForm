@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
-import MenuBar from './MenuBar';
+import MenuBar from './MenuBar/index.js';
 import ComponentSider from './ComponentSider';
 import DesignView from './DesignView';
 import DevTools from '../components/DevTools/index.js';
@@ -14,6 +14,7 @@ import {
   Table,
   Modal,
   Tabs,
+  Tree,
 } from 'antd';
 
 import ConfigTable from '../components/Config/ConfigTable.js';
@@ -22,6 +23,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 const Search = Input.Search;
 const TabPane = Tabs.TabPane;
+const TreeNode = Tree.TreeNode;
 
 
 const dataSource = [{
@@ -84,6 +86,10 @@ class MainLayout extends Component {
   }
 
   handleCancel() {
+    this._dismissModal();
+  }
+
+  _dismissModal() {
     this.props.dispatch({
       type: 'SET_MODAL_VISIBILITY',
       payload: false,
@@ -91,10 +97,7 @@ class MainLayout extends Component {
   }
 
   handleOk() {
-    this.props.dispatch({
-      type: 'SET_MODAL_VISIBILITY',
-      payload: false,
-    });
+    this._dismissModal();
   }
 
   render() {
@@ -143,11 +146,34 @@ class MainLayout extends Component {
               width={240}
             >
             <div style={{ positon: 'relative', width: '240px', padding: '5px' }}>
-                <Search
-                  placeholder="input search text"
-                  style={{ width: 160 }}
-                  onSearch={value => console.log(value)}
-                />
+                <div>
+                  <Search
+                    placeholder="input search text"
+                    style={{ width: 160 }}
+                    onSearch={value => console.log(value)}
+                  />
+
+                  <Tree
+                    showLine
+                    defaultExpandedKeys={['0-0-0']}
+                    onSelect={this.onSelect}
+                  >
+                    <TreeNode title="parent 1" key="0-0">
+                      <TreeNode title="parent 1-0" key="0-0-0">
+                        <TreeNode title="leaf" key="0-0-0-0" />
+                        <TreeNode title="leaf" key="0-0-0-1" />
+                        <TreeNode title="leaf" key="0-0-0-2" />
+                      </TreeNode>
+                      <TreeNode title="parent 1-1" key="0-0-1">
+                        <TreeNode title="leaf" key="0-0-1-0" />
+                      </TreeNode>
+                      <TreeNode title="parent 1-2" key="0-0-2">
+                        <TreeNode title="leaf" key="0-0-2-0" />
+                        <TreeNode title="leaf" key="0-0-2-1" />
+                      </TreeNode>
+                    </TreeNode>
+                  </Tree>
+                </div>
               <div style={{position: 'absolute', background: '#999', width: '100%',left: 0, bottom: '100px'}}>
                 <Table 
                   pagination={false}
@@ -159,7 +185,7 @@ class MainLayout extends Component {
         </Layout>
       </Layout>
 
-        <Modal title="Modal" visible={editModalVisible}
+        <Modal title="参数配置" visible={true}
           onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
           okText="OK" cancelText="Cancel"
           width="750"

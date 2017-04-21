@@ -62,10 +62,7 @@ class LayoutEngine {
 		let showEditModal = (id, component) => {
 			dispatch({
 				type: 'SET_MODAL_VISIBILITY',
-				payload: {
-					id,
-					component,
-				},
+				payload: true,
 			});
 		};
 
@@ -106,7 +103,7 @@ class LayoutEngine {
 			          <span className="ctrl">
 			        		<i>
 			        			<Icon type="edit" 
-			        				onClick={showEditModal.bind(this, id, component)}
+			        				onClick={showEditModal.bind(this, props.id, component)}
 			        			/>
 			        		</i>
 			        		<i>
@@ -114,7 +111,7 @@ class LayoutEngine {
 			        				title="Are you sure to delete this component？" 
 			        				okText="Yes" 
 			        				cancelText="No"
-			        				onConfirm={removeComponent.bind(this, id)}
+			        				onConfirm={removeComponent.bind(this, props.id)}
 			        			>
 								    <Icon type="delete" />
 								</Popconfirm>
