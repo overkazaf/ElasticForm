@@ -33,19 +33,19 @@ class LayoutEngine {
 
 		return (
 			<div className="form-view">
-      	<style dangerouslySetInnerHTML={{ __html: layoutStyle}} />
-	      <Layout>
-	        <Header>
-	        	<h1 style={{textAlign: 'center', color: '#fff'}}>{title}</h1>
-	        </Header>
-	        <Content>
-	        	{ LayoutEngine.execRender(layouts, dispatch) }
-	        </Content>
-	        <Footer style={{ background: '#e7e7e7'}}>
-	        	<Button type="primary">Submit</Button>
-	        </Footer>
-        </Layout>
-      </div>
+				<style dangerouslySetInnerHTML={{ __html: layoutStyle}} />
+				<Layout>
+				<Header>
+					<h1 style={{textAlign: 'center', color: '#fff'}}>{title}</h1>
+				</Header>
+				<Content>
+					{ LayoutEngine.execRender(layouts, dispatch) }
+				</Content>
+				<Footer style={{ background: '#e7e7e7'}}>
+					<Button type="primary">Submit</Button>
+				</Footer>
+				</Layout>
+			</div>
 		)
 	}
 

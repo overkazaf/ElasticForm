@@ -109,11 +109,34 @@ class MainLayout extends Component {
       editModalVisible,
     } = this.props;
 
-    console.log('this.props', this.props);
+
+    let mainHeaderStyleObj = { 
+      background: 'rgba(0,0,0,0.75)', 
+      padding: 0,
+      height: '32px',
+      lineHeight: '32px', 
+    };
+
+    let tableContainerStyleObj = {
+      position: 'absolute', 
+      padding: '5px', 
+      background: '#f6f6f6', 
+      width: '100%',
+      left: 0, 
+      bottom: '100px',
+      border: '1px solid #aaa',
+    };
+
+    let viewContainerStyleObj = { 
+      margin: 2, 
+      maxWidth: 980, 
+      minHeight: 560, 
+      overflow: 'auto',
+    };
 
     return (
       <Layout>
-       <Header style={{ background: 'rgba(0,0,0,0.75)', padding: 0 }} >
+       <Header style={mainHeaderStyleObj} >
         <MenuBar />
        </Header>
        <Layout style={{ height: '100vh' }}>
@@ -130,8 +153,8 @@ class MainLayout extends Component {
           />
         </Sider>
         <Layout>
-          <Content style={{ margin: '2px' }}>
-            <div style={{ padding: '5px', background: '#fff', minHeight: 520 }}>
+          <Content style={viewContainerStyleObj}>
+            <div style={{ padding: '5px', background: '#fff'}}>
               <DesignView 
                 dispatch={dispatch}
                 data={data}
@@ -144,12 +167,13 @@ class MainLayout extends Component {
           <Sider
               collapsible
               width={240}
+              style={{ backgroundColor: '#f9f9f9' }}
             >
-            <div style={{ positon: 'relative', width: '240px', padding: '5px' }}>
+            <div style={{ positon: 'relative', width: '240px', maxHeight: '320px', overflow: 'auto', padding: '5px', border: '1px solid #aaa' }}>
                 <div>
                   <Search
-                    placeholder="input search text"
-                    style={{ width: 160 }}
+                    placeholder="search now"
+                    style={{ width: 220 }}
                     onSearch={value => console.log(value)}
                   />
 
@@ -174,7 +198,7 @@ class MainLayout extends Component {
                     </TreeNode>
                   </Tree>
                 </div>
-              <div style={{position: 'absolute', background: '#999', width: '100%',left: 0, bottom: '100px'}}>
+              <div style={tableContainerStyleObj}>
                 <Table 
                   pagination={false}
                   dataSource={dataSource} 
@@ -187,7 +211,7 @@ class MainLayout extends Component {
 
         <Modal title="参数配置" visible={true}
           onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
-          okText="OK" cancelText="Cancel"
+          okText="保存设置" cancelText="取消"
           width="750"
         >
           <ConfigTable config={{}}/>
