@@ -146,6 +146,7 @@ class MainLayout extends Component {
           collapsed={collapsed}
           onCollapse={this.onCollapse}
           style={{ overflow: 'auto' }}
+          collapsedWidth={0}
         >
           <div className="logo" />
           <ComponentSider 
@@ -182,19 +183,18 @@ class MainLayout extends Component {
                     defaultExpandedKeys={['0-0-0']}
                     onSelect={this.onSelect}
                   >
-                    <TreeNode title="parent 1" key="0-0">
-                      <TreeNode title="parent 1-0" key="0-0-0">
-                        <TreeNode title="leaf" key="0-0-0-0" />
-                        <TreeNode title="leaf" key="0-0-0-1" />
-                        <TreeNode title="leaf" key="0-0-0-2" />
+                    <TreeNode title="根目录" key="0-0">
+                      <TreeNode title="二级目录-1" key="0-0-0">
+                        <TreeNode title="表单一" key="0-0-0-0" />
+                        <TreeNode title="表单二" key="0-0-0-1" />
+                        <TreeNode title="表单三" key="0-0-0-2" />
                       </TreeNode>
-                      <TreeNode title="parent 1-1" key="0-0-1">
-                        <TreeNode title="leaf" key="0-0-1-0" />
+                      <TreeNode title="二级目录-2" key="0-0-1">
+                        <TreeNode title="数据源一" key="0-0-1-0" />
+                        <TreeNode title="数据源二" key="0-0-1-１" />
                       </TreeNode>
-                      <TreeNode title="parent 1-2" key="0-0-2">
-                        <TreeNode title="leaf" key="0-0-2-0" />
-                        <TreeNode title="leaf" key="0-0-2-1" />
-                      </TreeNode>
+                      <TreeNode title="未分类表单-1" key="0-0-2"></TreeNode>
+                      <TreeNode title="未分类表单-2" key="0-0-3"></TreeNode>
                     </TreeNode>
                   </Tree>
                 </div>
@@ -211,7 +211,7 @@ class MainLayout extends Component {
 
         <Modal title="参数配置" visible={true}
           onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
-          okText="保存设置" cancelText="取消"
+          okText="保存所有配置" cancelText="取消"
           width="750"
         >
           <ConfigTable config={{}}/>

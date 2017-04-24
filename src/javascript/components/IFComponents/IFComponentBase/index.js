@@ -31,7 +31,7 @@ class IFComponentBase extends Component {
 		}, callback);
 	}
 
-	getFieldValues(array) {
+	getFieldsValue(array) {
 		let valueObj = {};
 
 		array.map((field) => {
@@ -39,7 +39,7 @@ class IFComponentBase extends Component {
 			valueObj[field] = this.getFieldValue(field);
 		});
 
-		console.log('getFieldValues');
+		console.log('getFieldsValue');
 		return valueObj;
 	}
 
@@ -54,7 +54,7 @@ class IFComponentBase extends Component {
 	}
 
 	getDataModel() {
-		return this.getFieldValues([
+		return this.getFieldsValue([
 			'id',
 			'name',
 			'value',
