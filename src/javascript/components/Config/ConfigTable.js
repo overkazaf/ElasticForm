@@ -183,8 +183,8 @@ class ConfigTable extends Component {
                     </Panel>
                     <Panel header="组件风格" key="3">
                       <Form>
-                      <Row gutter={12}>
-                        <Col span={6}>
+                      <Row gutter={8}>
+                        <Col span={7}>
                           <FormItem label={"组件尺寸"}>
                             <Select title="选择组件尺寸" value="default">
                               <Option value="default">默认大小</Option>
@@ -193,14 +193,14 @@ class ConfigTable extends Component {
                             </Select>
                           </FormItem>
                         </Col>
-                        <Col span={6}>
+                        <Col span={7} offset={1}>
                           <FormItem label={"组件主题"}>
                             <Select title="选择组件主题" value="default">
                               <Option value="default">默认主题</Option>
                             </Select>
                           </FormItem>
                         </Col>
-                        <Col span={6}>
+                        <Col span={7} offset={1}>
                           <FormItem label={"组件风格"}>
                             <Select title="选择组件风格" value="vertical">
                               <Option value="vertical">垂直排布</Option>
@@ -378,7 +378,7 @@ class ConfigTable extends Component {
                   </Row>
                   
                   <Row gutter={6}>
-                    <Col span={4} push={20}>
+                    <Col span={4}>
                       <Button type="primary">
                         应用事件设置
                       </Button>
@@ -398,10 +398,11 @@ class ConfigTable extends Component {
                 <Col span={18}>
                     <FormItem label={"格式检验"}>
                         <RadioGroup onChange={null} value={1}>
-                            <Radio value={1}>手机</Radio>
-                            <Radio value={2}>邮箱</Radio>
-                            <Radio value={3}>整数</Radio>
-                            <Radio value={3}>小数</Radio>
+                            <Radio value={1}>无</Radio>
+                            <Radio value={2}>手机</Radio>
+                            <Radio value={3}>邮箱</Radio>
+                            <Radio value={4}>整数</Radio>
+                            <Radio value={5}>小数</Radio>
                         </RadioGroup>
                     </FormItem>
                 </Col>
