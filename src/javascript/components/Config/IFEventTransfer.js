@@ -4,6 +4,7 @@ import {
 	Transfer,
     Form,
     Input,
+    Icon,
 } from 'antd';
 
 import _ from 'lodash';
@@ -117,11 +118,21 @@ class IFEventTransfer extends Component {
   }
   renderFooter = () => {
     return (
-      <Button size="small" style={{ float: 'right', margin: 5 }}
-        onClick={this.getMock}
-      >
-        refresh
-      </Button>
+      <div>
+        <Button size="small" style={{ float: 'right', margin: 5 }}
+        >
+          <Icon type="up" />上移
+        </Button>
+        <Button size="small" style={{ float: 'right', margin: 5 }}
+        >
+          <Icon type="down" />下移
+        </Button>
+        <Button size="small" type="danger" style={{ float: 'right', margin: 5 }}
+          onClick={this.getMock}
+        >
+          <Icon type="retweet" />重置
+        </Button>
+      </div>
     );
   }
   render() {
