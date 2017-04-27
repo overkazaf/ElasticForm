@@ -23,14 +23,14 @@ app.prepare()
   const server = new Koa();
   const router = new Router();
   
-  mongoose.connect('mongodb://localhost/test');
-  const db = mongoose.connection;
+  // mongoose.connect('mongodb://localhost/test');
+  // const db = mongoose.connection;
 
 
-  db.on('error', function(err) {
-    console.error('error occurs:', JSON.stringify(err));
-    mongoose.disconnect();
-  });
+  // db.on('error', function(err) {
+  //   console.error('error occurs:', JSON.stringify(err));
+  //   mongoose.disconnect();
+  // });
 
 
   const userService = serviceFactory.create('User');
