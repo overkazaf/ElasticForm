@@ -17,7 +17,7 @@ class DesignView extends Component {
     const panes = [];
 
     this.state = {
-      activeKey: 'form1',
+      activeKey: 'IntelliForm-00001',
       panes,
     };
   }

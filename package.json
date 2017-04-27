@@ -24,6 +24,9 @@
     "start": "next start",
     "cover": "istanbul cover src/tests/index.spec.js"
   },
+  "devDependencies": {
+    
+  },
   "dependencies": {
     "ali-oss": "^4.8.0",
     "antd": "^2.7.2",

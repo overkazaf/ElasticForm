@@ -43,6 +43,7 @@ let data = {
   panes: [
     {
       id: 'IntelliForm-00001',
+      key: 'IntelliForm-00001',
       name: 'form1',
       title: '测试表单一',
       description: '测试表单一',
