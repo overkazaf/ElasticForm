@@ -33,29 +33,29 @@ app.prepare()
   // });
 
 
-  const userService = serviceFactory.create('User');
+  // const userService = serviceFactory.create('User');
 
-  userService.find({name: 'John'}, function(data) {
-    console.log('user John has been found:', data);
-  });
+  // userService.find({name: 'John'}, function(data) {
+  //   console.log('user John has been found:', data);
+  // });
 
-  db.once('open', function (callback) {
-    // yay!
-    console.log('yay');
-    //const User = mongoose.model('User');
-    // const userId = mongoose.Types.ObjectId();
-    // const john = new User({
-    //   _id: userId,
-    //   name: 'John',
-    //   nickName: 'John Doe',
-    //   password: 'xxyyzz',
-    // });
+  // db.once('open', function (callback) {
+  //   // yay!
+  //   console.log('yay');
+  //   //const User = mongoose.model('User');
+  //   // const userId = mongoose.Types.ObjectId();
+  //   // const john = new User({
+  //   //   _id: userId,
+  //   //   name: 'John',
+  //   //   nickName: 'John Doe',
+  //   //   password: 'xxyyzz',
+  //   // });
 
-    // john.save(function (err, john) {
-    //   if (err) return console.error(err);
-    //   console.log('User john has been successfully saved...', john);
-    // });
-  });
+  //   // john.save(function (err, john) {
+  //   //   if (err) return console.error(err);
+  //   //   console.log('User john has been successfully saved...', john);
+  //   // });
+  // });
 
   // page routers
   router.get('/index', function *() {
