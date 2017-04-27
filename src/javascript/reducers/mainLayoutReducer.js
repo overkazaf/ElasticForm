@@ -38,12 +38,35 @@ let layouts = [
     }
   }
 ];
+
 let data = {
   panes: [
     {
-      name: 'form1', 
-      key: 'form1',
+      id: 'IntelliForm-00001',
+      name: 'form1',
       title: '测试表单一',
+      description: '测试表单一',
+      formType: 0,
+      pageIndex: 1,
+      theme: 'default',
+      creater: 'u-001',
+      createTS: 1488133454806,
+      style: {
+        width: 960,
+      },
+      nextId: 'IntelliForm-00002',
+      plugIns: [],
+      dataSourceIds: [],
+      eventList: [
+        {
+          eventType: 'onLoad',
+          options: {
+            action: 'BringDataSource',
+            expression: 'LOOKUP',
+            target: ['comp4']
+          }
+        }
+      ],
       closable: false,
       layouts,
     }

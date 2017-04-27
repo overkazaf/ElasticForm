@@ -209,7 +209,7 @@ class MainLayout extends Component {
         </Layout>
       </Layout>
 
-        <Modal title="参数配置" visible={true}
+        <Modal title="参数配置" visible={editModalVisible}
           onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
           okText="保存所有配置" cancelText="取消"
           width="750"

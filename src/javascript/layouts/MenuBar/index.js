@@ -25,56 +25,31 @@ const menuArray = [
 			{
 				name: '新建',
 				children: [
-					{
-						name: '数据源',
-					},
-					{
-						name: '自定义表单',
-					},
+					{name: '数据源'},
+					{name: '自定义表单'},
 				]
 			},
-			{
-				name: '保存',
-			},
-			{
-				name: '另存为',
-			},
-			{ name: 'divider' },
-			{
-				name: '退出',
-			}
+			{name: '保存'},
+			{name: '另存为'},
+			{name: 'divider'},
+			{name: '退出'}
 		],
 	},
 	{
 		name: '编辑(Edit)',
 		children: [
-			{
-				name: '复制',
-			},
-			{
-				name: '粘贴',
-			},
-			{
-				name: '撤销',
-			},
-			{
-				name: '重做',
-			},
-			
+			{name: '复制'},
+			{name: '粘贴'},
+			{name: '撤销'},
+			{name: '重做'},
 		]
 	},
 	{
 		name: '预览(Preview)',
 		children: [
-			{
-				name: '查看模式',
-			},
-			{
-				name: '添加模式',
-			},
-			{
-				name: '编辑模式',
-			},
+			{name: '查看模式'},
+			{name: '添加模式'},
+			{name: '编辑模式'},
 		],
 	},
 	{
@@ -83,26 +58,18 @@ const menuArray = [
 			{
 				name: 'OSS',
 				children: [
-					{ name: 'Bucket1'},
-					{ name: 'Bucket2'},
-					{ name: 'Bucket3'},
+					{name: 'Bucket1'},
+					{name: 'Bucket2'},
+					{name: 'Bucket3'},
 				]
 			},
 			{
 				name: '应用服务器',
 				children: [
-					{
-						name: '192.168.1.1（测试1）',
-					},
-					{
-						name: '192.168.1.2（测试2）',
-					},
-					{
-						name: 'divider',
-					},
-					{
-						name: '添加服务器',
-					},
+					{name: '192.168.1.1（测试1）'},
+					{name: '192.168.1.2（测试2）'},
+					{name: 'divider'},
+					{name: '添加服务器'},
 				]
 			},
 		], 
@@ -113,23 +80,15 @@ const menuArray = [
 			{
 				name: '查看',
 				children: [
-					{
-						name: '目标环境一',
-					},
-					{
-						name: '目标环境二',
-					}
+					{name: '目标环境一'},
+					{name: '目标环境二'}
 				]
 			},
 			{
 				name: '操作',
 				children: [
-					{
-						name: '在浏览器新选项卡打开',
-					},
-					{
-						name: '复制链接',
-					},
+					{name: '在浏览器新选项卡打开'},
+					{name: '复制链接'},
 				]
 			},
 		], 
