@@ -5,8 +5,10 @@ const TabPane = Tabs.TabPane;
 import ComponentFactory from '../factory/ComponentFactory.js';
 import LayoutEngine from '../engine/LayoutEngine.js';
 import mock from '../mock/test.js';
+import _ from 'lodash';
 
 import designViewStyle from './DesignView.scss';
+
 
 export default
 class DesignView extends Component {
@@ -32,7 +34,7 @@ class DesignView extends Component {
 
   add = () => {
     const panes = this.state.panes;
-    const activeKey = `newTab${this.newTabIndex++}`;
+    const activeKey = `${_.uniqueId()}${this.newTabIndex++}`;
     panes.push({ title: 'New Tab', content: 'Content of new Tab', key: activeKey });
     this.setState({ panes, activeKey });
   }
