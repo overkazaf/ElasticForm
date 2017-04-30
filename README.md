@@ -3,16 +3,17 @@ This app provide powerful enviroment for dynamic workflow forms building
 
 ## How to use
 
-how to dev ```gulp```
+how to dev ```yarn dev```
 
-how to build ```gulp build```
+how to build ```yarn build```
 
-how to start ```gulp build-start```
+how to start ```yarn build-start```
 
 ## Relative libs we use in this app
 
 | lib name| description| purpose|
 -----------------
+
 |:-:|:-:|:-:|:-:|
 | redux| lib for state management| |
 | next.js| lib that provides SSR feature| enhance user experiences|
@@ -24,4 +25,4 @@ how to start ```gulp build-start```
 ## Develop rules
 1. create your own feature branch and start developing
 2. write your test cases after your codes is done
-3. notice the project master to merge your branch
+3. notice the project owner to merge your branch while finishing your codes
