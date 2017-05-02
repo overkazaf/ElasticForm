@@ -116,8 +116,8 @@ class ConfigTable extends Component {
               <div style={{ marginTop: '10px' }}>
                 {
                   this.state.dataSourceRadioValue == 1 ?
-                      <IFTransfer />:
-                      <IFDynamicForm />
+                    <IFTransfer />:
+                    <IFDynamicForm />
                 }
               </div>
             </TabPane>
