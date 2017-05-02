@@ -97,7 +97,12 @@ class MainLayout extends Component {
   }
 
   handleOk() {
+    this._confirmModalConfig();
     this._dismissModal();
+  }
+
+  _confirmModalConfig() {
+    
   }
 
   render() {
