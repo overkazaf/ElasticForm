@@ -101,11 +101,19 @@ class ConfigTable extends Component {
       });
     };
 
+    componentDidMount() {
+      let basicProps = this.refs['basicProps'];
+      
+      Object.keys(basicProps.refs).map((item) => {
+        console.log(basicProps.refs[item]);
+      });
+    }
+
     render() {
         return (
-          <Tabs type="card" defaultActiveKey="4">
+          <Tabs type="card" defaultActiveKey="1">
             <TabPane tab="基础设置" key="1">
-              <BasicProps />
+              <BasicProps ref="basicProps"/>
             </TabPane>
             <TabPane tab="数据源" key="2">
               <RadioGroup onChange={this.handleDataSourceRadioChange} value={this.state.dataSourceRadioValue}>
@@ -359,5 +367,3 @@ class ConfigTable extends Component {
         )
     }
 }
-
-const DIYForm = Form.create({})(ConfigTable);
