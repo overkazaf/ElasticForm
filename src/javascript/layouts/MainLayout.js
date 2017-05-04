@@ -102,7 +102,15 @@ class MainLayout extends Component {
   }
 
   _confirmModalConfig() {
-    
+    let model = this.refs['configTable'].__getDataModel();
+
+    this.props.dispatch({
+      type: 'UPDATE_COMPONENT',
+      payload: {
+        id: 0,
+        model,
+      },
+    });
   }
 
   render() {
@@ -219,7 +227,7 @@ class MainLayout extends Component {
           okText="保存所有配置" cancelText="取消"
           width="750"
         >
-          <ConfigTable config={{}}/>
+          <ConfigTable ref="configTable" config={{}}/>
         </Modal>
 
         

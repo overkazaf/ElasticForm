@@ -189,8 +189,7 @@ class InputValueProps extends JFormComponent {
 	}
 	
 	handleChange(id, e) {
-		let newState = Object.assign({}, this.state[id]);
-		newState['value'] = e.target.value;
+		let newState = Object.assign(this.state[id], {value: e.target.value});
 
 		this.setState({
 			[id]: newState,
@@ -210,7 +209,7 @@ class InputValueProps extends JFormComponent {
 			label, 
 			placeholder, 
 			defaultValue, 
-			value
+			value,
 		].map((item, index) => {
 			let {
 				id,
@@ -247,45 +246,151 @@ class InputValueProps extends JFormComponent {
 class InputDecorationProps extends JFormComponent {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			addonBefore: {
+				id: 'addonBefore',
+				type: 'input',
+				label: '前缀文字',
+				addonBefore: '前缀',
+				addonAfter: '',
+				prefix: '',
+				subfix: '',
+				placehodler: '如：数量, 单价, 总金额 等',
+				value: '',
+			},
+			addonAfter: {
+				id: 'addonAfter',
+				type: 'input',
+				label: '后缀文字',
+				addonBefore: '',
+				addonAfter: '后缀',
+				prefix: '',
+				subfix: '',
+				placehodler: '如：元, ￥, $ 等',
+				value: '',
+			},
+			prefix: {
+				id: 'prefix',
+				type: 'select',
+				label: '前置图标',
+				placehodler: '请选择前置图标',
+				value: '',
+				options: [
+					{ id: 1, value: 'user', icon: 'user' },
+					{ id: 2, value: 'lock', icon: 'lock' },
+					{ id: 3, value: 'cloud', icon: 'cloud' },
+					{ id: 4, value: 'smile', icon: 'smile' },
+					{ id: 5, value: 'link', icon: 'link' },
+					{ id: 6, value: 'mail', icon: 'mail' },
+				],
+			},
+			subfix: {
+				id: 'subfix',
+				type: 'select',
+				label: '前置图标',
+				placehodler: '请选择前置图标',
+				value: '',
+				options: [
+					{ id: 1, value: 'close-circle', icon: 'close-circle' },
+					{ id: 2, value: 'close-circle-o', icon: 'close-circle-o' },
+					{ id: 3, value: 'check-circle', icon: 'check-circle' },
+					{ id: 4, value: 'check-circle-o', icon: 'check-circle-o' },
+				],
+			},
+		};
+	}
+
+	handleChange(id, e) {
+		// console.log('handleChange in inputDecoration');
+		let currentState = this.state[id];
+		let { type } = currentState;
+		let newValue = type === 'input' ? e.target.value : e;
+		let newState = Object.assign(this.state[id], { value: newValue　 });
+
+		this.setState({
+			[id]: newState,
+		}, () => {
+			console.log('handleChange in input decoration', this.state);
+		});
 	}
 	
 	render() {
+		let that = this;
+		let {
+			addonBefore,
+			addonAfter,
+			prefix,
+			subfix,
+		} = this.state;
+
+		let inputDecorationContent = [
+			addonBefore,
+			addonAfter,
+			prefix,
+			subfix,
+		].map((item, index) => {
+			let {
+				id,
+				type,
+				value,
+				label,
+				addonBefore,
+				addonAfter,
+				prefix,
+				subfix,
+				placehodler,
+				options,
+			} = item;
+
+			let formContent;
+			let handleChange = that.handleChange.bind(that, id);
+
+			if (type === 'input') {
+				formContent = <Input 
+					addonBefore={addonBefore} 
+					addonAfter={addonAfter} 
+					prefix={prefix} 
+					subfix={subfix}
+					value={value} 
+					placeholder={placehodler}
+					onChange={handleChange}
+				/>;
+			} else if (type === 'select') {
+				formContent = (() => {
+					let optionContent = options.map((opt, index) => {
+						let {
+							id,
+							value,
+							icon,
+						} = opt;
+					
+						return (
+							<Option key={`opt-${id}-index`} value={value}><Icon type={icon} /></Option>
+						)
+					});
+					return (
+						<Select 
+							onChange={handleChange}
+							style={{ width: '100%'}}>
+							{optionContent}
+						</Select>
+					)
+				})();
+			}
+
+			return (
+				<Col key={`input-decoration-${id}-${index}`} span={5}>
+					<FormItem label={label}>
+						{formContent}
+					</FormItem>
+				</Col>
+			)
+		});
+
 		return (
 			<Row gutter={8}>
-				<Col span={5}>
-				  <FormItem label={"前缀文字"}>
-				    <Input addonBefore="前缀" placeholder="如：数量, 单价, 总金额 等" />
-				  </FormItem>
-				</Col>
-				<Col span={5}>
-				  <FormItem label={"后缀文字"}>
-				    <Input addonAfter="后缀" placeholder="如：元, ￥, $ 等" />
-				  </FormItem>
-				</Col>
-				<Col span={5}>
-				  <FormItem label={"前置图标"}>
-				  	<Select style={{ width: '100%' }}
-				  		placeholder="请选择前置图标">
-						  <Option value="user"><Icon type="user" /></Option>
-						  <Option value="lock"><Icon type="lock" /></Option>
-						  <Option value="cloud"><Icon type="cloud" /></Option>
-						  <Option value="smile"><Icon type="smile" /></Option>
-						  <Option value="link"><Icon type="link" /></Option>
-						  <Option value="mail"><Icon type="mail" /></Option>
-						</Select>
-				  </FormItem>
-				</Col>
-				<Col span={5}>
-				  <FormItem label={"后置图标"}>
-				    <Select style={{ width: '100%' }}
-				    	placeholder="请选择后置图标">
-						  <Option value="close-circle"><Icon type="close-circle" /></Option>
-						  <Option value="close-circle-o"><Icon type="close-circle-o" /></Option>
-						  <Option value="check-circle"><Icon type="check-circle" /></Option>
-						  <Option value="check-circle-o"><Icon type="check-circle-o" /></Option>
-						</Select>
-				  </FormItem>
-				</Col>
+				{inputDecorationContent}
 			</Row>
 		)
 	}
@@ -352,7 +457,6 @@ class ComponentThemeStyle extends JFormComponent {
 			theme,
 			layoutStyle,
 		].map((item, index) => {
-			console.log('item ', item);
 			let {
 				id,
 				label,
@@ -460,34 +564,34 @@ class ComponentColorStyle extends JFormComponent {
 
 
 const PropsPanelMap = {
-	StatusProps: () => {
+	StatusProps: (refName) => {
 		return (
-			<StatusProps />
+			<StatusProps ref={refName} />
 		)
 	},
-	ComponentThemeStyle: () => {
+	ComponentThemeStyle: (refName) => {
 		return (
-			<ComponentThemeStyle />
+			<ComponentThemeStyle ref={refName} />
 		)
 	},
-	ComponentColorStyle: () => {
+	ComponentColorStyle: (refName) => {
 		return (
-			<ComponentColorStyle />
+			<ComponentColorStyle ref={refName} />
 		)
 	},
-	InputAlignProps: () => {
+	InputAlignProps: (refName) => {
 		return (
-			<InputAlignProps />
+			<InputAlignProps ref={refName} />
 		)
 	},
-	InputValueProps: () => {
+	InputValueProps: (refName) => {
 		return (
-			<InputValueProps />
+			<InputValueProps ref={refName} />
 		)
 	},
-	InputDecorationProps: () => {
+	InputDecorationProps: (refName) => {
 		return (
-			<InputDecorationProps />
+			<InputDecorationProps ref={refName} />
 		)
 	}
 }
@@ -502,41 +606,18 @@ export default class BasicProps extends Component {
 		return (
 			<Collapse defaultActiveKey={['1', '2', '3']}>
 				<Panel header="状态属性" key="1">
-					<CustomForm ref="formStatus" formType="StatusProps" />
+					{PropsPanelMap['StatusProps']('formStatus')}
 				</Panel>
 				<Panel header="输入框属性" key="2">
-			    <CustomForm ref="inputAlign" formType="InputAlignProps" />
-			    <CustomForm ref="inputValue" formType="InputValueProps" />
-			    <CustomForm ref="inputDecoration" formType="InputDecorationProps" />
+					{PropsPanelMap['InputAlignProps']('inputAlign')}
+					{PropsPanelMap['InputValueProps']('inputValue')}
+					{PropsPanelMap['InputDecorationProps']('inputDecoration')}
 				</Panel>
 				<Panel header="组件风格" key="3">
-					<CustomForm ref="componentTheme" formType="ComponentThemeStyle" />
-					<CustomForm ref="componentColor" formType="ComponentColorStyle" />
+					{PropsPanelMap['ComponentThemeStyle']('componentTheme')}
+					{PropsPanelMap['ComponentColorStyle']('componentColor')}
 				</Panel>
 			</Collapse>
-		)
-	}
-}
-
-
-
-class CustomForm extends Component {
-	constructor(props) {
-		super(props);
-		
-		this.state = {
-			formType: props.formType,
-			model: {},
-		};
-	}
-
-	render() {
-		let {
-			formType,
-		} = this.state;
-
-		return (
-			PropsPanelMap[formType]()
 		)
 	}
 }

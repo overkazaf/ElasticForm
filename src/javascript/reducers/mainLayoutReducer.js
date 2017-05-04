@@ -28,7 +28,7 @@ let layouts = [
   {
     grid: {i: 'g3', x: 8, y: 0, w: 3, h: 1},
     component: {
-      type: 'IFInputNumber', 
+      type: 'IFInput', 
       props: { 
         id: 3, 
         defaultValue: 1,
@@ -89,16 +89,16 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         	let $$newList = state.getIn(['data', 'panes', 0, 'layouts']);
         		
         	$$newList = $$newList.unshift(Immutable.fromJS({
-			    grid: {i: (_.uniqueId('grid_')), x: 0, y: 0, w: 3, h: 1},
-			    component: {
-			      type: 'IFInputNumber', 
-			      props: { 
-			      	id: _.uniqueId('component_'),
-			        visibility: true,
-			        locked: false,
-			      },
-			    }
-			  }));
+  			    grid: {i: (_.uniqueId('grid_')), x: 0, y: 0, w: 3, h: 1},
+  			    component: {
+  			      type: 'IFInputNumber', 
+  			      props: { 
+  			      	id: _.uniqueId('component_'),
+  			        visibility: true,
+  			        locked: false,
+  			      },
+  			    }
+  			  }));
         	return state.setIn(['data', 'panes', 0, 'layouts'], $$newList);
         }
 
@@ -123,23 +123,33 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         case 'EDIT_COMPONENT': {
         	return state;
         }
+
+        case 'UPDATE_COMPONENT': {
+          let $$layouts = state.getIn(['data', 'panes', 0, 'layouts']);
+          let index = $$layouts.findIndex((item) => {
+            let itemId = item.getIn(['component', 'props', 'id']);
+            return itemId == action.payload.id;
+          });
+
+          let $$newItem = $$layouts.get(index);
+
+          console.log('$$newItem', $$newItem);
+
+          return state;
+        }
+
         case 'REMOVE_COMPONENT': {
-        	console.log('action.payload in REMOVE_COMPONENT', action.payload);
         	let $$layouts = state.getIn(['data', 'panes', 0, 'layouts']);
         	let index = $$layouts.findIndex((item) => {
         		let itemId = item.getIn(['component', 'props', 'id']);
-        		console.log('itemId', itemId);
-        		console.log('action.payload.id', action.payload.id);
         		return itemId == action.payload.id;
         	});
 
-        	console.log('deleting index:', index, $$layouts.get(index).toJS());
         	let $$newLayout = $$layouts.delete(index);
 
         	return state.setIn(['data', 'panes', 0, 'layouts'], $$newLayout);
         }
         case 'SET_MODAL_VISIBILITY': {
-          console.log('setModalVisibility', action.payload);
         	return state.set('editModalVisible', action.payload);
         }
         default: return state;

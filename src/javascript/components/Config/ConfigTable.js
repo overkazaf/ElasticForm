@@ -101,12 +101,19 @@ class ConfigTable extends Component {
       });
     };
 
-    componentDidMount() {
-      let basicProps = this.refs['basicProps'];
+    __getDataModel(tabIndex = 0) {
       
-      Object.keys(basicProps.refs).map((item) => {
-        console.log(basicProps.refs[item]);
+      let basicProps = this.refs['basicProps'];
+      let dataModel = {};
+      Object.keys(basicProps.refs).map((refKey) => {
+        dataModel[refKey] = basicProps.refs[refKey].getFieldsValue();
       });
+
+      return dataModel;
+    }
+
+    __getDataModels() {
+      
     }
 
     render() {
