@@ -64,6 +64,11 @@ class LayoutEngine {
 				type: 'SET_MODAL_VISIBILITY',
 				payload: true,
 			});
+
+			dispatch({
+				type: 'EDIT_COMPONENT',
+				payload: id,
+			})
 		};
 
 		let removeComponent = (id) => {
@@ -80,9 +85,12 @@ class LayoutEngine {
 			<ReactGridLayout 
 				className="layout" 
 				layout={gridLayout}
-				rowHeight={40} 
+				rowHeight={5} 
 				width={960}
 				height={500}
+				margin={[0, 0]}
+				containerPadding={[0,0]}
+				autoSize={true}
 				onLayoutChange={handleLayoutChange}
 			>
 	      {

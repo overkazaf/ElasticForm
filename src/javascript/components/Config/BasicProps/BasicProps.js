@@ -255,7 +255,7 @@ class InputDecorationProps extends JFormComponent {
 				addonBefore: '前缀',
 				addonAfter: '',
 				prefix: '',
-				subfix: '',
+				suffix: '',
 				placehodler: '如：数量, 单价, 总金额 等',
 				value: '',
 			},
@@ -266,7 +266,7 @@ class InputDecorationProps extends JFormComponent {
 				addonBefore: '',
 				addonAfter: '后缀',
 				prefix: '',
-				subfix: '',
+				suffix: '',
 				placehodler: '如：元, ￥, $ 等',
 				value: '',
 			},
@@ -285,17 +285,17 @@ class InputDecorationProps extends JFormComponent {
 					{ id: 6, value: 'mail', icon: 'mail' },
 				],
 			},
-			subfix: {
-				id: 'subfix',
+			suffix: {
+				id: 'suffix',
 				type: 'select',
-				label: '前置图标',
-				placehodler: '请选择前置图标',
+				label: '后置图标',
+				placehodler: '请选择后置图标',
 				value: '',
 				options: [
-					{ id: 1, value: 'close-circle', icon: 'close-circle' },
-					{ id: 2, value: 'close-circle-o', icon: 'close-circle-o' },
-					{ id: 3, value: 'check-circle', icon: 'check-circle' },
-					{ id: 4, value: 'check-circle-o', icon: 'check-circle-o' },
+					{ id: 1, value: (<Icon type="close-circle" />), icon: 'close-circle' },
+					{ id: 2, value: (<Icon type="close-circle-o" />), icon: 'close-circle-o' },
+					{ id: 3, value: (<Icon type="check-circle" />), icon: 'check-circle' },
+					{ id: 4, value: (<Icon type="check-circle-o" />), icon: 'check-circle-o' },
 				],
 			},
 		};
@@ -321,14 +321,14 @@ class InputDecorationProps extends JFormComponent {
 			addonBefore,
 			addonAfter,
 			prefix,
-			subfix,
+			suffix,
 		} = this.state;
 
 		let inputDecorationContent = [
 			addonBefore,
 			addonAfter,
-			prefix,
-			subfix,
+			//prefix,
+			//suffix,
 		].map((item, index) => {
 			let {
 				id,
@@ -338,7 +338,7 @@ class InputDecorationProps extends JFormComponent {
 				addonBefore,
 				addonAfter,
 				prefix,
-				subfix,
+				suffix,
 				placehodler,
 				options,
 			} = item;
@@ -351,7 +351,7 @@ class InputDecorationProps extends JFormComponent {
 					addonBefore={addonBefore} 
 					addonAfter={addonAfter} 
 					prefix={prefix} 
-					subfix={subfix}
+					suffix={suffix}
 					value={value} 
 					placeholder={placehodler}
 					onChange={handleChange}

@@ -229,8 +229,6 @@ class MainLayout extends Component {
         >
           <ConfigTable ref="configTable" config={{}}/>
         </Modal>
-
-        
       </Layout>
     )
   }

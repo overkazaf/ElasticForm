@@ -1,8 +1,12 @@
 import IFComponentBase from '../../IFComponentBase/index.js';
 
 import {
-	Input,
+	InputNumber,
+	Form,
 } from 'antd';
+
+
+const FormItem = Form.Item;
 
 export default
 class IFInputNumber extends IFComponentBase {
@@ -24,29 +28,43 @@ class IFInputNumber extends IFComponentBase {
 		let {
 			placeholder,
 			prefix,
-			subfix,
+			suffix,
 			addonBefore,
 			addonAfter,
 			defaultValue,
 			value,
 			locked,
 			visibility,
+			mustInput,
+			label,
+			size,
+			min,
+			max,
+			step,
 		} = option.toJS();
 
 		if (!visibility) {
 			return <div></div>;
 		}
+	
+		console.log('disabled', locked);
 
 		return (
-			<Input 
-				 placeholder={placeholder}
-				 addonBefore={addonBefore}
-				 addonAfter={addonAfter}
-				 disabled={!!locked}
-				 size={'large'}
-				 value={value}
-				 defaultValue={defaultValue}
-			/>
+			<FormItem
+				label={label}
+				required={!!mustInput}
+			>
+				<InputNumber 
+					 min={min || -Infinity}
+					 max={max || Infinity}
+					 step={step || 1}
+					 disabled={!!locked}
+					 size={size || 'large'}
+					 value={value}
+					 defaultValue={defaultValue}
+					 style={{ width: '100%' }}
+				/>
+			</FormItem>
 		)
 	}
 }
