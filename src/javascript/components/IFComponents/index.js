@@ -2,6 +2,7 @@ import IFButtonNormal from './IFButton/IFButtonNormal/index.js';
 import IFDropdown from './IFDropdown/index.js';
 import IFInputNumber from './IFInput/IFInputNumber/index.js';
 import IFInputNormal from './IFInput/IFInputNormal/index.js';
+import IFInputPhone from './IFInput/IFInputPhone/index.js';
 import IFSmartTable from './IFTable/IFSmartTable/index.js';
 import IFTreeSelect from './IFTree/IFTreeSelect/index.js';
 import IFRangePicker from './IFDate/IFRangePicker/index.js';
@@ -15,6 +16,7 @@ let IFComponents = {
 	IFDropdown,
 	IFInputNumber,
 	IFInputNormal,
+	IFInputPhone,
 	IFSmartTable,
 	IFTreeSelect,
 	IFRangePicker,

@@ -22,11 +22,15 @@ class ComponentSider extends Component {
 				name: '常用组件',
 				icon: 'rocket',
 				children: [
+					{ name: '文本', key: 'IFInputText' },
+					{ name: '下拉框', key: 'IFDropdown' },
+					{ name: '手机号', key: 'IFInputPhone', icon: 'mobile'},
+
+
 					{ name: '数字', key: 'IFInputNumber', icon: 'pay-circle'},
 					{ name: '单价', key: 'IFInputPrice', icon: 'pay-circle-o'},
-					{ name: '电话', key: 'IFInputPhone', icon: 'mobile'},
 					{ name: '邮箱', key: 'IFInputMail', icon: 'mail' },
-					{ name: '文本', key: 'IFInputText' },
+					
 				]
 			},
 			{

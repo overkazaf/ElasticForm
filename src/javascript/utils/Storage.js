@@ -1,5 +1,9 @@
 function isLocalStorageSupported() {
-	return !(typeof window.localStorage === 'undefined');
+	try {
+		return !(typeof window.localStorage === 'undefined');
+	} catch(e) {
+		return false;
+	}
 }
 
 export default class Storage {
@@ -8,19 +12,19 @@ export default class Storage {
 		this.supportLocalStorage = isLocalStorageSupported();
 	}
 
-	save(key, obj) {
+	set(key, obj) {
 		if (this.supportLocalStorage) {
 			return localStorage.setItem(key, JSON.stringify(obj));
 		}
 	}	
 
-	static get(key) {
+	get(key) {
 		if (this.supportLocalStorage) {
 			return JSON.parse(localStorage.getItem(key));
 		}
 	}
 	
-	remove(key) {
+	delete(key) {
 		if (this.supportLocalStorage) {
 			localStorage.removeItem(key);
 		}

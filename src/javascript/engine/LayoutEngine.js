@@ -46,7 +46,7 @@ class LayoutEngine {
 					{ LayoutEngine.execRender(header, dispatch, 'header') }
 				</Content>
 				<Footer style={{ background: '#e7e7e7'}}>
-					<Button type="primary">Submit</Button>
+					{ LayoutEngine.execRender(footer, dispatch, 'footer') }
 				</Footer>
 				</Layout>
 			</div>
@@ -71,7 +71,9 @@ class LayoutEngine {
 
 			dispatch({
 				type: 'EDIT_COMPONENT',
-				payload: id,
+				payload: {
+					id,
+				},
 			})
 		};
 

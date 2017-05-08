@@ -4,7 +4,7 @@ import _ from 'lodash';
 let layouts = {
   header: [
     {
-      grid: {i: 'g1', x: 0, y: 0, w: 2, h: 8, minH: 8},
+      grid: {i: 'g1', x: 0, y: 0, w: 2, h: 9, minH: 9},
       component: {
         type: 'IFInputNumber', 
         props: { 
@@ -16,7 +16,7 @@ let layouts = {
       }
     },
     {
-      grid: {i: 'g2', x: 2, y: 0, w: 3, h: 8, minH: 8, minW: 2},
+      grid: {i: 'g2', x: 2, y: 0, w: 3, h: 9, minH: 9, minW: 2},
       component: {
         type: 'IFRangePicker', 
         props: {
@@ -27,7 +27,7 @@ let layouts = {
       }
     },
     {
-      grid: {i: 'g3', x: 6, y: 0, w: 2, h: 8, minH: 8},
+      grid: {i: 'g3', x: 6, y: 0, w: 2, h: 9, minH: 9},
       component: {
         type: 'IFInputNormal', 
         props: { 
@@ -37,10 +37,70 @@ let layouts = {
           locked: false,
         },
       }
+    },
+    {
+      grid: {i: 'g4', x: 6, y: 2, w: 2, h: 9, minW: 2, minH: 9},
+      component: {
+        type: 'IFDropdown', 
+        props: { 
+          id: 4, 
+          label: 'SelectMe',
+          visibility: true,
+          dataSource: [
+            {id: 1, label: '下拉选项一', value: 1},
+            {id: 2, label: '下拉选项二', value: 2},
+            {id: 3, label: '下拉选项三', value: 3},
+            {id: 4, label: '下拉选项四', value: 4},
+            {id: 5, label: '下拉选项五', value: 5},
+          ]
+        },
+      }
+    },
+    {
+      grid: {i: 'g5', x: 3, y: 2, w: 2, h: 9, minW: 2, minH: 9},
+      component: {
+        type: 'IFDropdown', 
+        props: { 
+          id: 5, 
+          label: 'SelectMe2',
+          visibility: true,
+          theme: 'primary',
+          dataSource: [
+            {id: 1, label: '下拉选项一', value: 1},
+            {id: 2, label: '下拉选项二', value: 2},
+            {id: 3, label: '下拉选项三', value: 3},
+            {id: 4, label: '下拉选项四', value: 4},
+            {id: 5, label: '下拉选项五', value: 5},
+          ]
+        },
+      }
+    },
+    {
+      grid: {i: 'g6', x: 1, y: 2, w: 2, h: 9, minW: 2, minH: 9},
+      component: {
+        type: 'IFInputPhone', 
+        props: { 
+          id: 5, 
+          visibility: true,
+          theme: 'primary',
+        },
+      }
     }
   ],
   body: [],
-  footer: [],
+  footer: [
+    {
+      grid: {i: 'g44', x: 6, y: 0, w: 2, h: 9, minH: 9},
+      component: {
+        type: 'IFButtonNormal', 
+        props: { 
+          id: 44, 
+          theme: 'primary',
+          label: '提交'
+        },
+      }
+    }
+  ],
 };
 
 let data = {
@@ -72,9 +132,9 @@ let data = {
           }
         }
       ],
-      closable: false,
+      closable: true,
       layouts,
-    }
+    },
   ]
 };
 
@@ -87,7 +147,7 @@ const $$initState = Immutable.fromJS({
 });
 
 export const mainLayoutReducer = (state = $$initState, action) => {
-	console.log('action in mainLayoutReducer', action.type);
+	console.log('action calling in mainLayoutReducer', action.type);
     switch (action.type) {
         case 'ADD_COMPONENT': {
 
@@ -129,7 +189,7 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         	return state.setIn(['data', 'panes', 0, 'layouts', 'header'], $$newLayout);
         }
         case 'EDIT_COMPONENT': {
-        	return state.set('focusId', action.payload);
+        	return state.set('focusId', action.payload.id);
         }
 
         case 'UPDATE_COMPONENT': {

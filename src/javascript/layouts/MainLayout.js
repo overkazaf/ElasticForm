@@ -63,6 +63,11 @@ const columns = [{
 }];
 
 
+
+
+
+
+
 class MainLayout extends Component {
 
   onCollapse = (collapsed) => {
@@ -226,7 +231,7 @@ class MainLayout extends Component {
         <Modal title="参数配置" visible={editModalVisible}
           onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
           okText="保存所有配置" cancelText="取消"
-          width="750"
+          width={750}
         >
           <ConfigTable ref="configTable" config={{}}/>
         </Modal>

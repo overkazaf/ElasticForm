@@ -16,7 +16,7 @@ class IFDropdown extends IFComponentBase {
 	
 	handleMenuClick({ key }) {
 
-	  let selectedOption = this.state.option.get('baseData').toJS().filter((item, index) => {
+	  let selectedOption = this.state.option.get('dataSource').toJS().filter((item, index) => {
 	  	return index == key;
 	  })[0];
 
@@ -43,7 +43,7 @@ class IFDropdown extends IFComponentBase {
 		  	defaultSelectedKeys={['1']}
 		  	onClick={this.handleMenuClick.bind(this)}
 		  >
-		    {rawOption.baseData && rawOption.baseData.map((item, index) => {
+		    {rawOption.dataSource && rawOption.dataSource.map((item, index) => {
 		    	return (
 		    		<Menu.Item key={index} value={item.value}>{item.label}</Menu.Item>
 		    	)
@@ -51,11 +51,21 @@ class IFDropdown extends IFComponentBase {
 		  </Menu>
 		);
 
+		let {
+			size,
+			theme,
+		} = rawOption;
+
+
+		console.log('size', size);
+		console.log('theme', theme);
+
 		return (
 			<Dropdown overlay={menu}>
 		      <Button 
 		      	size={'large'}
-		      	style={{ marginLeft: 8 }}>
+		      	type={theme || 'default'}
+		      	style={{ width: '100%'}}>
 		        {rawOption.label} <Icon type="down" />
 		      </Button>
 		    </Dropdown>

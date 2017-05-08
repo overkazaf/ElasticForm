@@ -26,6 +26,7 @@ class IFButtonNormal extends IFComponentBase {
 			visibility,
 			locked,
 			theme,
+			size,
 			ghost,
 		} = option.toJS();
 
@@ -36,10 +37,11 @@ class IFButtonNormal extends IFComponentBase {
 		return (
 			<Button 
 				ghost={!!ghost}
-			    size={'large'}
+			  size={size || 'large'}
 				type={theme}
 				disabled={!!locked}
 				onClick={onClick}
+				style={{ width: '100%'}}
 			>
 				{label}
 			</Button>

@@ -1,7 +1,7 @@
 .form-view {
 	padding: 10px;
 	width: 980px;
-	height: 620px;
+	min-height: 620px;
 	box-sizing: border-box;
 	border: 1px solid #fff;
 
@@ -16,9 +16,13 @@
 	.draggable-item {
 		padding: 5px;
 		background: #f8f8f8;
+		border: 2px solid #f8f8f8;
+		border-radius: 4px;
+		box-sizing: border-box;
 
 		&:hover {
-			background: #d8d8d8;
+		  border: 2px dotted #fff;
+			background: #baff00;
 
 			.ctrl {
 				display: block;
