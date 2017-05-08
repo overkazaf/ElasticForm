@@ -118,6 +118,9 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         }
         case 'UPDATE_LAYOUTS': {
         	let $$layouts = state.getIn(['data', 'panes', 0, 'layouts', 'header']);
+
+          console.log('$$UPDATE_LAYOUTS in UPDATE_LAYOUTS', $$layouts.toJS());
+
         	let $$newLayout = $$layouts.map((item, index) => {
         		let newItem = item.set('grid', Immutable.fromJS(action.payload[index]));
         		return newItem;
@@ -138,8 +141,6 @@ export const mainLayoutReducer = (state = $$initState, action) => {
           });
 
           let $$newItem = $$layouts.get(index);
-          console.log('action', action.payload);
-
           let model = action.payload.model;
 
           let $$settedItem = $$newItem.updateIn(['component', 'props'], function(item) {
@@ -148,10 +149,7 @@ export const mainLayoutReducer = (state = $$initState, action) => {
 
           let $$newLayout = $$layouts.set(index, $$settedItem);
 
-          console.log($$newLayout.toJS());
-
-
-          return state.setIn(['data', 'panes', 0, 'layouts'], $$newLayout);
+          return state.setIn(['data', 'panes', 0, 'layouts', 'header'], $$newLayout);
         }
 
         case 'REMOVE_COMPONENT': {
