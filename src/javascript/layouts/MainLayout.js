@@ -219,6 +219,7 @@ class MainLayout extends Component {
                 </div>
             </div>
           </Sider>
+          <DevTools />
         </Layout>
       </Layout>
 

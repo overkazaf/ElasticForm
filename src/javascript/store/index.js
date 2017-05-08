@@ -21,7 +21,8 @@ export const initStore = (initialState) => {
   		rootReducer, 
   		Immutable.fromJS(initialState), 
   		composeEnhancers(
-  			applyMiddleware(thunkMiddleware, epicMiddleware)
+  			applyMiddleware(thunkMiddleware, epicMiddleware),
+  			DevTools.instrument(),
   		),
   	)
 };

@@ -28,7 +28,11 @@ class LayoutEngine {
 		let {
 			name,
 			title,
-			layouts,
+			layouts: {
+				header,
+				body,
+				footer,
+			},
 		} = page;
 
 		return (
@@ -39,7 +43,7 @@ class LayoutEngine {
 					<h1 style={{textAlign: 'center', color: '#fff'}}>{title}</h1>
 				</Header>
 				<Content>
-					{ LayoutEngine.execRender(layouts, dispatch) }
+					{ LayoutEngine.execRender(header, dispatch, 'header') }
 				</Content>
 				<Footer style={{ background: '#e7e7e7'}}>
 					<Button type="primary">Submit</Button>
@@ -49,7 +53,7 @@ class LayoutEngine {
 		)
 	}
 
-	static execRender(layouts = [], dispatch = () => {}) {
+	static execRender(layouts = [], dispatch = () => {}, type = 'header') {
 		let gridLayout = layouts.map(layout => layout.grid);
 
 		let handleLayoutChange = (layouts) => {
