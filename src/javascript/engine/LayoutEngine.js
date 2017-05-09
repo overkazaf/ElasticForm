@@ -53,17 +53,28 @@ class LayoutEngine {
 		)
 	}
 
-	static execRender(layouts = [], dispatch = () => {}, type = 'header') {
+	/**
+	 * [执行每块区域的render命令]
+	 * @param  {Array}  layouts  [description]
+	 * @param  {[type]} dispatch [description]
+	 * @return {[type]}          [description]
+	 */
+	static execRender(layouts = [], dispatch = () => {}, position = 'header') {
+
 		let gridLayout = layouts.map(layout => layout.grid);
 
 		let handleLayoutChange = (layouts) => {
 			dispatch({
 				type: 'UPDATE_LAYOUTS',
-				payload: layouts,
+				payload: {
+					position,
+					tabIndex: 0,
+					layouts,
+				},
 			})
 		};
 
-		let showEditModal = (id, component) => {
+		let showEditModal = (id, component, tabIndex = 0, position) => {
 			dispatch({
 				type: 'SET_MODAL_VISIBILITY',
 				payload: true,
@@ -73,11 +84,13 @@ class LayoutEngine {
 				type: 'EDIT_COMPONENT',
 				payload: {
 					id,
+					tabIndex,
+					position,
 				},
 			})
 		};
 
-		let removeComponent = (id) => {
+		let removeComponent = (id, tabIndex = 0, position) => {
 			dispatch({
 				type: 'REMOVE_COMPONENT',
 				payload: {
@@ -85,7 +98,6 @@ class LayoutEngine {
 				},
 			})
 		};
-
 
 		return (
 			<ReactGridLayout 
@@ -112,12 +124,14 @@ class LayoutEngine {
 	      			id,
 	      		} = component;
 
+	      		console.log('item in layout', item);
+
 	      		return (
 	      			<div key={grid.i} className="draggable-item">
 			          <span className="ctrl">
 			        		<i>
 			        			<Icon type="edit" 
-			        				onClick={showEditModal.bind(this, props.id, component)}
+			        				onClick={showEditModal.bind(this, props.id, component, 0, position)}
 			        			/>
 			        		</i>
 			        		<i>
@@ -125,7 +139,7 @@ class LayoutEngine {
 			        				title="Are you sure to delete this component？" 
 			        				okText="Yes" 
 			        				cancelText="No"
-			        				onConfirm={removeComponent.bind(this, props.id)}
+			        				onConfirm={removeComponent.bind(this, props.id, 0, position)}
 			        			>
 								    <Icon type="delete" />
 								</Popconfirm>

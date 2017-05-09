@@ -95,7 +95,7 @@ let layouts = {
         type: 'IFButtonNormal', 
         props: { 
           id: 44, 
-          theme: 'primary',
+          theme: 'dashed',
           label: '提交'
         },
       }
@@ -139,7 +139,9 @@ let data = {
 };
 
 const $$initState = Immutable.fromJS({
-    focusId: null,
+    activeCId: null,
+    activePosition: null,
+    activeTabIndex: 0,
     collapsed: false,
     mode: 'inline',
     editModalVisible: false,
@@ -147,24 +149,21 @@ const $$initState = Immutable.fromJS({
 });
 
 export const mainLayoutReducer = (state = $$initState, action) => {
-	console.log('action calling in mainLayoutReducer', action.type);
     switch (action.type) {
         case 'ADD_COMPONENT': {
 
-        	let $$newList = state.getIn(['data', 'panes', 0, 'layouts', 'header']);
-        		
-        	$$newList = $$newList.unshift(Immutable.fromJS({
-  			    grid: {i: (_.uniqueId('grid_')), x: 0, y: 0, w: 3, h: 8, minH: 8},
-  			    component: {
-  			      type: 'IFInputNumber', 
-  			      props: { 
-  			      	id: _.uniqueId('component_'),
-  			        visibility: true,
-  			        locked: false,
-  			      },
-  			    }
-  			  }));
-        	return state.setIn(['data', 'panes', 0, 'layouts', 'header'], $$newList);
+          let {
+            id,
+            position,
+            tabIndex,
+          } = action.payload;
+
+          console.log(id, position, tabIndex);
+
+        	let $$newList = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
+        	let $$updatedList = $$newList.unshift(Immutable.fromJS(generateComponentTpl(id)));
+
+        	return state.setIn(['data', 'panes', 0, 'layouts', position], $$updatedList);
         }
 
         case 'UPDATE_COLLAPSED': {
@@ -177,51 +176,72 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         		        .set('mode', mode);
         }
         case 'UPDATE_LAYOUTS': {
-        	let $$layouts = state.getIn(['data', 'panes', 0, 'layouts', 'header']);
+          let {
+            tabIndex,
+            position,
+            layouts,
+          } = action.payload;
 
-          console.log('$$UPDATE_LAYOUTS in UPDATE_LAYOUTS', $$layouts.toJS());
-
+        	let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
         	let $$newLayout = $$layouts.map((item, index) => {
-        		let newItem = item.set('grid', Immutable.fromJS(action.payload[index]));
+        		let newItem = item.set('grid', Immutable.fromJS(layouts[index]));
         		return newItem;
         	});
 
-        	return state.setIn(['data', 'panes', 0, 'layouts', 'header'], $$newLayout);
+        	return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
         case 'EDIT_COMPONENT': {
-        	return state.set('focusId', action.payload.id);
+          let {
+            id,
+            tabIndex,
+            position,
+          } = action.payload;
+
+        	return state.set('activeCId', id)
+                      .set('activePosition', position)
+                      .set('activeTabIndex', tabIndex);
         }
 
         case 'UPDATE_COMPONENT': {
 
-          let $$layouts = state.getIn(['data', 'panes', 0, 'layouts', 'header']);
+          const {
+            model,
+          } = action.payload;
+
+          const tabIndex = state.get('activeTabIndex');
+          const position = state.get('activePosition');
+
+          let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
           let index = $$layouts.findIndex((item) => {
             let itemId = item.getIn(['component', 'props', 'id']);
-            return itemId == state.get('focusId');
+            return itemId == state.get('activeCId');
           });
 
           let $$newItem = $$layouts.get(index);
-          let model = action.payload.model;
-
           let $$settedItem = $$newItem.updateIn(['component', 'props'], function(item) {
             return Immutable.fromJS(combineModel(item.toJS(), model));
           });
 
           let $$newLayout = $$layouts.set(index, $$settedItem);
-
-          return state.setIn(['data', 'panes', 0, 'layouts', 'header'], $$newLayout);
+          return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
 
         case 'REMOVE_COMPONENT': {
-        	let $$layouts = state.getIn(['data', 'panes', 0, 'layouts', 'header']);
+          let {
+            id,
+          } = action.payload;
+
+          const tabIndex = state.get('activeTabIndex');
+          const position = state.get('activePosition');
+
+        	let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
         	let index = $$layouts.findIndex((item) => {
         		let itemId = item.getIn(['component', 'props', 'id']);
-        		return itemId == action.payload.id;
+        		return itemId === id;
         	});
-
         	let $$newLayout = $$layouts.delete(index);
 
-        	return state.setIn(['data', 'panes', 0, 'layouts', 'header'], $$newLayout);
+        	return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
         case 'SET_MODAL_VISIBILITY': {
         	return state.set('editModalVisible', action.payload);
@@ -271,6 +291,10 @@ function combineModel(component, formModel) {
   } = formModel;
 
   let newComponentDS = Object.assign(component, {
+    layoutStyle: layoutStyle.value,
+    theme: theme.value,
+    size: size.value,
+
     defaultValue: defaultValue.value,
     placeholder: placeholder.value,
     value: value.value,
@@ -288,4 +312,68 @@ function combineModel(component, formModel) {
   });
 
   return newComponentDS;
+}
+
+
+
+function generateComponentTpl(componentType) {
+  const componentId = _.uniqueId(`${componentType}_`);
+  const gridId = _.uniqueId(`grid_${componentType}_`);
+  return {
+    grid: getDefaultComponentGrid(gridId, componentType),
+    component: {
+      type: componentType, 
+      props: getDefaultComponentProps(componentId, componentType),
+    }
+  };
+}
+
+/**
+ * [getDefaultComponentGrid 根据不同的组件生成不一样的默认布局]
+ * @param  {[type]} gridId        [description]
+ * @param  {[type]} componentType [description]
+ * @return {[type]}               [description]
+ */
+function getDefaultComponentGrid(gridId, componentType) {
+  return {
+      i: gridId, 
+      x: 0, 
+      y: 0, 
+      w: 3, 
+      h: 16, 
+      miW: 2,
+      minH: 12,
+  };
+}
+
+function getDefaultComponentProps(componentId, componentType) {
+  const defaultComponentPropsMap = {
+    'IFDropdown': {
+      id: componentId,
+      visibility: true,
+      locked: false,
+      label: `新增组件${componentId}`,
+      dataSource: [],
+    }
+  };
+
+  return { 
+    id: componentId,
+    visibility: true,
+    locked: false,
+    label: `新增组件${componentId}`,
+    dataSource: [],
+  };
+
+  if (!(componentType in defaultComponentPropsMap)) {
+    return { 
+        id: componentId,
+        visibility: true,
+        locked: false,
+        label: `新增组件${componentId}`,
+        dataSource: [],
+      };
+  } else {
+    return defaultComponentPropsMap[componentType];
+  }
 }

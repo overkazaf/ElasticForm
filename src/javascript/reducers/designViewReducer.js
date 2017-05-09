@@ -8,7 +8,7 @@ export const designViewReducer = ($$state = $$initState, action) => {
     console.log('action in designViewReducer', action);
     switch (action.type) {
         case 'CHANGE_ACTIVE_TAB_INDEX': {
-            return $$state.set('activeTabIndex', action.payload)
+            return $$state.set('activeTabIndex', action.payload.tabIndex)
         }
         default: return $$state;
     }

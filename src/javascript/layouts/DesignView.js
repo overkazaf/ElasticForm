@@ -29,6 +29,27 @@ class DesignView extends Component {
 
   onChange = (activeKey) => {
     this.setState({ activeKey });
+
+    // let tabIndex = -1;
+
+    // this.state.panes.map((panel, index) => {
+    //   if (panel.key === activeKey) {
+    //     tabIndex = index;
+    //   }
+    // });
+
+    // this.props.dispatch({
+    //   type: 'CHANGE_ACTIVE_TAB_INDEX',
+    //   payload: {
+    //     tabIndex,
+    //   },
+    // });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      panes: nextProps.data.panes || [],
+    });
   }
 
   onEdit = (targetKey, action) => {
@@ -52,20 +73,11 @@ class DesignView extends Component {
       createTS: (new Date().getTime()),
     });
 
-    console.log('panes', panes);
     panes.push(panelTpl);
-
-    console.log('panes', panes);
     this.setState({ panes, activeKey });
   }
 
   remove = (targetKey) => {
-    if (confirm('Do you want to remove this tab? ')) {
-      this.props.dispatch({
-        type: 'CHANGE_ACTIVE_TAB_INDEX',
-        payload: 0,
-      });  
-    }
 
     let activeKey = this.state.activeKey;
     let lastIndex;
@@ -133,9 +145,8 @@ function generateNewFormPanelTemplate(option = {}) {
   return Object.assign(pageJson, option);
 }
 
-const mapStateToProps = (store, ...args) => {
+const mapStateToProps = (store) => {
   return store.get('designViewReducer').toJS();
-}
+};
 
-
-export default connect(mapStateToProps)(DesignView);
+export default DesignView;

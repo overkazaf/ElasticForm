@@ -3,6 +3,7 @@ import {
 	Menu,
 	Icon,
 } from 'antd';
+import _ from 'lodash';
 
 const SubMenu = Menu.SubMenu;
 
@@ -22,7 +23,7 @@ class ComponentSider extends Component {
 				name: '常用组件',
 				icon: 'rocket',
 				children: [
-					{ name: '文本', key: 'IFInputText' },
+					{ name: '文本', key: 'IFInputNormal' },
 					{ name: '下拉框', key: 'IFDropdown' },
 					{ name: '手机号', key: 'IFInputPhone', icon: 'mobile'},
 
@@ -109,8 +110,11 @@ class ComponentSider extends Component {
 			)
 		});
 
+		let uuid = _.uniqueId('menu_' + (Math.random()) + '_');
+
 		return (
 			<Menu 
+			  key={uuid}
 				onClick={handleMenuClick}
 				theme="dark" 
 				mode={"inline"}>

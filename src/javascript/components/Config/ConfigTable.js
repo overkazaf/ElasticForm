@@ -112,10 +112,6 @@ class ConfigTable extends Component {
       return dataModel;
     }
 
-    __getDataModels() {
-      
-    }
-
     render() {
         return (
           <Tabs type="card" defaultActiveKey="1">

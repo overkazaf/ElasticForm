@@ -63,12 +63,27 @@ const columns = [{
 }];
 
 
-
-
-
-
-
 class MainLayout extends Component {
+
+  constructor(props) {
+    super(props);
+
+    let {
+      collapsed,
+      data,
+      focusId,
+      mode,
+      editModalVisible,
+    } = props;
+    
+    this.state = {
+      collapsed,
+      data,
+      focusId,
+      mode,
+      editModalVisible,
+    };
+  }
 
   onCollapse = (collapsed) => {
     this.props.dispatch({
@@ -86,6 +101,8 @@ class MainLayout extends Component {
       type: 'ADD_COMPONENT',
       payload: {
         id: obj.key,
+        position: 'header',
+        tabIndex: 0,
       }
     });
   }
@@ -113,19 +130,31 @@ class MainLayout extends Component {
       type: 'UPDATE_COMPONENT',
       payload: {
         id: 0,
+        position: 'footer',
+        tabIndex: 0,
         model,
       },
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+
+    this.setState({
+      data: nextProps.data,
+    });
+  }
+
   render() {
 
-    let {
-      collapsed,
-      data,
-      dispatch,
+    let { 
       editModalVisible,
+      dispatch,
+      collapsed,
     } = this.props;
+
+    let {
+      data,
+    } = this.state;
 
 
     let mainHeaderStyleObj = { 

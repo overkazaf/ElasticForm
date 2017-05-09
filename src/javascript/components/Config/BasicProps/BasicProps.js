@@ -418,7 +418,10 @@ class ComponentThemeStyle extends JFormComponent {
 	  		label: '默认主题',
 	  		title: '选择组件主题',
 	  		options: [
-					{id: 1, label: '默认主题', value: 'default'},
+					{id: 1, label: 'default', value: 'default'},
+					{id: 2, label: 'primary', value: 'primay'},
+					{id: 3, label: 'dashed', value: 'dashed'},
+					{id: 4, label: 'danger', value: 'danger'},
 	  		]
 	  	},
 	  	layoutStyle: {
@@ -478,7 +481,6 @@ class ComponentThemeStyle extends JFormComponent {
 			});
 
 			let colOffset = index ? 1 : 0;
-
 
 			return (
 				<Col key={`${id}-${index}`} span={7} offset={colOffset}>

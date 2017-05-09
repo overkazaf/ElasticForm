@@ -6,7 +6,6 @@ import { mainLayoutReducer } from './mainLayoutReducer';
 
 
 const rootReducer = combineReducers({
-	designViewReducer,
 	mainLayoutReducer,
 });
 
