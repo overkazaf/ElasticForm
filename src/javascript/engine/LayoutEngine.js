@@ -124,8 +124,6 @@ class LayoutEngine {
 	      			id,
 	      		} = component;
 
-	      		console.log('item in layout', item);
-
 	      		return (
 	      			<div key={grid.i} className="draggable-item">
 			          <span className="ctrl">

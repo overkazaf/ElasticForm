@@ -6,27 +6,50 @@ function isLocalStorageSupported() {
 	}
 }
 
+
+
 export default class Storage {
-	
-	constructor() { 
+	__global_storage__ = {};
+	constructor(name, type = 'localStorage') { 
 		this.supportLocalStorage = isLocalStorageSupported();
+		this.keyMap = {};
+		this.name = name;
 	}
 
 	set(key, obj) {
-		if (this.supportLocalStorage) {
-			return localStorage.setItem(key, JSON.stringify(obj));
+		this.keyMap[key] = 1;
+
+		if (this.type === 'localStorage' && this.supportLocalStorage) {
+			localStorage.setItem(key, JSON.stringify(obj));
+		} else {
+			__global_storage__[key] = JSON.stringify(obj);
 		}
 	}	
 
 	get(key) {
-		if (this.supportLocalStorage) {
+		if (this.type === 'localStorage' && this.supportLocalStorage) {
 			return JSON.parse(localStorage.getItem(key));
+		} else {
+			return __global_storage__[key];
 		}
 	}
 	
 	delete(key) {
-		if (this.supportLocalStorage) {
+		delete this.keyMap[key];
+
+		if (this.type === 'localStorage' && this.supportLocalStorage) {
 			localStorage.removeItem(key);
+		} else {
+			delete __global_storage__[key];
+		}
+	}
+
+
+	list(keyArray = []) {
+		if (!keyArray.length) {
+			Object.keys(this.map).map((key) => {
+				console.log(`${key} ====> this.get(key)`);
+			});
 		}
 	}
 }

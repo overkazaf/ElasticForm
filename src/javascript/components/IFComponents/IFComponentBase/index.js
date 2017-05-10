@@ -61,6 +61,14 @@ class IFComponentBase extends Component {
 		]);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		let newState = Immutable.fromJS(Object.assign(this.state.option.toJS(), nextProps.option));
+
+		this.setState({
+			option: newState,
+		}, console.log(this.state.option.toJS()))
+	}
+
 	shouldComponentUpdate(nextProps, nextState) {
 		return !(this.props === nextProps || is(this.props, nextProps)) 
 			|| !(this.state === nextState || is(this.state, nextState));

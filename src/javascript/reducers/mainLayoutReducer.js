@@ -1,5 +1,6 @@
 import Immutable, { List } from 'immutable';
 import _ from 'lodash';
+import Storage from '../utils/Storage.js';
 
 let layouts = {
   header: [
@@ -148,6 +149,9 @@ const $$initState = Immutable.fromJS({
     data,
 });
 
+
+const store = new Storage('configModel', 'window');
+
 export const mainLayoutReducer = (state = $$initState, action) => {
     switch (action.type) {
         case 'ADD_COMPONENT': {
@@ -158,7 +162,7 @@ export const mainLayoutReducer = (state = $$initState, action) => {
             tabIndex,
           } = action.payload;
 
-          console.log(id, position, tabIndex);
+          position = predictComponentPositionById(id);
 
         	let $$newList = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
         	let $$updatedList = $$newList.unshift(Immutable.fromJS(generateComponentTpl(id)));
@@ -199,7 +203,8 @@ export const mainLayoutReducer = (state = $$initState, action) => {
 
         	return state.set('activeCId', id)
                       .set('activePosition', position)
-                      .set('activeTabIndex', tabIndex);
+                      .set('activeTabIndex', tabIndex)
+                      //.set('configModel', store.get(`configModel::${id}`));
         }
 
         case 'UPDATE_COMPONENT': {
@@ -210,11 +215,12 @@ export const mainLayoutReducer = (state = $$initState, action) => {
 
           const tabIndex = state.get('activeTabIndex');
           const position = state.get('activePosition');
+          const activeCId = state.get('activeCId');
 
           let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
           let index = $$layouts.findIndex((item) => {
             let itemId = item.getIn(['component', 'props', 'id']);
-            return itemId == state.get('activeCId');
+            return itemId === activeCId;
           });
 
           let $$newItem = $$layouts.get(index);
@@ -223,6 +229,13 @@ export const mainLayoutReducer = (state = $$initState, action) => {
           });
 
           let $$newLayout = $$layouts.set(index, $$settedItem);
+
+          window.model = model;
+          // write to localStorage
+          //store.set(`configModel::${activeCId}`, model);
+
+          //store.list();
+
           return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
 
@@ -335,6 +348,7 @@ function generateComponentTpl(componentType) {
  * @return {[type]}               [description]
  */
 function getDefaultComponentGrid(gridId, componentType) {
+  
   return {
       i: gridId, 
       x: 0, 
@@ -344,6 +358,29 @@ function getDefaultComponentGrid(gridId, componentType) {
       miW: 2,
       minH: 12,
   };
+  // switch(componentType) {
+  //   case 'IFButtonSubmit':
+  //   case 'IFButtonReset':
+  //     return {
+  //       i: gridId, 
+  //       x: 0, 
+  //       y: 0, 
+  //       w: 3, 
+  //       h: 9, 
+  //       miW: 2,
+  //       minH: 9,
+  //     };
+  //   default:
+  //     return {
+  //       i: gridId, 
+  //       x: 0, 
+  //       y: 0, 
+  //       w: 3, 
+  //       h: 16, 
+  //       miW: 2,
+  //       minH: 12,
+  //   };
+  // }
 }
 
 function getDefaultComponentProps(componentId, componentType) {
@@ -361,19 +398,39 @@ function getDefaultComponentProps(componentId, componentType) {
     id: componentId,
     visibility: true,
     locked: false,
-    label: `新增组件${componentId}`,
+    label: `组件${componentId}`,
     dataSource: [],
   };
 
-  if (!(componentType in defaultComponentPropsMap)) {
-    return { 
-        id: componentId,
-        visibility: true,
-        locked: false,
-        label: `新增组件${componentId}`,
-        dataSource: [],
-      };
-  } else {
-    return defaultComponentPropsMap[componentType];
+  // if (!(componentType in defaultComponentPropsMap)) {
+  //   return { 
+  //       id: componentId,
+  //       visibility: true,
+  //       locked: false,
+  //       label: `新增组件${componentId}`,
+  //       dataSource: [],
+  //     };
+  // } else {
+  //   return defaultComponentPropsMap[componentType];
+  // }
+}
+
+
+/**
+ * [predictComponentPositionById 根据组件id]
+ * @param  {[type]} id [description]
+ * @return {[type]}    [description]
+ */
+function predictComponentPositionById(id, position) {
+  if (typeof position !== 'undefined') return position;
+
+  switch(id) {
+    case 'IFButtonSubmit':
+    case 'IFButtonReset':
+      return 'footer';
+    case 'IFSmartTable':
+      return 'body';
+    default:
+      return 'header';
   }
 }

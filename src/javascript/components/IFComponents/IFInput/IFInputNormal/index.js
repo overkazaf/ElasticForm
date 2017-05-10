@@ -15,24 +15,6 @@ class IFInputNormal extends IFComponentBase {
 	  super(props);
 	}
 
-	getDataModel() {
-
-	}
-
-	componentWillReceiveProps(nextProps) {
-		console.log('nextProps', nextProps);
-		let newState = Immutable.fromJS(Object.assign(this.state.option.toJS(), nextProps.option));
-
-		console.log(newState.toJS());
-		this.setState({
-			option: newState,
-		}, console.log(this.state.option.toJS()))
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return true;
-	}
-
 	render() {
 
 		let {

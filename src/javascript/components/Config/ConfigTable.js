@@ -22,6 +22,8 @@ import {
   CirclePicker,
 } from 'react-color';
 
+import { connect } from 'react-redux';
+
 import IFDynamicForm from './IFDynamicForm.js';
 import IFTransfer from './IFTransfer.js';
 import IFEventTransfer from './IFEventTransfer.js';
@@ -82,14 +84,14 @@ let getActionTypes = () => {
   return types;
 }
 
-export default
+
 class ConfigTable extends Component {
     
     constructor(props) {
       super(props);
     
       this.state = {
-        dataSourceRadioValue: 1,
+        dataSourceRadioValue: 2,
       };
     }
 
@@ -113,10 +115,12 @@ class ConfigTable extends Component {
     }
 
     render() {
+      let { dispatch } = this.props;
+
         return (
-          <Tabs type="card" defaultActiveKey="1">
+          <Tabs type="card" defaultActiveKey="2">
             <TabPane tab="基础设置" key="1">
-              <BasicProps ref="basicProps"/>
+              <BasicProps dispatch={dispatch} ref="basicProps"/>
             </TabPane>
             <TabPane tab="数据源" key="2">
               <RadioGroup onChange={this.handleDataSourceRadioChange} value={this.state.dataSourceRadioValue}>
@@ -127,8 +131,8 @@ class ConfigTable extends Component {
               <div style={{ marginTop: '10px' }}>
                 {
                   this.state.dataSourceRadioValue == 1 ?
-                    <IFTransfer />:
-                    <IFDynamicForm />
+                    <IFTransfer dispatch={dispatch}/>:
+                    <IFDynamicForm dispatch={dispatch}/>
                 }
               </div>
             </TabPane>
@@ -370,3 +374,9 @@ class ConfigTable extends Component {
         )
     }
 }
+
+const mapStateToProps = (store) => {
+  return store.get('configReducer').toJS();
+};
+
+export default connect(mapStateToProps)(ConfigTable);

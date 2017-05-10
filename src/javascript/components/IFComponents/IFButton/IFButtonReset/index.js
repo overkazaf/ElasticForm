@@ -2,10 +2,10 @@ import {
 	Button,
 } from 'antd';
 import Immutable from 'immutable';
-import IFComponentBase from '../../IFComponentBase/index.js';
+import IFButtonNormal from '../IFButtonNormal/index.js';
 
 export default
-class IFButtonNormal extends IFComponentBase {
+class IFButtonReset extends IFButtonNormal {
 	constructor(props) {
 	  super(props);
 
@@ -40,7 +40,7 @@ class IFButtonNormal extends IFComponentBase {
 			<Button 
 				ghost={!!ghost}
 			  size={size || 'large'}
-				type={theme}
+				type={theme || 'default'}
 				disabled={!!locked}
 				onClick={onClick || null}
 				style={{ width: '100%'}}

@@ -6,6 +6,8 @@ let {
 	IFInputPhone,
 	IFDropdown,
 	IFButtonNormal,
+	IFButtonSubmit,
+	IFButtonReset,
 	IFSmartTable,
 	IFTreeSelect,
 	IFRangePicker,
@@ -25,6 +27,8 @@ const AntdComponents = {
 	IFInputPhone: (option) => <IFInputPhone ref={option.id} option={option} />,
 	IFDropdown: (option) => <IFDropdown ref={option.id} option={option} />,
 	IFButtonNormal: (option) => <IFButtonNormal ref={option.id} option={option} />,
+	IFButtonSubmit: (option) => <IFButtonSubmit ref={option.id} option={option} />,
+	IFButtonReset: (option) => <IFButtonReset ref={option.id} option={option} />,
 	IFUploadImage: (option) => <IFUploadImage ref={option.id} option={option} />,
 	IFRadioGroupHorizontal:  (option) => <IFRadioGroupHorizontal ref={option.id} option={option} />,
 	IFRadioGroupVertical:  (option) => <IFRadioGroupVertical ref={option.id} option={option} />,
@@ -36,7 +40,7 @@ const AntdComponents = {
 export default
 class ComponentFactory {
 	static create(type, option) {
-		console.log(`Creating ${type} element with option ${JSON.stringify(option)}`);
+		console.log(`Creating component ${type}`);
 		return AntdComponents[type](option);
 	}
 }

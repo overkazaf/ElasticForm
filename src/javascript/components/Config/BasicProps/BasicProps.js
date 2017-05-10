@@ -419,7 +419,7 @@ class ComponentThemeStyle extends JFormComponent {
 	  		title: '选择组件主题',
 	  		options: [
 					{id: 1, label: 'default', value: 'default'},
-					{id: 2, label: 'primary', value: 'primay'},
+					{id: 2, label: 'primary', value: 'primary'},
 					{id: 3, label: 'dashed', value: 'dashed'},
 					{id: 4, label: 'danger', value: 'danger'},
 	  		]

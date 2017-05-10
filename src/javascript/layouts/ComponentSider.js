@@ -14,6 +14,11 @@ class ComponentSider extends Component {
 		this.props.handleMenuClick && this.props.handleMenuClick(...args);
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		// 菜单栏只需要做首次渲染
+		return false;
+	}
+
 	render() {
 		const handleMenuClick = (...args) => {
 			this.handleMenuClick(...args);
@@ -26,6 +31,8 @@ class ComponentSider extends Component {
 					{ name: '文本', key: 'IFInputNormal' },
 					{ name: '下拉框', key: 'IFDropdown' },
 					{ name: '手机号', key: 'IFInputPhone', icon: 'mobile'},
+					{ name: '表单提交按钮', key: 'IFButtonSubmit'},
+					{ name: '表单重置按钮', key: 'IFButtonReset'},
 
 
 					{ name: '数字', key: 'IFInputNumber', icon: 'pay-circle'},
@@ -118,8 +125,8 @@ class ComponentSider extends Component {
 				onClick={handleMenuClick}
 				theme="dark" 
 				mode={"inline"}>
-	            {siderMenus}
-	        </Menu>
+	        {siderMenus}
+	    </Menu>
 		)
 	}
 }

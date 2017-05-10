@@ -13,15 +13,16 @@ class DynamicFieldSet extends React.Component {
   remove = (index) => {
     const { form } = this.props;
     // can use data-binding to get
-    const keys = form.getFieldValue('keys');
-    // We need at least one passenger
-    if (keys.length === 1) {
+    const labels = form.getFieldValue('labels');
+    const values = form.getFieldValue('values');
+    // We need at least one k-v pairs
+    if (labels.length === 1) {
       return;
     }
 
     // can use data-binding to set
     form.setFieldsValue({
-      keys: keys.filter((k, i) => i !== index),
+      labels: labels.filter((k, i) => i !== index),
       values: values.filter((k, i) => i !== index),
     });
   }
@@ -30,14 +31,14 @@ class DynamicFieldSet extends React.Component {
     uuid++;
     const { form } = this.props;
     // can use data-binding to get
-    const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(uuid);
+    const labels = form.getFieldValue('labels');
+    const nextLabels = labels.concat(uuid);
     const values = form.getFieldValue('values');
     const nextValues = values.concat(uuid);
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({
-      keys: nextKeys,
+      labels: nextLabels,
       values: nextValues,
     });
   }
@@ -47,12 +48,30 @@ class DynamicFieldSet extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        let labels = values.labels;
+        let dataSource = labels.map((key, index) => {
+          return {
+            label: values[`labels-${key}`],
+            value: values[`values-${key}`],
+          }
+        });
+
+
+        this.props.dispatch({
+          type: 'UPDATE_COMPONENT_DATASOURCE',
+          payload: {
+            dataSource,
+          },
+        });
       }
     });
   }
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
+
+    console.log('this.props in IFDynamicForm');
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -79,30 +98,30 @@ class DynamicFieldSet extends React.Component {
     };
 
 
-    getFieldDecorator('keys', { initialValue: [] });
+    getFieldDecorator('labels', { initialValue: [] });
     getFieldDecorator('values', { initialValue: [] });
-    const keys = getFieldValue('keys');
+    const labels = getFieldValue('labels');
     const values = getFieldValue('values');
-    const formItems = keys.map((k, index) => {
+    const formItems = labels.map((k, index) => {
       const val = values[index];
       return (
         <Row gutter={6}>
           <Col span={10}>
             <FormItem
               {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-              label={index === 0 ? '新增Key' : ''}
+              label={index === 0 ? '新增Label' : ''}
               required={false}
               key={k}
                   >
-                  {getFieldDecorator(`keys-${k}`, {
+              {getFieldDecorator(`labels-${k}`, {
                 validateTrigger: ['onChange', 'onBlur'],
                 rules: [{
                   required: true,
                   whitespace: true,
-                  message: "请将新增的键补充完整",
+                  message: "请将新增的标签补充完整",
                 }],
               })(
-              <Input placeholder="input key" style={{ width: '90%', marginRight: 8 }} />
+              <Input placeholder="input new label" style={{ width: '90%', marginRight: 8 }} />
             )}
 
             </FormItem>
@@ -122,7 +141,7 @@ class DynamicFieldSet extends React.Component {
                   message: "请将新增的值补充完整",
                 }],
               })(
-              <Input placeholder="input value" style={{ width: '90%', marginRight: 8 }} />
+              <Input placeholder="input new value" style={{ width: '90%', marginRight: 8 }} />
             )}
             </FormItem>
           </Col>
@@ -130,9 +149,8 @@ class DynamicFieldSet extends React.Component {
             <Icon
               className="dynamic-delete-button"
               type="minus-circle-o"
-              disabled={keys.length === 1}
+              disabled={labels.length === 1}
               onClick={() => {
-                this.remove(index);
                 this.remove(index);
               }}
             />

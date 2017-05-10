@@ -2,14 +2,13 @@ import {
 	Button,
 } from 'antd';
 import Immutable from 'immutable';
-import IFComponentBase from '../../IFComponentBase/index.js';
+import IFButtonNormal from '../IFButtonNormal/index.js';
 
 export default
-class IFButtonNormal extends IFComponentBase {
+class IFButtonSubmit extends IFButtonNormal {
 	constructor(props) {
 	  super(props);
 
-	  console.log('props.option', props);
 	  this.state = {
 	  	option: Immutable.fromJS(props.option || {}),
 	  	eventMap: {},
@@ -40,7 +39,7 @@ class IFButtonNormal extends IFComponentBase {
 			<Button 
 				ghost={!!ghost}
 			  size={size || 'large'}
-				type={theme}
+				type={theme || 'primary'}
 				disabled={!!locked}
 				onClick={onClick || null}
 				style={{ width: '100%'}}
