@@ -16,11 +16,8 @@ class DesignView extends Component {
   constructor(props) {
     super(props);
     this.newTabIndex = 0;
-
-    console.log('props in DesignView', props);
-
+    
     const panes = props.data.panes || [];
-
     this.state = {
       activeKey: 'IntelliForm-00001',
       panes,

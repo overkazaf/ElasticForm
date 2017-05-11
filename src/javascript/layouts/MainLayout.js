@@ -124,16 +124,29 @@ class MainLayout extends Component {
   }
 
   _confirmModalConfig() {
-    let dataSource = this.refs['configTable'].__getDataModel(1);
+    let configTable = this.refs['configTable'];
 
-    console.log('dataSource', dataSource);
+    window.configTable = configTable;
+    let activeConfigKey = configTable.__getActiveConfigTabKey();
+    let model = configTable.__getDataModel.call(configTable);
 
-    this.props.dispatch({
-      type: 'UPDATE_COMPONENT_DATASOURCE',
-      payload: {
-        dataSource,
-      },
-    });
+    console.log('activeConfigKey == 2', activeConfigKey == 2);
+    if (activeConfigKey == 2) {
+      this.props.dispatch({
+        type: 'UPDATE_COMPONENT_DATASOURCE',
+        payload: {
+          dataSource: model,
+        },
+      });
+    } else {
+      this.props.dispatch({
+        type: 'UPDATE_COMPONENT',
+        payload: {
+          model,
+        },
+      });
+    }
+    
   }
 
   componentWillReceiveProps(nextProps) {

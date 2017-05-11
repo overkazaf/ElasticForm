@@ -92,6 +92,7 @@ class ConfigTable extends Component {
     
       this.state = {
         dataSourceRadioValue: 2,
+        activeConfigTabKey: "2",
       };
     }
 
@@ -103,12 +104,26 @@ class ConfigTable extends Component {
       });
     };
 
-    __getDataModel(tabIndex = 1) {
+    onChange(activeConfigTabKey) {
+      console.log('activeConfigTabKey', activeConfigTabKey);
+      this.setState({
+        activeConfigTabKey,
+      });
+    }
+
+    __getActiveConfigTabKey() {
+      return this.state.activeConfigTabKey;
+    }
+
+    __getDataModel() {
+      const tabIndex = +this.state.activeConfigTabKey;
+
       const getDataModelByTabIndex = [
         (refs) => {
           let dataModel = {};
-          Object.keys(refs).map((refKey) => {
-            dataModel[refKey] = refs[refKey].getFieldsValue();
+          let basicProps = refs['basicProps'];
+          Object.keys(basicProps.refs).map((refKey) => {
+            dataModel[refKey] = basicProps.refs[refKey].getFieldsValue();
           });
 
           return dataModel;
@@ -130,7 +145,11 @@ class ConfigTable extends Component {
           return dataSource;
         }
       ];
-      return getDataModelByTabIndex[tabIndex](this.refs);
+
+      console.log('tabIndex-1', tabIndex);
+      console.log(getDataModelByTabIndex[tabIndex-1](this.refs));
+
+      return getDataModelByTabIndex[tabIndex-1](this.refs);
     }
 
     render() {
@@ -138,7 +157,10 @@ class ConfigTable extends Component {
       console.log('dispatch', dispatch);
 
         return (
-          <Tabs type="card" defaultActiveKey="2">
+          <Tabs 
+            onChange={this.onChange.bind(this)}
+            type="card" 
+            activeKey={this.state.activeConfigTabKey}>
             <TabPane tab="基础设置" key="1">
               <BasicProps dispatch={dispatch} ref="basicProps"/>
             </TabPane>
