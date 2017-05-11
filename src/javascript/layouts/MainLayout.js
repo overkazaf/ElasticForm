@@ -124,15 +124,14 @@ class MainLayout extends Component {
   }
 
   _confirmModalConfig() {
-    let model = this.refs['configTable'].__getDataModel();
+    let dataSource = this.refs['configTable'].__getDataModel(1);
+
+    console.log('dataSource', dataSource);
 
     this.props.dispatch({
-      type: 'UPDATE_COMPONENT',
+      type: 'UPDATE_COMPONENT_DATASOURCE',
       payload: {
-        id: 0,
-        position: 'footer',
-        tabIndex: 0,
-        model,
+        dataSource,
       },
     });
   }

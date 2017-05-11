@@ -53,7 +53,16 @@ class IFTransfer extends Component {
       </Button>
     );
   }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('nextProps in IFTransfer', nextProps);  
+  }
+
   render() {
+  
+    let { dispatch } = this.props;
+    console.log('dispatch', dispatch);
+
     return (
       <div>
         <Transfer

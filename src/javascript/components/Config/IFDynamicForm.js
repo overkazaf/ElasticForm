@@ -10,6 +10,14 @@ const FormItem = Form.Item;
 
 let uuid = 0;
 class DynamicFieldSet extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      dataSource: [],
+    }
+  }
+
   remove = (index) => {
     const { form } = this.props;
     // can use data-binding to get
@@ -44,6 +52,9 @@ class DynamicFieldSet extends React.Component {
   }
 
   handleSubmit = (e) => {
+
+    console.log('this.props in handleSubmit', this.props);
+
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -56,21 +67,28 @@ class DynamicFieldSet extends React.Component {
           }
         });
 
-
-        this.props.dispatch({
-          type: 'UPDATE_COMPONENT_DATASOURCE',
-          payload: {
-            dataSource,
-          },
+        this.setState({
+          dataSource,
         });
+
+
+        // dispatch({
+        //   type: 'UPDATE_COMPONENT_DATASOURCE',
+        //   payload: {
+        //     dataSource,
+        //   },
+        // });
       }
     });
   }
 
+  getFleldsValue() {
+    return this.state.dataSource;
+  }
+
+
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-
-    console.log('this.props in IFDynamicForm');
 
     const formItemLayout = {
       labelCol: {
@@ -109,7 +127,7 @@ class DynamicFieldSet extends React.Component {
           <Col span={10}>
             <FormItem
               {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-              label={index === 0 ? '新增Label' : ''}
+              label={index === 0 ? '新增标签' : ''}
               required={false}
               key={k}
                   >
@@ -129,7 +147,7 @@ class DynamicFieldSet extends React.Component {
           <Col span={10}>
             <FormItem
               {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-              label={index === 0 ? '新增Value' : ''}
+              label={index === 0 ? '新增值' : ''}
               required={false}
               key={val}
                   >
@@ -159,7 +177,7 @@ class DynamicFieldSet extends React.Component {
       );
     });
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form ref="dataSourceConfig" onSubmit={this.handleSubmit.bind(this)}>
         {formItems}
         <FormItem {...addFormItemLayoutWithOutLabel}>
           <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>

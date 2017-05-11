@@ -56,10 +56,6 @@ class IFDropdown extends IFComponentBase {
 			theme,
 		} = rawOption;
 
-
-		console.log('size', size);
-		console.log('theme', theme);
-
 		return (
 			<Dropdown overlay={menu}>
 		      <Button 

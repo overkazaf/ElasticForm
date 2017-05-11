@@ -103,19 +103,39 @@ class ConfigTable extends Component {
       });
     };
 
-    __getDataModel(tabIndex = 0) {
-      
-      let basicProps = this.refs['basicProps'];
-      let dataModel = {};
-      Object.keys(basicProps.refs).map((refKey) => {
-        dataModel[refKey] = basicProps.refs[refKey].getFieldsValue();
-      });
+    __getDataModel(tabIndex = 1) {
+      const getDataModelByTabIndex = [
+        (refs) => {
+          let dataModel = {};
+          Object.keys(refs).map((refKey) => {
+            dataModel[refKey] = refs[refKey].getFieldsValue();
+          });
 
-      return dataModel;
+          return dataModel;
+        },
+        (refs) => {
+          let rawModels = Object.keys(refs).map((refKey) => {
+            return refs[refKey].getFieldsValue();
+          })[0];
+
+          let dataSource = rawModels.labels.map((label) => {
+            const labelValue = rawModels[`labels-${label}`];
+            const valueValue = rawModels[`values-${label}`];
+            return {
+              label: `${labelValue}`,
+              value: `${valueValue}`,
+            }
+          });
+          
+          return dataSource;
+        }
+      ];
+      return getDataModelByTabIndex[tabIndex](this.refs);
     }
 
     render() {
       let { dispatch } = this.props;
+      console.log('dispatch', dispatch);
 
         return (
           <Tabs type="card" defaultActiveKey="2">
@@ -131,8 +151,8 @@ class ConfigTable extends Component {
               <div style={{ marginTop: '10px' }}>
                 {
                   this.state.dataSourceRadioValue == 1 ?
-                    <IFTransfer dispatch={dispatch}/>:
-                    <IFDynamicForm dispatch={dispatch}/>
+                    <IFTransfer ref="dataSource"  dispatch={dispatch}/>:
+                    <IFDynamicForm ref="dataSource" dispatch={dispatch}/>
                 }
               </div>
             </TabPane>
@@ -379,4 +399,5 @@ const mapStateToProps = (store) => {
   return store.get('configReducer').toJS();
 };
 
-export default connect(mapStateToProps)(ConfigTable);
+export default ConfigTable;
+// export default connect(mapStateToProps)(ConfigTable);

@@ -153,6 +153,7 @@ const $$initState = Immutable.fromJS({
 const store = new Storage('configModel', 'window');
 
 export const mainLayoutReducer = (state = $$initState, action) => {
+    console.log('action in mainLayoutReducer', action);
     switch (action.type) {
         case 'ADD_COMPONENT': {
 
@@ -187,6 +188,7 @@ export const mainLayoutReducer = (state = $$initState, action) => {
           } = action.payload;
 
         	let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
+
         	let $$newLayout = $$layouts.map((item, index) => {
         		let newItem = item.set('grid', Immutable.fromJS(layouts[index]));
         		return newItem;
@@ -207,6 +209,32 @@ export const mainLayoutReducer = (state = $$initState, action) => {
                       //.set('configModel', store.get(`configModel::${id}`));
         }
 
+        case 'UPDATE_COMPONENT_DATASOURCE': {
+          const {
+            dataSource,
+          } = action.payload;
+
+          const tabIndex = state.get('activeTabIndex');
+          const position = state.get('activePosition');
+          const activeCId = state.get('activeCId');
+
+          let {
+            $$newItem,
+            $$layouts,
+            index,
+          } = getTargetItemByState(state, tabIndex, position, activeCId);
+
+          let $$updatedItem = $$newItem.updateIn(['component', 'props'], function(item) {
+            let rawItem = Object.assign(item.toJS(), { dataSource });
+            return Immutable.fromJS(rawItem);
+          });
+
+          console.log('$$updatedItem', $$updatedItem.toJS());
+
+          let $$newLayout = $$layouts.set(index, $$updatedItem);
+          return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
+        }
+
         case 'UPDATE_COMPONENT': {
 
           const {
@@ -217,25 +245,16 @@ export const mainLayoutReducer = (state = $$initState, action) => {
           const position = state.get('activePosition');
           const activeCId = state.get('activeCId');
 
-          let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
-          let index = $$layouts.findIndex((item) => {
-            let itemId = item.getIn(['component', 'props', 'id']);
-            return itemId === activeCId;
-          });
-
-          let $$newItem = $$layouts.get(index);
-          let $$settedItem = $$newItem.updateIn(['component', 'props'], function(item) {
+          let {
+            $$newItem,
+            $$layouts,
+            index,
+          } = getTargetItemByState(state, tabIndex, position, activeCId);
+          let $$updatedItem = $$newItem.updateIn(['component', 'props'], function(item) {
             return Immutable.fromJS(combineModel(item.toJS(), model));
           });
 
-          let $$newLayout = $$layouts.set(index, $$settedItem);
-
-          window.model = model;
-          // write to localStorage
-          //store.set(`configModel::${activeCId}`, model);
-
-          //store.list();
-
+          let $$newLayout = $$layouts.set(index, $$updatedItem);
           return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
 
@@ -248,10 +267,14 @@ export const mainLayoutReducer = (state = $$initState, action) => {
           const position = state.get('activePosition');
 
         	let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
+
         	let index = $$layouts.findIndex((item) => {
         		let itemId = item.getIn(['component', 'props', 'id']);
-        		return itemId === id;
+        		return itemId == id;
         	});
+
+          console.log('index', index);
+
         	let $$newLayout = $$layouts.delete(index);
 
         	return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
@@ -262,6 +285,23 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         default: return state;
     }
 };
+
+function getTargetItemByState(state, tabIndex, position, activeCId) {
+
+  let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
+  let index = $$layouts.findIndex((item) => {
+    let itemId = item.getIn(['component', 'props', 'id']);
+    return itemId === activeCId;
+  });
+
+  let $$newItem = $$layouts.get(index);
+
+  return {
+    $$layouts,
+    $$newItem,
+    index,
+  };
+}
 
 /**
  * [combineModel description]
