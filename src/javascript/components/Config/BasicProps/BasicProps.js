@@ -106,7 +106,7 @@ class StatusProps extends JFormComponent {
 /**
  * 处理组件中文本的对齐状态
  */
-class InputAlignProps extends JFormComponent {
+class InputAlignCarry extends JFormComponent {
 	constructor(props) {
 		super(props);
 
@@ -526,15 +526,23 @@ class FontStyle extends JFormComponent {
 				title: '请选择字号大小',
 				value: '12px',
 				options: [
+					{id: 'ft10', label: '10px', value: '10px'},
 					{id: 'ft12', label: '12px', value: '12px'},
 					{id: 'ft14', label: '14px', value: '14px'},
 					{id: 'ft16', label: '16px', value: '16px'},
-					{id: 'ft18', label: '18px', value: '18px'},
 					{id: 'ft20', label: '20px', value: '20px'},
-					{id: 'ft22', label: '22px', value: '22px'},
 					{id: 'ft24', label: '24px', value: '24px'},
-					{id: 'ft26', label: '26px', value: '26px'},
 					{id: 'ft28', label: '28px', value: '28px'},
+					{id: 'ft32', label: '32px', value: '32px'},
+					{id: 'ft36', label: '36px', value: '36px'},
+					{id: 'ft40', label: '40px', value: '40px'},
+					{id: 'ft44', label: '44px', value: '44px'},
+					{id: 'ft48', label: '48px', value: '48px'},
+					{id: 'ft52', label: '52px', value: '52px'},
+					{id: 'ft56', label: '56px', value: '56px'},
+					{id: 'ft60', label: '60px', value: '60px'},
+					{id: 'ft64', label: '64px', value: '64px'},
+					{id: 'ft68', label: '68px', value: '68px'},
 				]
 
 			},
@@ -720,11 +728,19 @@ class ComponentColorStyle extends JFormComponent {
 				value,
 			} = item;
 
+			let colors = [
+			"#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", 
+			"#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", 
+			"#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", 
+			"#ff5722", "#795548", "#607d8b", "#aaaaaa", "#000000"];
+
 			return (
-				<Col key={`color-${id}-${index}`} span={10}>
+				<Col key={`color-${id}-${index}`} span={12}>
 					<FormItem label={label}>
 						<CirclePicker
+						  colors={colors}
 							color={value}
+							width={"96%"}
 							onChange={that.handleChange.bind(that, id)} />
 					</FormItem>
 				</Col>
@@ -756,9 +772,9 @@ const PropsPanelMap = {
 			<ComponentColorStyle ref={refName} />
 		)
 	},
-	InputAlignProps: (refName) => {
+	InputAlignCarry: (refName) => {
 		return (
-			<InputAlignProps ref={refName} />
+			<InputAlignCarry ref={refName} />
 		)
 	},
 	InputValueProps: (refName) => {
@@ -788,7 +804,7 @@ export default class BasicProps extends Component {
 		return (
 			<Collapse defaultActiveKey={['1', '2', '3']}>
 				<Panel header="组件风格" key="1">
-					{PropsPanelMap['InputAlignProps']('inputAlign')}
+					{PropsPanelMap['InputAlignCarry']('inputAlignCarry')}
 					{PropsPanelMap['FontStyle']('fontStyle')}
 					{PropsPanelMap['ComponentThemeStyle']('componentTheme')}
 					{PropsPanelMap['ComponentColorStyle']('componentColor')}

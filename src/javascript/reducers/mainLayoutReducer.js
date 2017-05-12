@@ -13,6 +13,17 @@ let layouts = {
           label: '标签文字',
           visibility: true,
           locked: false,
+          fontStyle: {
+            fontFamily: 'Microsoft Yahei',
+            fontSize: '12px',
+            fontStyle: {
+              options: [
+                {id: 'fontWeight', value: 'normal'},
+                {id: 'fontStyle', value: 'normal'},
+                {id: 'textDecoration', value: 'none'},
+              ]
+            }
+          },
         },
       }
     },
@@ -329,7 +340,7 @@ function combineModel(component, formModel) {
       mustInput,
       visibility,
     },
-    inputAlign: {
+    inputAlignCarry: {
       carry,
       textAlign,
     },
@@ -345,7 +356,14 @@ function combineModel(component, formModel) {
       placeholder,
       value,
     },
+    fontStyle: {
+      fontFamily,
+      fontSize,
+      fontStyle,
+    },
   } = formModel;
+
+  console.log('inputAlignCarry', textAlign);
 
   let newComponentDS = Object.assign(component, {
     layoutStyle: layoutStyle.value,
@@ -366,7 +384,22 @@ function combineModel(component, formModel) {
     locked,
     mustInput,
     visibility,
+
+    fontStyle: {
+      fontFamily: fontFamily.value,
+      fontSize: fontSize.value,
+      fontStyle: {
+        options: fontStyle.values,
+      },
+      fontColor: fontColor.value,
+      textAlign,
+    },
+
+    bgColor: bgColor.value,
+
   });
+
+  console.log('newComponentDS', newComponentDS);
 
   return newComponentDS;
 }

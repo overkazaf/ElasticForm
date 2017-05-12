@@ -28,7 +28,7 @@ class ComponentSider extends Component {
 				name: '常用组件',
 				icon: 'rocket',
 				children: [
-					{ name: '文本', key: 'IFInputNormal' },
+					{ name: '文本', key: 'IFLabel' },
 					{ name: '下拉框', key: 'IFDropdown' },
 					{ name: '手机号', key: 'IFInputPhone', icon: 'mobile'},
 					{ name: '表单提交按钮', key: 'IFButtonSubmit'},

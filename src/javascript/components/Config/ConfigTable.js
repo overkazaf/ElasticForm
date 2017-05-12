@@ -92,7 +92,7 @@ class ConfigTable extends Component {
     
       this.state = {
         dataSourceRadioValue: 2, // 1为从已有数据源中选择，2为批量自定义数据源
-        activeConfigTabKey: "1",
+        activeConfigTabKey: "2",
       };
     }
 

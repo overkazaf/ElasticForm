@@ -11,11 +11,32 @@ class IFLabel extends IFComponentBase {
 
     let {
       label,
+      fontStyle: {
+        fontFamily,
+        fontSize,
+        fontStyle: {
+          options,
+        },
+        textAlign,
+        fontColor,
+      },
+      bgColor,
     } = option;
-    console.log('option in label');
+
+    let styleObj = {};
+    styleObj['fontFamily'] = fontFamily;
+    styleObj['fontSize'] = fontSize;
+    styleObj['textAlign'] = textAlign;
+    styleObj['color'] = fontColor || '#000';
+    styleObj['backgroundColor'] = bgColor;
+    styleObj['height'] = '100%';
+
+    options.map((item) => {
+      styleObj[item.id] = item.value;
+    });
 
     return (
-      <div className="if-label">
+      <div className="if-label" style={styleObj}>
         {label}
       </div>  
     );

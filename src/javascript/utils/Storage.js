@@ -9,7 +9,6 @@ function isLocalStorageSupported() {
 
 
 export default class Storage {
-	__global_storage__ = {};
 	constructor(name, type = 'localStorage') { 
 		this.supportLocalStorage = isLocalStorageSupported();
 		this.keyMap = {};
@@ -21,16 +20,12 @@ export default class Storage {
 
 		if (this.type === 'localStorage' && this.supportLocalStorage) {
 			localStorage.setItem(key, JSON.stringify(obj));
-		} else {
-			__global_storage__[key] = JSON.stringify(obj);
 		}
 	}	
 
 	get(key) {
 		if (this.type === 'localStorage' && this.supportLocalStorage) {
 			return JSON.parse(localStorage.getItem(key));
-		} else {
-			return __global_storage__[key];
 		}
 	}
 	
@@ -39,8 +34,6 @@ export default class Storage {
 
 		if (this.type === 'localStorage' && this.supportLocalStorage) {
 			localStorage.removeItem(key);
-		} else {
-			delete __global_storage__[key];
 		}
 	}
 
