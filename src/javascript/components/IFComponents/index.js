@@ -2,6 +2,7 @@ import IFButtonNormal from './IFButton/IFButtonNormal/index.js';
 import IFButtonSubmit from './IFButton/IFButtonSubmit/index.js';
 import IFButtonReset from './IFButton/IFButtonReset/index.js';
 import IFDropdown from './IFDropdown/index.js';
+import IFLabel from './IFLabel/index.js';
 import IFInputNumber from './IFInput/IFInputNumber/index.js';
 import IFInputNormal from './IFInput/IFInputNormal/index.js';
 import IFInputPhone from './IFInput/IFInputPhone/index.js';
@@ -18,6 +19,7 @@ let IFComponents = {
 	IFButtonSubmit,
 	IFButtonReset,
 	IFDropdown,
+	IFLabel,
 	IFInputNumber,
 	IFInputNormal,
 	IFInputPhone,

@@ -90,11 +90,14 @@ class LayoutEngine {
 			})
 		};
 
-		let removeComponent = (id, tabIndex = 0, position) => {
+		let removeComponent = (id, tabIndex, position) => {
+			console.log('removeComponent', id, tabIndex, position);
 			dispatch({
 				type: 'REMOVE_COMPONENT',
 				payload: {
 					id,
+					tabIndex, 
+					position,
 				},
 			})
 		};

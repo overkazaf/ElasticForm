@@ -1,6 +1,7 @@
 import IFComponents from '../components/IFComponents';
 
 let {
+	IFLabel,
 	IFInputNumber,
 	IFInputNormal,
 	IFInputPhone,
@@ -22,6 +23,7 @@ const AntdComponents = {
 	//IFCheckBoxGroupVertical:(option) => <IFCheckBoxGroupVertical ref={option.id} option={option} />,
 	//IFCheckBoxGroupVertical:(option) => <IFCheckBoxGroupVertical ref={option.id} option={option} />,
 	//IFCheckBoxGroupVertical:(option) => <IFCheckBoxGroupVertical ref={option.id} option={option} />,
+	IFLabel: (option) => <IFLabel ref={option.id} option={option} />,
 	IFInputNumber: (option) => <IFInputNumber ref={option.id} option={option} />,
 	IFInputNormal: (option) => <IFInputNormal ref={option.id} option={option} />,
 	IFInputPhone: (option) => <IFInputPhone ref={option.id} option={option} />,

@@ -7,10 +7,10 @@ let layouts = {
     {
       grid: {i: 'g1', x: 0, y: 0, w: 2, h: 9, minH: 9},
       component: {
-        type: 'IFInputNumber', 
+        type: 'IFLabel', 
         props: { 
           id: 1, 
-          defaultValue: 0,
+          label: '标签文字',
           visibility: true,
           locked: false,
         },
@@ -261,10 +261,14 @@ export const mainLayoutReducer = (state = $$initState, action) => {
         case 'REMOVE_COMPONENT': {
           let {
             id,
+            tabIndex,
+            position,
           } = action.payload;
 
-          const tabIndex = state.get('activeTabIndex');
-          const position = state.get('activePosition');
+          tabIndex = tabIndex || state.get('activeTabIndex');
+          position = position || state.get('activePosition');
+
+          console.log('tabIndex', tabIndex, 'position', position, 'id', id);
 
         	let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
 

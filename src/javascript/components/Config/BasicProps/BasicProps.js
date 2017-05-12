@@ -8,6 +8,7 @@ import {
 	Radio,
 	Input,
 	Select,
+	Button,
 	Icon,
 } from 'antd';
 
@@ -22,6 +23,7 @@ const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
 const Option = Select.Option;
 const Panel = Collapse.Panel;
+const ButtonGroup  = Button.Group;
 
 import JFormComponent from '../JFormComponent';
 
@@ -403,7 +405,7 @@ class ComponentThemeStyle extends JFormComponent {
 	  this.state = {
 	  	size: {
 	  		id: 'size',
-	  		value: 'default',
+	  		value: 'large',
 	  		label: '组件尺寸',
 	  		title: '选择组件尺寸',
 	  		options: [
@@ -414,7 +416,7 @@ class ComponentThemeStyle extends JFormComponent {
 	  	},
 	  	theme: {
 	  		id: 'theme',
-	  		value: 'default',
+	  		value: 'primary',
 	  		label: '默认主题',
 	  		title: '选择组件主题',
 	  		options: [
@@ -430,8 +432,8 @@ class ComponentThemeStyle extends JFormComponent {
 	  		label: '组件风格',
 	  		title: '选择组件风格',
 	  		options: [
-					{id: 1, label: '垂直排布', value: 'vertical'},
-					{id: 2, label: '水平排布', value: 'horizontal'},
+					{id: 1, label: '垂直风格', value: 'vertical'},
+					{id: 2, label: '水平风格', value: 'horizontal'},
 	  		]
 	  	},
 	  };
@@ -480,14 +482,16 @@ class ComponentThemeStyle extends JFormComponent {
 				)
 			});
 
-			let colOffset = index ? 1 : 0;
-
 			return (
-				<Col key={`${id}-${index}`} span={7} offset={colOffset}>
+				<Col key={`${id}-${index}`} span={8}>
 					<FormItem label={label}>
-							<Select title={title} value={value} onChange={that.handleChange.bind(that, id)}>
-								{optionContent}
-							</Select>
+						<Select 
+							title={title} 
+							value={value} 
+							onChange={that.handleChange.bind(that, id)}
+							style={{ width: '80%'}}>
+							{optionContent}
+						</Select>
 					</FormItem>
 				</Col>
 			)
@@ -496,6 +500,177 @@ class ComponentThemeStyle extends JFormComponent {
 		return (
 			<Row gutter={8}>
 				{componentThemeStyleContent}
+			</Row>
+		)
+	}
+}
+
+class FontStyle extends JFormComponent {
+	constructor(props) {
+		super(props);
+		
+		this.state = {
+			fontStyle: {
+				id: 'fontStyle',
+				label: '文字样式',
+				values: [],
+				options: [
+					{id: 'fontWeight', label: '加粗', value: 'bold', checked: false},
+					{id: 'fontStyle', label: '斜体', value: 'italic', checked: true},
+					{id: 'textDecoration', label: '下划线', value: 'underline', checked: false}
+	  		]
+			},
+			fontSize: {
+				id: 'fontSize',
+				label: '字号大小',
+				title: '请选择字号大小',
+				value: '12px',
+				options: [
+					{id: 'ft12', label: '12px', value: '12px'},
+					{id: 'ft14', label: '14px', value: '14px'},
+					{id: 'ft16', label: '16px', value: '16px'},
+					{id: 'ft18', label: '18px', value: '18px'},
+					{id: 'ft20', label: '20px', value: '20px'},
+					{id: 'ft22', label: '22px', value: '22px'},
+					{id: 'ft24', label: '24px', value: '24px'},
+					{id: 'ft26', label: '26px', value: '26px'},
+					{id: 'ft28', label: '28px', value: '28px'},
+				]
+
+			},
+			fontFamily: {
+				id: 'fontFamily',
+				label: '字体',
+				title: '请选择字体',
+				value: 'sans serif',
+				options: [
+					{id: 'ff1', label: 'sans serif', value: 'sans serif'},
+					{id: 'ff2', label: '微软雅黑', value: 'Microsoft Yahei'},
+					{id: 'ff3', label: '黑体', value: 'Heiti'},
+				],
+			},
+		};
+	}
+
+	handleChange(key, id) {
+		console.log('key', key, 'id', id);
+		switch(key) {
+			case 'fontStyle': {
+				let newState = Object.assign({}, this.state.fontStyle);
+				newState.options = newState.options.map((opt) => {
+					if (opt.id === id) {
+						opt.checked = !opt.checked;
+					}
+					return opt;
+				});
+
+				newState.values = newState.options.filter((item) => {
+					return item.checked;
+				});
+
+				this.setState({
+					fontStyle: newState,
+				}, () => {
+					console.log('new state has been successfully setted', this.state);
+				});
+
+				return;
+			}
+
+			default: {
+				let newKeyState = Object.assign(this.state[key], { value: id });
+				this.setState({
+					[key]: newKeyState,
+				}, () => {
+					console.warn('state has been changed in colorChange', this.state);
+				});
+
+				return;
+			}
+		}
+	}
+
+	render() {
+		let that = this;
+		let {
+			fontStyle,
+			fontSize,
+			fontFamily,
+		} = this.state;
+
+		let fontStyleContent = [fontStyle, fontSize, fontFamily].map((item, index) => {
+			  let { 
+			  	id,
+			  	label,
+			  	title,
+			  	value,
+			  	options,
+			  } = item;
+
+				if (id === 'fontStyle') {
+					let buttonContent = options.map((opt, idx) => {
+						let buttonKey = `${id}-${idx}`;
+						let { 
+							id,
+							label,
+							value,
+							checked,
+						} = opt;
+						
+						// 区分选中和未选的按钮状态
+						let buttonType = !checked ? 'default' : 'primary';
+						let styleObj = {};
+						styleObj[id] = value;
+
+						return (
+							<Button size="default" onClick={that.handleChange.bind(that, 'fontStyle', id)} type={buttonType} key={buttonKey}>
+								<span style={styleObj}>{label}</span>
+							</Button>
+						)
+					});
+					return (
+						<Col key={`${id}-${index}`} span={8}>
+							<FormItem label={label}>
+								<ButtonGroup>
+                  {buttonContent}
+								</ButtonGroup>
+							</FormItem> 
+						</Col>
+					)
+				} else {
+
+					let optionContent = options.map((opt) => {
+						let { 
+							id,
+							label,
+							value,
+						} = opt;
+
+						return (
+							<Option key={`opt-${id}`} value={value}>{label}</Option>
+						)
+					});
+
+					return (
+						<Col key={`${id}-${index}`} span={8}>
+							<FormItem label={label}>
+								<Select 
+									title={title} 
+									value={value} 
+									onChange={that.handleChange.bind(that, id)}
+									style={{ width: '80%'}}
+									>
+									{optionContent}
+								</Select>
+							</FormItem> 
+						</Col>
+					)
+				}
+		});
+
+		return (
+			<Row gutter={8} style={{ display: 'block' }}>
+				{fontStyleContent}
 			</Row>
 		)
 	}
@@ -595,6 +770,11 @@ const PropsPanelMap = {
 		return (
 			<InputDecorationProps ref={refName} />
 		)
+	},
+	FontStyle: (refName) => {
+		return (
+			<FontStyle ref={refName} />
+		)
 	}
 }
 
@@ -607,17 +787,18 @@ export default class BasicProps extends Component {
 
 		return (
 			<Collapse defaultActiveKey={['1', '2', '3']}>
-				<Panel header="状态属性" key="1">
-					{PropsPanelMap['StatusProps']('formStatus')}
+				<Panel header="组件风格" key="1">
+					{PropsPanelMap['InputAlignProps']('inputAlign')}
+					{PropsPanelMap['FontStyle']('fontStyle')}
+					{PropsPanelMap['ComponentThemeStyle']('componentTheme')}
+					{PropsPanelMap['ComponentColorStyle']('componentColor')}
 				</Panel>
 				<Panel header="输入框属性" key="2">
-					{PropsPanelMap['InputAlignProps']('inputAlign')}
 					{PropsPanelMap['InputValueProps']('inputValue')}
 					{PropsPanelMap['InputDecorationProps']('inputDecoration')}
 				</Panel>
-				<Panel header="组件风格" key="3">
-					{PropsPanelMap['ComponentThemeStyle']('componentTheme')}
-					{PropsPanelMap['ComponentColorStyle']('componentColor')}
+				<Panel header="状态属性" key="3">
+					{PropsPanelMap['StatusProps']('formStatus')}
 				</Panel>
 			</Collapse>
 		)
