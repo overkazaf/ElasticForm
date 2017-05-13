@@ -85,6 +85,31 @@ let getActionTypes = () => {
 }
 
 
+class ApplyConfigButton extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let {
+      onApply,
+      title,
+    } = this.props;
+  
+    let styleObj = { 
+      marginTop: '10px', 
+      marginRight: '10px', 
+      textAlign: 'right',
+    };
+
+    return (
+      <div style={styleObj}>
+        <Button ghost onClick={onApply} type="primary">{title}</Button>
+      </div>
+    ) 
+  } 
+}
+
 class ConfigTable extends Component {
     
     constructor(props) {
@@ -118,8 +143,10 @@ class ConfigTable extends Component {
     __getDataModel() {
       const tabIndex = +this.state.activeConfigTabKey;
 
+      // 根据当前的配置面板项，返回配置信息
       const getDataModelByTabIndex = [
         (refs) => {
+          console.log('refs in 0', refs);
           let dataModel = {};
           let basicProps = refs['basicProps'];
           Object.keys(basicProps.refs).map((refKey) => {
@@ -129,7 +156,10 @@ class ConfigTable extends Component {
           return dataModel;
         },
         (refs) => {
-          let rawModels = Object.keys(refs).map((refKey) => {
+          console.log('refs in 1', refs);
+          let rawModels = Object.keys(refs).filter((refKey) => {
+            return refKey == 'dataSource';
+          }).map((refKey) => {
             return refs[refKey].getFieldsValue();
           })[0];
 
@@ -146,15 +176,15 @@ class ConfigTable extends Component {
         }
       ];
 
-      console.log('tabIndex-1', tabIndex);
+      console.log('tabIndex - 1 ==', tabIndex);
+      console.log('getDataModelByTabIndex[tabIndex-1]', getDataModelByTabIndex[tabIndex-1]);
       console.log(getDataModelByTabIndex[tabIndex-1](this.refs));
 
       return getDataModelByTabIndex[tabIndex-1](this.refs);
     }
 
     render() {
-      let { dispatch } = this.props;
-      console.log('dispatch', dispatch);
+      let { dispatch, onApply } = this.props;
 
         return (
           <Tabs 
@@ -163,6 +193,8 @@ class ConfigTable extends Component {
             activeKey={this.state.activeConfigTabKey}>
             <TabPane tab="基础设置" key="1">
               <BasicProps dispatch={dispatch} ref="basicProps"/>
+
+              <ApplyConfigButton onApply={onApply} title="应用基础设置" />
             </TabPane>
             <TabPane tab="数据源" key="2">
               <RadioGroup onChange={this.handleDataSourceRadioChange} value={this.state.dataSourceRadioValue}>
@@ -177,6 +209,9 @@ class ConfigTable extends Component {
                     <IFDynamicForm ref="dataSource" dispatch={dispatch}/>
                 }
               </div>
+
+              <ApplyConfigButton onApply={onApply} title="应用数据源设置" />
+
             </TabPane>
             <TabPane tab="过滤规则" key="3">
               <Row>

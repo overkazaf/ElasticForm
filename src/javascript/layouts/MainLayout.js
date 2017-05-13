@@ -4,6 +4,7 @@ import Immutable from 'immutable';
 import MenuBar from './MenuBar/index.js';
 import ComponentSider from './ComponentSider';
 import DesignView from './DesignView';
+import DraggableSiderTools from '../components/Config/DraggableSiderTools/index.js';
 import DevTools from '../components/DevTools/index.js';
 import { 
   Layout, 
@@ -15,9 +16,11 @@ import {
   Modal,
   Tabs,
   Tree,
+  Button,
 } from 'antd';
 
 import ConfigTable from '../components/Config/ConfigTable.js';
+import Draggable from 'react-draggable';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -25,43 +28,7 @@ const Search = Input.Search;
 const TabPane = Tabs.TabPane;
 const TreeNode = Tree.TreeNode;
 
-
-const dataSource = [{
-  key: '1',
-  name: '表名',
-  value: 'IntelliForm-0001',
-},
-{
-  key: '2',
-  name: '标题',
-  value: '测试表一',
-},
-{
-  key: '3',
-  name: '描述',
-  value: '这一是个测试用表'
-},
-{
-  key: '4',
-  name: '基础资料',
-  value: 'NIL',
-},
-{
-  key: '5',
-  name: '事件',
-  value: 'EVENT_LIST:xxxyyy',
-}];
-
-const columns = [{
-  title: '属性',
-  dataIndex: 'name',
-  key: 'name',
-}, {
-  title: '值',
-  dataIndex: 'value',
-  key: 'value',
-}];
-
+import MainLayoutStyle from './MainLayout.scss';
 
 class MainLayout extends Component {
 
@@ -119,18 +86,19 @@ class MainLayout extends Component {
   }
 
   handleOk() {
-    this._confirmModalConfig();
+    this._confirmModalConfig(true);
     this._dismissModal();
   }
 
-  _confirmModalConfig() {
+  _confirmModalConfig(confirmAllFlag = false) {
     let configTable = this.refs['configTable'];
 
-    window.configTable = configTable;
+    // TODO：
+    // if confirmAllFlag is setted to true, we apply all config panels
+
     let activeConfigKey = configTable.__getActiveConfigTabKey();
     let model = configTable.__getDataModel.call(configTable);
 
-    console.log('activeConfigKey == 2', activeConfigKey == 2);
     if (activeConfigKey == 2) {
       this.props.dispatch({
         type: 'UPDATE_COMPONENT_DATASOURCE',
@@ -176,15 +144,7 @@ class MainLayout extends Component {
       lineHeight: '32px', 
     };
 
-    let tableContainerStyleObj = {
-      position: 'absolute', 
-      padding: '5px', 
-      background: '#f6f6f6', 
-      width: '100%',
-      left: 0, 
-      bottom: '100px',
-      border: '1px solid #aaa',
-    };
+    
 
     let viewContainerStyleObj = { 
       margin: 2, 
@@ -225,56 +185,62 @@ class MainLayout extends Component {
             </Footer>
           </Content>
           <Sider
-              collapsible
-              width={240}
-              style={{ backgroundColor: '#f9f9f9' }}
-            >
-            <div style={{ positon: 'relative', width: '240px', maxHeight: '320px', overflow: 'auto', padding: '5px', border: '1px solid #aaa' }}>
-                <div>
-                  <Search
-                    placeholder="search now"
-                    style={{ width: 220 }}
-                    onSearch={value => console.log(value)}
-                  />
-
-                  <Tree
-                    showLine
-                    defaultExpandedKeys={['0-0-0']}
-                    onSelect={this.onSelect}
-                  >
-                    <TreeNode title="根目录" key="0-0">
-                      <TreeNode title="二级目录-1" key="0-0-0">
-                        <TreeNode title="表单一" key="0-0-0-0" />
-                        <TreeNode title="表单二" key="0-0-0-1" />
-                        <TreeNode title="表单三" key="0-0-0-2" />
-                      </TreeNode>
-                      <TreeNode title="二级目录-2" key="0-0-1">
-                        <TreeNode title="数据源一" key="0-0-1-0" />
-                        <TreeNode title="数据源二" key="0-0-1-１" />
-                      </TreeNode>
-                      <TreeNode title="未分类表单-1" key="0-0-2"></TreeNode>
-                      <TreeNode title="未分类表单-2" key="0-0-3"></TreeNode>
-                    </TreeNode>
-                  </Tree>
-                </div>
-              <div style={tableContainerStyleObj}>
-                <Table 
-                  pagination={false}
-                  dataSource={dataSource} 
-                  columns={columns} />
-                </div>
-            </div>
+            style={{ background: 'transparent', padding: '4px'}}
+          >
+            <DraggableSiderTools />
           </Sider>
         </Layout>
       </Layout>
-
-        <Modal title="参数配置" visible={editModalVisible}
-          onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
-          okText="保存所有配置" cancelText="取消"
-          width={750}
-        >
-          <ConfigTable ref="configTable" config={{}}/>
-        </Modal>
+      <Layout>
+       <Draggable 
+         grid={[1, 1]} 
+         handle=".if-draggable-modal-header" 
+         onDrag={handleDrag}>
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            marginLeft: '-400px',
+            top: '100px',
+            width: '800px',
+            background: '#222',
+            border: '1px solid #aaa',
+            boxShadow: '1px 1px 10px #000',
+            zIndex: '1000',
+            background: '#fff',
+            padding: '15px',
+            borderRadius: '8px',
+            display: editModalVisible ? 'block' : 'none'
+          }}>
+            <style dangerouslySetInnerHTML={{ __html: MainLayoutStyle}} />
+              <div className="if-draggable-modal-content">
+                <div className="if-draggable-modal-header" style={{ cursor: 'move'}}>
+                  <h2>参数配置</h2>
+                  <span className="close" onClick={this.handleCancel.bind(this)}>
+                    <Icon type="close-circle" />
+                  </span>
+                </div>
+                <div className="if-draggable-modal-body">
+                  <ConfigTable 
+                    ref="configTable" 
+                    config={{
+                      basicProps: {},
+                      dataSource: {},
+                      filterRules: {},
+                      advancedConfig: {},
+                      validations: {},
+                      pushDownProfile: {},
+                    }}
+                    onApply={this._confirmModalConfig.bind(this)}
+                    />
+                </div>
+                <div className="if-draggable-modal-footer">
+                  <Button size="large" onClick={this.handleOk.bind(this)} type="primary">保存所有配置</Button>
+                  <Button size="large" onClick={this.handleCancel.bind(this)} type="default">取消</Button>
+                </div>
+              </div>
+              </div>
+        </Draggable>
+        </Layout>
       </Layout>
     )
   }
@@ -285,3 +251,8 @@ const mapStateToProps = ($$state, ownProps) => {
 }
 
 export default connect(mapStateToProps)(MainLayout);
+
+
+function handleDrag(...args) {
+    console.log('handle drag', args);
+}

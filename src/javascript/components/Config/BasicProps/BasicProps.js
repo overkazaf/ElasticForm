@@ -16,6 +16,8 @@ import {
   TwitterPicker,
   GithubPicker,
   CirclePicker,
+  SketchPicker,
+  CompactPicker,
 } from 'react-color';
 
 const FormItem = Form.Item;
@@ -117,6 +119,7 @@ class InputAlignCarry extends JFormComponent {
 	}
 	
 	handleChange(type, e) {
+
 		this.setState({
 			[type]: e.target.value,
 		}, () => {
@@ -516,7 +519,7 @@ class FontStyle extends JFormComponent {
 				values: [],
 				options: [
 					{id: 'fontWeight', label: '加粗', value: 'bold', checked: false},
-					{id: 'fontStyle', label: '斜体', value: 'italic', checked: true},
+					{id: 'fontStyle', label: '斜体', value: 'italic', checked: false},
 					{id: 'textDecoration', label: '下划线', value: 'underline', checked: false}
 	  		]
 			},
@@ -561,6 +564,7 @@ class FontStyle extends JFormComponent {
 	}
 
 	handleChange(key, id) {
+		console.log('handleChange in fontStyle');
 		console.log('key', key, 'id', id);
 		switch(key) {
 			case 'fontStyle': {
@@ -703,6 +707,7 @@ class ComponentColorStyle extends JFormComponent {
 	}
 
 	handleChange(key, { hex }) {
+
 		let newKeyState = Object.assign(this.state[key], { value: hex });
 		this.setState({
 			[key]: newKeyState,
@@ -734,13 +739,13 @@ class ComponentColorStyle extends JFormComponent {
 			"#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", 
 			"#ff5722", "#795548", "#607d8b", "#aaaaaa", "#000000"];
 
+			let offset = index ? 1 : 0;
+
 			return (
-				<Col key={`color-${id}-${index}`} span={12}>
+				<Col key={`color-${id}-${index}`} span={11} offset={offset}>
 					<FormItem label={label}>
-						<CirclePicker
-						  colors={colors}
+						<CompactPicker
 							color={value}
-							width={"96%"}
 							onChange={that.handleChange.bind(that, id)} />
 					</FormItem>
 				</Col>
