@@ -462,34 +462,47 @@ function getDefaultComponentGrid(gridId, componentType) {
 
 function getDefaultComponentProps(componentId, componentType) {
   const defaultComponentPropsMap = {
-    'IFDropdown': {
-      id: componentId,
-      visibility: true,
-      locked: false,
-      label: `新增组件${componentId}`,
-      dataSource: [],
+    'IFDropdown': (componentId) => {
+      return {
+        id: componentId,
+        visibility: true,
+        locked: false,
+        label: `下拉框${componentId}`,
+        dataSource: [],
+      };
+    },
+    'IFLabel': (componentId) => {
+      return {
+        id: componentId,
+        visibility: true,
+        locked: false,
+        label: `标签${componentId}`,
+        fontStyle: {
+          fontFamily: 'Microsoft Yahei',
+          fontSize: '12px',
+          fontStyle: {
+            options: [
+              {id: 'fontWeight', value: 'normal', checked: false},
+              {id: 'fontStyle', value: 'normal', checked: false},
+              {id: 'textDecoration', value: 'none', checked: false},
+            ]
+          }
+        }
+      };
     }
   };
 
-  return { 
-    id: componentId,
-    visibility: true,
-    locked: false,
-    label: `组件${componentId}`,
-    dataSource: [],
-  };
-
-  // if (!(componentType in defaultComponentPropsMap)) {
-  //   return { 
-  //       id: componentId,
-  //       visibility: true,
-  //       locked: false,
-  //       label: `新增组件${componentId}`,
-  //       dataSource: [],
-  //     };
-  // } else {
-  //   return defaultComponentPropsMap[componentType];
-  // }
+  if (componentType in defaultComponentPropsMap) {
+    return defaultComponentPropsMap[componentType](componentId);
+  } else {
+    return { 
+      id: componentId,
+      visibility: true,
+      locked: false,
+      label: `组件${componentId}`,
+      dataSource: [],
+    };
+  }
 }
 
 
