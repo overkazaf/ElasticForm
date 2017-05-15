@@ -23,11 +23,13 @@ import {
 } from 'react-color';
 
 import { connect } from 'react-redux';
-
+import _ from 'lodash';
 import IFDynamicForm from './IFDynamicForm.js';
 import IFTransfer from './IFTransfer.js';
 import IFEventTransfer from './IFEventTransfer.js';
 import BasicProps from './BasicProps/BasicProps.js';
+
+import defaultBasicProps from './BasicProps/defaultBasicProps.js';
 
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
@@ -118,7 +120,35 @@ class ConfigTable extends Component {
       this.state = {
         dataSourceRadioValue: 2, // 1为从已有数据源中选择，2为批量自定义数据源
         activeConfigTabKey: "2",
+        config: {
+          basicProps: {},
+          dataSource: {},
+        },
       };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+      return true;
+    }
+
+    componentWillReceiveProps(nextProps) {
+      
+      let {
+        config,
+      } = nextProps;
+
+      console.log('nextProps in ConfigTable', nextProps);
+      console.log('defaultBasicProps in ConfigTable', defaultBasicProps);
+
+      if (!config) {
+        config = _.cloneDeep(defaultBasicProps);
+      }
+
+      this.setState({
+        config,
+      }, () => {
+        console.log('basicProps has been setted in ConfigTable', this.state);
+      });
     }
 
     handleDataSourceRadioChange = () => {
@@ -130,7 +160,6 @@ class ConfigTable extends Component {
     };
 
     onChange(activeConfigTabKey) {
-      console.log('activeConfigTabKey', activeConfigTabKey);
       this.setState({
         activeConfigTabKey,
       });
@@ -146,7 +175,6 @@ class ConfigTable extends Component {
       // 根据当前的配置面板项，返回配置信息
       const getDataModelByTabIndex = [
         (refs) => {
-          console.log('refs in 0', refs);
           let dataModel = {};
           let basicProps = refs['basicProps'];
           Object.keys(basicProps.refs).map((refKey) => {
@@ -156,7 +184,6 @@ class ConfigTable extends Component {
           return dataModel;
         },
         (refs) => {
-          console.log('refs in 1', refs);
           let rawModels = Object.keys(refs).filter((refKey) => {
             return refKey == 'dataSource';
           }).map((refKey) => {
@@ -176,23 +203,30 @@ class ConfigTable extends Component {
         }
       ];
 
-      console.log('tabIndex - 1 ==', tabIndex);
-      console.log('getDataModelByTabIndex[tabIndex-1]', getDataModelByTabIndex[tabIndex-1]);
-      console.log(getDataModelByTabIndex[tabIndex-1](this.refs));
-
       return getDataModelByTabIndex[tabIndex-1](this.refs);
     }
 
     render() {
       let { dispatch, onApply } = this.props;
-
+      let { config } = this.state;
+      
+      let {
+        basicProps,
+        dataSource,
+        filterRules,
+        advancedConfig,
+      } = config;
+      
         return (
           <Tabs 
             onChange={this.onChange.bind(this)}
             type="card" 
             activeKey={this.state.activeConfigTabKey}>
             <TabPane tab="基础设置" key="1">
-              <BasicProps dispatch={dispatch} ref="basicProps"/>
+              <BasicProps 
+                config={basicProps}
+                dispatch={dispatch} 
+                ref="basicProps"/>
 
               <ApplyConfigButton onApply={onApply} title="应用基础设置" />
             </TabPane>
@@ -451,6 +485,38 @@ class ConfigTable extends Component {
         )
     }
 }
+
+
+const ModelConversionsStretagy = {
+  'basicProps': (config) => {
+    if (!Object.keys(config).length) {
+      return config;
+    }
+
+    let targetConfig = {};
+    let basicKeys = [
+      'componentColor',
+      'componentTheme',
+      'fontStyle',
+      'formStatus',
+      'configutAlignCarry',
+      'inputDecoration',
+      'inputValue',
+    ];
+
+    basicKeys.map((key) => {
+      targetConfig[key] = config[key];
+    });
+
+    return config;
+  },
+};
+
+function convertModel(config, type) {
+  return ModelConversionsStretagy[type](config);
+}
+
+
 
 const mapStateToProps = (store) => {
   return store.get('configReducer').toJS();

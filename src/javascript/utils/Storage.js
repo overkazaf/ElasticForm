@@ -1,46 +1,57 @@
 function isLocalStorageSupported() {
 	try {
-		return !(typeof window.localStorage === 'undefined');
+		return !(typeof global.localStorage === 'undefined');
 	} catch(e) {
 		return false;
 	}
 }
 
 
+if (!global.__cache__) {
+	global.__cache__ = {};
+}
+
+global.GlobalStoreMap = new Map();
 
 export default class Storage {
 	constructor(name, type = 'localStorage') { 
-		this.supportLocalStorage = isLocalStorageSupported();
-		this.keyMap = {};
-		this.name = name;
+		if (typeof GlobalStoreMap.get(name) !== 'undefined') {
+			return GlobalStoreMap.get(name);
+		} else {
+			this.supportLocalStorage = isLocalStorageSupported();
+			this.keyMap = {};
+			this.name = name;
+
+			global.__cache__[name] = {};
+			GlobalStoreMap.set(name, this);
+		}
+	}
+
+	static getInstance(name) {
+		return GlobalStoreMap.get(name);
 	}
 
 	set(key, obj) {
 		this.keyMap[key] = 1;
-
-		if (this.type === 'localStorage' && this.supportLocalStorage) {
-			localStorage.setItem(key, JSON.stringify(obj));
-		}
+		global.__cache__[this.name][key] = obj;
 	}	
 
 	get(key) {
-		if (this.type === 'localStorage' && this.supportLocalStorage) {
-			return JSON.parse(localStorage.getItem(key));
-		}
+		return global.__cache__[this.name][key];
 	}
 	
 	delete(key) {
 		delete this.keyMap[key];
-
-		if (this.type === 'localStorage' && this.supportLocalStorage) {
-			localStorage.removeItem(key);
-		}
+		delete global.__cache__[this.name][key];
 	}
 
+	destroy() {
+		global.__cache__ = null;
+	}
 
 	list(keyArray = []) {
 		if (!keyArray.length) {
-			Object.keys(this.map).map((key) => {
+			Object.keys(this.keyMap).map((key) => {
 				console.log(`${key} ====> this.get(key)`);
 			});
 		}

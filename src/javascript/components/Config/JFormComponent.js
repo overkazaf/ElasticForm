@@ -37,6 +37,10 @@ export default class JFormComponent extends Component {
 		this.setState(newState, callback);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState(nextProps.options);
+	}
+
 	render() {
 		return (
 			<div className="JFormComponent-wrapper">

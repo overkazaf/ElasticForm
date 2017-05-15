@@ -1,3 +1,5 @@
+import React, { Component } from 'react';
+
 import {
 	Row,
 	Col,
@@ -22,44 +24,26 @@ import GL from '../components/Test/GL.js';
 
 let ResponsiveReactGridLayout = ReactGridLayout.Responsive;
 
-export default
-class LayoutEngine {
-	static renderLayout(page = {}, dispatch) {
-		let {
-			name,
-			title,
-			layouts: {
-				header,
-				body,
-				footer,
-			},
-		} = page;
 
-		return (
-			<div className="form-view">
-				<style dangerouslySetInnerHTML={{ __html: layoutStyle}} />
-				<Layout>
-				<Header>
-					<h1 style={{textAlign: 'center', color: '#fff'}}>{title}</h1>
-				</Header>
-				<Content>
-					{ LayoutEngine.execRender(header, dispatch, 'header') }
-				</Content>
-				<Footer style={{ background: '#e7e7e7'}}>
-					{ LayoutEngine.execRender(footer, dispatch, 'footer') }
-				</Footer>
-				</Layout>
-			</div>
-		)
+class ComponentsView extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			activeElemId: null,
+		};
 	}
 
-	/**
-	 * [执行每块区域的render命令]
-	 * @param  {Array}  layouts  [description]
-	 * @param  {[type]} dispatch [description]
-	 * @return {[type]}          [description]
-	 */
-	static execRender(layouts = [], dispatch = () => {}, position = 'header') {
+	render() {
+		let that = this;
+
+		let {
+			layouts,
+			dispatch,
+			position,
+		} = this.props;
+
+		let { activeElemId } = this.state;
 
 		let gridLayout = layouts.map(layout => layout.grid);
 
@@ -91,7 +75,6 @@ class LayoutEngine {
 		};
 
 		let removeComponent = (id, tabIndex, position) => {
-			console.log('removeComponent', id, tabIndex, position);
 			dispatch({
 				type: 'REMOVE_COMPONENT',
 				payload: {
@@ -100,6 +83,15 @@ class LayoutEngine {
 					position,
 				},
 			})
+		};
+
+		let setActiveEl = (id) => {
+			dispatch({
+				type: 'UPDATE_ACTIVE_CID',
+				payload: {
+					id,
+				},
+			});
 		};
 
 		return (
@@ -127,8 +119,10 @@ class LayoutEngine {
 	      			id,
 	      		} = component;
 
+	      		let clazz = id == activeElemId ? 'draggable-item active' : 'draggable-item';
+
 	      		return (
-	      			<div key={grid.i} className="draggable-item">
+	      			<div onClick={setActiveEl.bind(that, props.id)} key={grid.i} className={clazz}>
 			          <span className="ctrl">
 			        		<i>
 			        			<Icon type="edit" 
@@ -142,8 +136,8 @@ class LayoutEngine {
 			        				cancelText="No"
 			        				onConfirm={removeComponent.bind(this, props.id, 0, position)}
 			        			>
-								    <Icon type="delete" />
-								</Popconfirm>
+								    	<Icon type="delete" />
+										</Popconfirm>
 			        		</i>
 			        	</span>
 			        	<span className="if-component-grid">
@@ -154,6 +148,46 @@ class LayoutEngine {
 	      	})
 	      }
       </ReactGridLayout>
+		)
+	}
+}
+
+export default
+class LayoutEngine {
+	static renderLayout(page = {}, dispatch) {
+		let {
+			name,
+			title,
+			layouts: {
+				header,
+				body,
+				footer,
+			},
+		} = page;
+
+		return (
+			<div className="form-view">
+				<style dangerouslySetInnerHTML={{ __html: layoutStyle}} />
+				<Layout>
+					<Header>
+						<h1 style={{textAlign: 'center', color: '#fff'}}>{title}</h1>
+					</Header>
+					<Content>
+						<ComponentsView 
+							layouts={header}
+							dispatch={dispatch}
+							position={'header'}
+							/>
+					</Content>
+					<Footer style={{ background: '#e7e7e7'}}>
+						<ComponentsView 
+							layouts={footer}
+							dispatch={dispatch}
+							position={'footer'}
+						/>
+					</Footer>
+				</Layout>
+			</div>
 		)
 	}
 }

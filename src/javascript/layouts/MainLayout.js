@@ -21,6 +21,7 @@ import {
 
 import ConfigTable from '../components/Config/ConfigTable.js';
 import Draggable from 'react-draggable';
+import Storage from '../utils/Storage.js'
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -29,6 +30,10 @@ const TabPane = Tabs.TabPane;
 const TreeNode = Tree.TreeNode;
 
 import MainLayoutStyle from './MainLayout.scss';
+import _ from 'lodash';
+import defaultBasicProps from '../components/Config/BasicProps/defaultBasicProps.js';
+
+const store = new Storage('configModel');
 
 class MainLayout extends Component {
 
@@ -40,6 +45,7 @@ class MainLayout extends Component {
       data,
       focusId,
       mode,
+      configModel,
       editModalVisible,
     } = props;
     
@@ -49,6 +55,7 @@ class MainLayout extends Component {
       focusId,
       mode,
       editModalVisible,
+      configModel,
     };
   }
 
@@ -63,7 +70,7 @@ class MainLayout extends Component {
   }
 
   handleMenuClick = (obj) => {
-    console.log('obj in HandleMenuClick', obj.key);
+
     this.props.dispatch({
       type: 'ADD_COMPONENT',
       payload: {
@@ -90,7 +97,7 @@ class MainLayout extends Component {
     this._dismissModal();
   }
 
-  _confirmModalConfig(confirmAllFlag = false) {
+  _confirmModalConfig(confirmAllFlag = false, reopen = false) {
     let configTable = this.refs['configTable'];
 
     // TODO：
@@ -108,20 +115,35 @@ class MainLayout extends Component {
       });
     } else {
       this.props.dispatch({
-        type: 'UPDATE_COMPONENT',
+        type: 'UPDATE_COMPONENT_BASIC_PROPS',
         payload: {
-          model,
+          basicProps: model,
         },
+      });
+    }
+
+    if (reopen) {
+      this.props.dispatch({
+        type: 'REEDIT_COMPONENT',
       });
     }
     
   }
 
   componentWillReceiveProps(nextProps) {
+    let {
+      data,
+      configModel,
+    } = nextProps;
 
     this.setState({
-      data: nextProps.data,
+      data,
+      configModel,
     });
+  }
+
+  componentWillUnmount() {
+    store.destory();
   }
 
   render() {
@@ -134,17 +156,25 @@ class MainLayout extends Component {
 
     let {
       data,
+      configModel,
     } = this.state;
 
+    console.log('current config model', configModel);
+
+    if (!configModel) {
+      configModel = {
+        basicProps: _.cloneDeep(defaultBasicProps),
+      }
+    }
+
+    console.log('fixed config model', configModel);
 
     let mainHeaderStyleObj = { 
       background: 'rgba(0,0,0,0.75)', 
       padding: 0,
       height: '32px',
       lineHeight: '32px', 
-    };
-
-    
+    };    
 
     let viewContainerStyleObj = { 
       margin: 2, 
@@ -165,7 +195,7 @@ class MainLayout extends Component {
           collapsed={collapsed}
           onCollapse={this.onCollapse}
           style={{ overflow: 'auto' }}
-          collapsedWidth={0}
+          collapsedWidth={40}
         >
           <div className="logo" />
           <ComponentSider 
@@ -222,15 +252,8 @@ class MainLayout extends Component {
                 <div className="if-draggable-modal-body">
                   <ConfigTable 
                     ref="configTable" 
-                    config={{
-                      basicProps: {},
-                      dataSource: {},
-                      filterRules: {},
-                      advancedConfig: {},
-                      validations: {},
-                      pushDownProfile: {},
-                    }}
-                    onApply={this._confirmModalConfig.bind(this)}
+                    config={configModel}
+                    onApply={this._confirmModalConfig.bind(this, false, true)}
                     />
                 </div>
                 <div className="if-draggable-modal-footer">
@@ -254,5 +277,4 @@ export default connect(mapStateToProps)(MainLayout);
 
 
 function handleDrag(...args) {
-    console.log('handle drag', args);
 }

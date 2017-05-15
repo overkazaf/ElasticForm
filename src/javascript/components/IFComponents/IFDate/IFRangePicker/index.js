@@ -17,7 +17,6 @@ class IFRangePicker extends IFComponentBase {
 
 	render() {
 
-		console.log('this.props in IFRangePicker', this.props);
 		return (
 			<RangePicker size={'large'} onChange={this.onChange} />
 		)
