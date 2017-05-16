@@ -38,6 +38,7 @@ export default class JFormComponent extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		console.log('JFormComponent received props', nextProps);
 		this.setState(nextProps.options);
 	}
 

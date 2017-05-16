@@ -43,19 +43,15 @@ class MainLayout extends Component {
     let {
       collapsed,
       data,
-      focusId,
       mode,
-      configModel,
       editModalVisible,
     } = props;
     
     this.state = {
       collapsed,
       data,
-      focusId,
       mode,
       editModalVisible,
-      configModel,
     };
   }
 
@@ -108,7 +104,7 @@ class MainLayout extends Component {
 
     if (activeConfigKey == 2) {
       this.props.dispatch({
-        type: 'UPDATE_COMPONENT_DATASOURCE',
+        type: 'UPDATE_COMPONENT_DATA_SOURCE',
         payload: {
           dataSource: model,
         },
@@ -127,7 +123,6 @@ class MainLayout extends Component {
         type: 'REEDIT_COMPONENT',
       });
     }
-    
   }
 
   componentWillReceiveProps(nextProps) {
@@ -143,7 +138,7 @@ class MainLayout extends Component {
   }
 
   componentWillUnmount() {
-    store.destory();
+    //store.destory();
   }
 
   render() {
@@ -156,18 +151,7 @@ class MainLayout extends Component {
 
     let {
       data,
-      configModel,
     } = this.state;
-
-    console.log('current config model', configModel);
-
-    if (!configModel) {
-      configModel = {
-        basicProps: _.cloneDeep(defaultBasicProps),
-      }
-    }
-
-    console.log('fixed config model', configModel);
 
     let mainHeaderStyleObj = { 
       background: 'rgba(0,0,0,0.75)', 
@@ -252,7 +236,6 @@ class MainLayout extends Component {
                 <div className="if-draggable-modal-body">
                   <ConfigTable 
                     ref="configTable" 
-                    config={configModel}
                     onApply={this._confirmModalConfig.bind(this, false, true)}
                     />
                 </div>

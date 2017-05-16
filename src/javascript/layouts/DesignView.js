@@ -108,7 +108,7 @@ class DesignView extends Component {
           onEdit={this.onEdit}
         >
           {panes && panes.map(pane => 
-              <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+              <TabPane tab={pane.title} key={pane.key} closable={true}>
                 {LayoutEngine.renderLayout(pane, dispatch)}
               </TabPane>)}
         </Tabs>
@@ -129,9 +129,9 @@ function generateNewFormPanelTemplate(option = {}) {
     nextId: null,
     plugIns: [],
     dataSourceIds: [],
+    basicProps: {},
     eventList: [
     ],
-    closable: true,
     layouts: {
       header: [],
       body: [],

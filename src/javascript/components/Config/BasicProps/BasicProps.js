@@ -35,10 +35,9 @@ import _ from 'lodash';
 /**
  * 处理组件状态数据
  */
-class StatusProps extends JFormComponent {
+class FormStatus extends JFormComponent {
 	constructor(props) {
 	  super(props);
-
 	  this.state = _.cloneDeep(defaultBasicProps.formStatus);
 	}
 
@@ -109,7 +108,10 @@ class InputAlignCarry extends JFormComponent {
 	constructor(props) {
 		super(props);
 
-		this.state = _.cloneDeep(defaultBasicProps.inputAlignCarry);
+		this.state = Object.assign({}, defaultBasicProps.inputAlignCarry);
+
+		console.log('this.state', this.state);
+		console.log('this.state', defaultBasicProps);
 	}
 	
 	handleChange(type, e) {
@@ -126,6 +128,9 @@ class InputAlignCarry extends JFormComponent {
 			textAlign,
 			carry,
 		} = this.state;
+
+		console.log('textAlign', textAlign);
+		console.log('carry', carry);
 
 		return (
 			<Row gutter={8}>
@@ -152,7 +157,7 @@ class InputAlignCarry extends JFormComponent {
 	}
 }
 
-class InputValueProps extends JFormComponent {
+class InputValue extends JFormComponent {
 	constructor(props) {
 		super(props);
 		this.state = _.cloneDeep(defaultBasicProps.inputValue);
@@ -215,7 +220,7 @@ class InputValueProps extends JFormComponent {
 	}
 }
 
-class InputDecorationProps extends JFormComponent {
+class InputDecoration extends JFormComponent {
 	constructor(props) {
 		super(props);
 
@@ -317,7 +322,7 @@ class InputDecorationProps extends JFormComponent {
 	}
 }
 
-class ComponentThemeStyle extends JFormComponent {
+class ComponentTheme extends JFormComponent {
 	constructor(props) {
 	  super(props);
 
@@ -342,7 +347,7 @@ class ComponentThemeStyle extends JFormComponent {
 			layoutStyle,
 		} = this.state;
 
-		let componentThemeStyleContent = [
+		let componentThemeContent = [
 			size,
 			theme,
 			layoutStyle,
@@ -384,23 +389,23 @@ class ComponentThemeStyle extends JFormComponent {
 
 		return (
 			<Row gutter={8}>
-				{componentThemeStyleContent}
+				{componentThemeContent}
 			</Row>
 		)
 	}
 }
 
-class FontStyle extends JFormComponent {
+class FontStyles extends JFormComponent {
 	constructor(props) {
 		super(props);
 
-		this.state = _.cloneDeep(defaultBasicProps.fontStyle);
+		this.state = _.cloneDeep(defaultBasicProps.fontStyles);
 	}
 
 	handleChange(key, id) {
 		switch(key) {
 			case 'fontStyle': {
-				let newState = _.cloneDeep(this.state.fontStyle);
+				let newState = _.cloneDeep(this.state.fontStyles);
 				newState.options = newState.options.map((opt) => {
 					if (opt.id === id) {
 						opt.checked = !opt.checked;
@@ -591,14 +596,14 @@ class ComponentColorStyle extends JFormComponent {
  * @type {Object}
  */
 const PropsPanelMap = {
-	StatusProps: (refName, options) => {
+	FormStatus: (refName, options) => {
 		return (
-			<StatusProps ref={refName} options={options} />
+			<FormStatus ref={refName} options={options} />
 		)
 	},
-	ComponentThemeStyle: (refName, options) => {
+	ComponentTheme: (refName, options) => {
 		return (
-			<ComponentThemeStyle ref={refName} options={options} />
+			<ComponentTheme ref={refName} options={options} />
 		)
 	},
 	ComponentColorStyle: (refName, options) => {
@@ -611,24 +616,25 @@ const PropsPanelMap = {
 			<InputAlignCarry ref={refName} options={options} />
 		)
 	},
-	InputValueProps: (refName, options) => {
+	InputValue: (refName, options) => {
 		return (
-			<InputValueProps ref={refName} options={options} />
+			<InputValue ref={refName} options={options} />
 		)
 	},
-	InputDecorationProps: (refName, options) => {
+	InputDecoration: (refName, options) => {
 		return (
-			<InputDecorationProps ref={refName} options={options} />
+			<InputDecoration ref={refName} options={options} />
 		)
 	},
-	FontStyle: (refName, options) => {
+	FontStyles: (refName, options) => {
 		return (
-			<FontStyle ref={refName} options={options} />
+			<FontStyles ref={refName} options={options} />
 		)
 	}
 }
 
-export default class BasicProps extends Component {
+export default 
+class BasicProps extends Component {
 	constructor(props) {
 	  super(props);
 
@@ -669,11 +675,11 @@ export default class BasicProps extends Component {
 						ref: 'inputAlignCarry'
 					},
 					{
-						id: 'FontStyle',
-						ref: 'fontStyle'
+						id: 'FontStyles',
+						ref: 'fontStyles'
 					},
 					{
-						id: 'ComponentThemeStyle',
+						id: 'ComponentTheme',
 						ref: 'componentTheme'
 					},
 					{
@@ -687,11 +693,11 @@ export default class BasicProps extends Component {
 				title: '输入框属性',
 				children: [
 					{
-						id: 'InputValueProps',
+						id: 'InputValue',
 						ref: 'inputValue'
 					},
 					{
-						id: 'InputDecorationProps',
+						id: 'InputDecoration',
 						ref: 'inputDecoration'
 					},
 				]
@@ -701,7 +707,7 @@ export default class BasicProps extends Component {
 				title: '状态属性',
 				children: [
 					{
-						id: 'StatusProps',
+						id: 'FormStatus',
 						ref: 'formStatus'
 					},
 				]
@@ -730,8 +736,6 @@ export default class BasicProps extends Component {
 				</Panel>
 			)
 		});
-
-		console.log('panelContent', panelContent);
 
 		return (
 			<Collapse defaultActiveKey={['1', '2', '3']}>

@@ -3,19 +3,17 @@ import {
 } from 'antd';
 
 let props = {
-	componentColor: {
-    fontColor: {
+  componentTheme: {
+  	fontColor: {
 			id: 'fontColor',
 			label: '文字颜色',
 			value: '',
 		},
-		bgColor: {
-			id: 'bgColor',
+		backgroundColor: {
+			id: 'backgroundColor',
 			label: '背景颜色',
 			value: '',
 		},
-  },
-  componentTheme: {
     size: {
   		id: 'size',
   		value: 'large',
@@ -56,10 +54,6 @@ let props = {
   	mustInput: false,
   	autoSum: false,
   },
-  inputAlignCarry: {
-    textAlign: 'left',
-		carry: 'round',
-  },
   inputDecoration: {
     addonBefore: {
 			id: 'addonBefore',
@@ -69,7 +63,7 @@ let props = {
 			addonAfter: '',
 			prefix: '',
 			suffix: '',
-			placehodler: '如：数量, 单价, 总金额 等',
+			placeholder: '如：数量, 单价, 总金额 等',
 			value: '',
 		},
 		addonAfter: {
@@ -80,14 +74,14 @@ let props = {
 			addonAfter: '后缀',
 			prefix: '',
 			suffix: '',
-			placehodler: '如：元, ￥, $ 等',
+			placeholder: '如：元, ￥, $ 等',
 			value: '',
 		},
 		prefix: {
 			id: 'prefix',
 			type: 'select',
 			label: '前置图标',
-			placehodler: '请选择前置图标',
+			placeholder: '请选择前置图标',
 			value: '',
 			options: [
 				{ id: 1, value: 'user', icon: 'user' },
@@ -102,7 +96,7 @@ let props = {
 			id: 'suffix',
 			type: 'select',
 			label: '后置图标',
-			placehodler: '请选择后置图标',
+			placeholder: '请选择后置图标',
 			value: '',
 			options: [
 				{ id: 1, value: (<Icon type="close-circle" />), icon: 'close-circle' },
@@ -113,16 +107,40 @@ let props = {
 		},
   },
   inputValue: {
+  	carry: {
+  		id: 'carry',
+			label: '进位方式',
+			type: 'RadioGroup',
+			value: '',
+			options: [
+				{id: 'round', label: '四舍五入', value: 'round'},
+				{id: 'ceil', label: '向上取整', value: 'ceil'},
+				{id: 'floor', label: '向下取整', value: 'floor'}
+  		]
+  	},
     label: {
 			id: 'label',
 			label: '标签文字',
+			type: 'Input',
 			value: '',
 			defaultValue: '',
 			placeholder: '组件标签文字',
 		},
+		link: {
+			id: 'link',
+			label: '链接地址',
+			type: 'Input',
+			value: '#',
+			defaultValue: '',
+			placeholder: '组件标签地址',
+		},
+		linkTarget: {
+			id: 'linkTarget',
+		},
 		placeholder: {
 			id: 'placeholder',
 			label: '提示文字',
+			type: 'Input',
 			value: '',
 			defaultValue: '',
 			placeholder: '组件提示文字',
@@ -130,6 +148,7 @@ let props = {
 		defaultValue: {
 			id: 'defaultValue',
 			label: '默认值',
+			type: 'Input',
 			value: '',
 			defaultValue: '',
 			placeholder: '组件默认值',
@@ -137,15 +156,17 @@ let props = {
 		value: {
 			id: 'value',
 			label: '当前值',
+			type: 'Input',
 			value: '',
 			defaultValue: '',
 			placeholder: '存在则覆盖默认值',
 		},
   },
-  fontStyle: {
+  fontStyles: {
     fontStyle: {
 			id: 'fontStyle',
 			label: '文字样式',
+			type: 'ButtonGroup',
 			values: [],
 			options: [
 				{id: 'fontWeight', label: '加粗', value: 'bold', checked: false},
@@ -156,6 +177,7 @@ let props = {
 		fontSize: {
 			id: 'fontSize',
 			label: '字号大小',
+			type: 'Select',
 			title: '请选择字号大小',
 			value: '12px',
 			options: [
@@ -177,11 +199,11 @@ let props = {
 				{id: 'ft64', label: '64px', value: '64px'},
 				{id: 'ft68', label: '68px', value: '68px'},
 			]
-
 		},
 		fontFamily: {
 			id: 'fontFamily',
 			label: '字体',
+			type: 'Select',
 			title: '请选择字体',
 			value: 'sans serif',
 			options: [
@@ -190,6 +212,20 @@ let props = {
 				{id: 'ff3', label: '黑体', value: 'Heiti'},
 			],
 		},
+		textAlign: {
+			id: 'textAlign',
+			type: 'RadioGroup',
+			label: '文字对齐',
+			value: 'left',
+			options: [
+				{id: 'left', label: '左对齐', value: 'left'},
+				{id: 'center', label: '居中', value: 'center'},
+				{id: 'right', label: '右对齐', value: 'right'}
+  		]
+		},
+		lineHeight: {
+
+		}
   },
 };
 

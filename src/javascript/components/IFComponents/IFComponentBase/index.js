@@ -53,14 +53,6 @@ class IFComponentBase extends Component {
 		}, callback);
 	}
 
-	getDataModel() {
-		return this.getFieldsValue([
-			'id',
-			'name',
-			'value',
-		]);
-	}
-
 	componentWillReceiveProps(nextProps) {
 		let newState = Immutable.fromJS(Object.assign(this.state.option.toJS(), nextProps.option));
 
@@ -78,7 +70,7 @@ class IFComponentBase extends Component {
 		return (
 			<div>
 				<h1>Warning</h1>
-				<p>You need to override the IFComponentBase Class in your SubClass</p>
+				<p style={{ color: 'red' }}>You need to override the IFComponentBase Class in your SubClass</p>
 			</div>
 		)
 	}
