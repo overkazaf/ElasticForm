@@ -49,10 +49,10 @@ let props = {
   	},
   },
   formStatus: {
-    visibility: true,
-  	locked: false,
-  	mustInput: false,
-  	autoSum: false,
+    visibility: { value: true },
+  	locked: { value: false },
+  	mustInput: { value: false },
+  	autoSum: { value: false },
   },
   inputDecoration: {
     addonBefore: {
@@ -136,6 +136,14 @@ let props = {
 		},
 		linkTarget: {
 			id: 'linkTarget',
+			label: '跳转方式',
+			type: 'Select',
+			value: '_blank',
+			options: [
+				{id: '_blank', value: '_blank', label: '新窗口'},
+				{id: '_self', value: '_self', label: '本窗口'},
+				{id: '_parent', value: '_parent', label: '父窗口'},
+			],
 		},
 		placeholder: {
 			id: 'placeholder',
@@ -167,7 +175,7 @@ let props = {
 			id: 'fontStyle',
 			label: '文字样式',
 			type: 'ButtonGroup',
-			values: [],
+			values: '',
 			options: [
 				{id: 'fontWeight', label: '加粗', value: 'bold', checked: false},
 				{id: 'fontStyle', label: '斜体', value: 'italic', checked: false},
@@ -224,7 +232,11 @@ let props = {
   		]
 		},
 		lineHeight: {
-
+			id: 'lineHeight',
+			type: 'Slider',
+			label: '行高',
+			value: 1.0,
+			step: 0.1
 		}
   },
 };

@@ -5,7 +5,7 @@ let layouts = {
       component: {
         type: 'IFLabel', 
         props: { 
-          id: 1, 
+          id: 'Label_1', 
           name: '标签一',
           description: '',
           ctrlType: 'Label',
@@ -64,7 +64,7 @@ let layouts = {
                 value: '',
               },
               label: {
-                value: '',
+                value: 'abcd',
               },
               link: {
                 value: '#',
@@ -85,7 +85,11 @@ let layouts = {
             fontStyles: {
               fontStyle: {
                 isMultiple: true,
-                values: [],
+                values: [
+                  'fontWeight:bold',
+                  'fontStyle:italic',
+                  'textDecoration:underline'
+                ].join('$'),
               },
               fontSize: {
                 value: '12px',

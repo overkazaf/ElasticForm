@@ -4,6 +4,27 @@ import _ from 'lodash';
 
 export default class JFormComponent extends Component {
 
+	updateModel(dispatch, {
+		rootModel, 
+		modelName, 
+		model,
+	}) {
+		console.log(rootModel, modelName, model);
+
+		dispatch({
+			type: 'UPDATE_SUB_MODEL',
+			payload: {
+				rootModel, 
+				modelName, 
+				model,
+			},
+		});
+	}
+
+	componentWillReceiveProps(nextProps) {
+		console.log('componentWillReceiveProps(nextProps) in JFormComponent', nextProps);
+	}
+
 	getFieldsValue(keys = []) {
 		let resultValuesMap = {};
 		let currentState = this.state;
@@ -38,8 +59,7 @@ export default class JFormComponent extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('JFormComponent received props', nextProps);
-		this.setState(nextProps.options);
+		this.setState(Object.assign({}, nextProps.options));
 	}
 
 	render() {

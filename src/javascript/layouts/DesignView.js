@@ -44,9 +44,15 @@ class DesignView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps in DesignView', nextProps);
+
     this.setState({
       panes: nextProps.data.panes || [],
     });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return true;
   }
 
   onEdit = (targetKey, action) => {

@@ -86,119 +86,67 @@ let getActionTypes = () => {
   return types;
 }
 
-
-class ApplyConfigButton extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    let {
-      onApply,
-      title,
-    } = this.props;
-  
-    let styleObj = { 
-      marginTop: '10px', 
-      marginRight: '10px', 
-      textAlign: 'right',
-    };
-
-    return (
-      <div style={styleObj}>
-        <Button ghost onClick={onApply} type="primary">{title}</Button>
-      </div>
-    ) 
-  } 
-}
-
+import ApplyConfigButton from './ApplyConfigButton.js';
 import Immutable from 'immutable';
 
 class ConfigTable extends Component {
-    
+
     constructor(props) {
       super(props);
-    
-      this.state = Immutable.fromJS({
+      
+      this.state = {
         dataSourceRadioValue: 2, // 1为从已有数据源中选择，2为批量自定义数据源
-        activeConfigTabKey: "2",
-        config: {
+        activeConfigTabKey: "1",
+        
+        // shared models
+        configModel: Object.assign({
           basicProps: {},
           dataSource: {},
           filterRules: {},
           eventList: [],
           validations: {},
           advanced: {},
-        },
+        }, props.dataModel),
+      };
+    }
+
+    componentWillReceiveProps(nextProps) {
+      console.log('nextProps in ConfigTable', nextProps);
+
+      this.setState({
+        configModel: nextProps.config.configModel,
       });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-      return true;
-    }
-
-    handleDataSourceRadioChange = () => {
-      
-      this.props.dispatch({
-        type: 'UPDATE_DATA_SOURCE_TYPE',
-      });
-
+    handleDataSourceRadioChange = () => {      
+      // this.props.dispatch({
+      //   type: 'UPDATE_DATA_SOURCE_TYPE',
+      // });
     };
 
     onChange(activeConfigTabKey) {
-      this.props.dispatch({
-        type: 'UPDATE_ACTIVE_CONFIG_KEY',
-        payload: activeConfigTabKey,
-      });
-    }
-
-    __getActiveConfigTabKey() {
-      return this.state.activeConfigTabKey;
-    }
-
-    __getDataModel() {
-      const tabIndex = +this.state.activeConfigTabKey;
-
-      // 根据当前的配置面板项，返回配置信息
-      const getDataModelByTabIndex = [
-        (refs) => {
-          let dataModel = {};
-          let basicProps = refs['basicProps'];
-          Object.keys(basicProps.refs).map((refKey) => {
-            dataModel[refKey] = basicProps.refs[refKey].getFieldsValue();
-          });
-
-          return dataModel;
-        },
-        (refs) => {
-          let rawModels = Object.keys(refs).filter((refKey) => {
-            return refKey == 'dataSource';
-          }).map((refKey) => {
-            return refs[refKey].getFieldsValue();
-          })[0];
-
-          let dataSource = rawModels.labels.map((label) => {
-            const labelValue = rawModels[`labels-${label}`];
-            const valueValue = rawModels[`values-${label}`];
-            return {
-              label: `${labelValue}`,
-              value: `${valueValue}`,
-            }
-          });
-          
-          return dataSource;
-        }
-      ];
-
-      return getDataModelByTabIndex[tabIndex-1](this.refs);
+      // this.props.dispatch({
+      //   type: 'UPDATE_ACTIVE_CONFIG_KEY',
+      //   payload: activeConfigTabKey,
+      // });
     }
 
     render() {
-      let { dispatch, onApply } = this.props;
+      let that = this;
+      let { 
+        dispatch, 
+        onApply,
+      } = this.props;
+
       let {
-        dataSourceRadioValue, 
-        config,
-      } = this.state.toJS();
+        configModel,
+        dataSourceRadioValue,
+        activeConfigTabKey,
+      } = this.state;
+
+
+      console.log('config in ConfigTable', configModel);
+      console.log('state in ConfigTable', this.state);
       
       let {
         basicProps,
@@ -207,19 +155,18 @@ class ConfigTable extends Component {
         eventList,
         validations,
         advanced,
-      } = config;
+      } = configModel;
       
         return (
           <Tabs 
             onChange={this.onChange.bind(this)}
             type="card" 
-            activeKey={this.state.activeConfigTabKey}>
+            activeKey={activeConfigTabKey}>
             <TabPane tab="基础设置" key="1">
               <BasicProps 
                 config={basicProps}
-                dispatch={dispatch} 
+                dispatch={dispatch}
                 ref="basicProps"/>
-              <ApplyConfigButton onApply={onApply} title="应用基础设置" />
             </TabPane>
             <TabPane tab="数据源" key="2">
               <RadioGroup onChange={this.handleDataSourceRadioChange} value={dataSourceRadioValue}>
@@ -508,8 +455,14 @@ function convertModel(config, type) {
 }
 
 const mapStateToProps = (store) => {
-  return store.get('configReducer').toJS();
+  let $$configReducer = store.get('configReducer');
+  let configBase = $$configReducer.toJS();
+  let configModel = $$configReducer.get('configModel').toJS();
+  return {
+    ...configBase,
+    configModel,
+  }
 };
 
-// export default ConfigTable;
-export default connect(mapStateToProps)(ConfigTable);
+export default ConfigTable;
+//export default connect(mapStateToProps)(ConfigTable);

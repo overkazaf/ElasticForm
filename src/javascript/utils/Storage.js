@@ -34,6 +34,8 @@ export default class Storage {
 	set(key, obj) {
 		this.keyMap[key] = 1;
 		global.__cache__[this.name][key] = obj;
+
+		console.warn('setting storage::', key, obj);
 	}	
 
 	get(key) {

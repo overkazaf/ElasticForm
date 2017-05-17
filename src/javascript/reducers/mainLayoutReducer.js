@@ -18,13 +18,33 @@ const $$initState = Immutable.fromJS({
     collapsed: false,
     mode: 'inline',
     editModalVisible: false,
+    configModel: {
+      basicProps: defaultBasicProps,
+      dataSource: [],
+    },
     data,
 });
 
+console.log('data in mainLayoutReducer', data);
 
-export const mainLayoutReducer = (state = $$initState, action) => {
+
+export const mainLayoutReducer = ($$state = $$initState, action) => {
     switch (action.type) {
-        
+        case 'ADD_COMPONENT': {
+          let {
+            id,
+            position,
+            tabIndex,
+          } = action.payload;
+
+          position = predictComponentPositionById(id);
+
+          let $$newList = $$state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
+          let component = generateComponentTpl(id);
+          let $$updatedList = $$newList.unshift(Immutable.fromJS(component));
+
+          return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$updatedList);
+        }
         case 'UPDATE_LAYOUTS': {
           let {
             tabIndex,
@@ -32,14 +52,14 @@ export const mainLayoutReducer = (state = $$initState, action) => {
             layouts,
           } = action.payload;
 
-        	let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
+        	let $$layouts = $$state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
 
         	let $$newLayout = $$layouts.map((item, index) => {
         		let newItem = item.set('grid', Immutable.fromJS(layouts[index]));
         		return newItem;
         	});
 
-        	return state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
+        	return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
 
         case 'EDIT_COMPONENT': {
@@ -53,32 +73,126 @@ export const mainLayoutReducer = (state = $$initState, action) => {
             $$newItem,
             $$layouts,
             index,
-          } = getTargetItemByState(state, tabIndex, position, id);
+          } = getTargetItemByState($$state, tabIndex, position, id);
           
           let targetConfigModel = store.get(`${id}`);
 
-          console.log('targetConfigModel::before', targetConfigModel);
+          console.log(`${id}:::::targetConfigModel::before`, targetConfigModel);
 
           if (!targetConfigModel) {
             let componentModel = $$newItem.getIn(['component']).toJS();
             console.log('componentModel', componentModel);
 
             targetConfigModel = convertComponentModel2Config(componentModel);
-            console.log('convertComponentModel2Config -> targetConfigModel', targetConfigModel);
-
+            console.log(`${id}  convertComponentModel2Config -> targetConfigModel` , targetConfigModel);
             store.set(`${id}`, targetConfigModel);
           }
 
-          console.log('targetConfigModel::after', targetConfigModel);
 
-        	return state.set('activeCId', id)
+          console.log(`setting model::${id}`, store.get(`${id}`));
+
+        	return $$state.set('activeCId', id)
                       .set('activePosition', position)
                       .set('activeTabIndex', tabIndex)
                       .set('configModel', targetConfigModel);
         }
         case 'REEDIT_COMPONENT': {
-          const id = state.get('activeCId');
-          return state.set('configModel', store.get(`${id}`))
+          const id = $$state.get('activeCId');
+          return $$state.set('configModel', store.get(`${id}`))
+        }
+
+        case 'UPDATE_COMPONENT_DATA_SOURCE': {
+          const {
+            dataSource,
+          } = action.payload;
+
+          const tabIndex = $$state.get('activeTabIndex');
+          const position = $$state.get('activePosition');
+          const activeCId = $$state.get('activeCId');
+
+          console.log('activeCId', activeCId);
+
+          let {
+            $$newItem,
+            $$layouts,
+            index,
+          } = getTargetItemByState($$state, tabIndex, position, activeCId);
+
+          let $$updatedItem = $$newItem.updateIn(['component', 'props'], function(item) {
+            let rawItem = Object.assign(item.toJS(), { dataSource });
+            return Immutable.fromJS(rawItem);
+          });
+
+          let $$newLayout = $$layouts.set(index, $$updatedItem);
+          return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
+        }
+
+        case 'UPDATE_COMPONENT_BASIC_PROPS': {
+          const {
+            basicProps,
+          } = action.payload;
+
+          const tabIndex = $$state.get('activeTabIndex');
+          const position = $$state.get('activePosition');
+          const activeCId = $$state.get('activeCId');
+
+          let {
+            $$newItem,
+            $$layouts,
+            index,
+          } = getTargetItemByState($$state, tabIndex, position, activeCId);
+
+          let $$updatedItem = $$newItem.updateIn(['component', 'props'], function(item) {
+            let targetBasicProps = _.merge(item.get('basicProps').toJS(), basicProps);
+            let $$targetItem = item.set('basicProps', Immutable.fromJS(targetBasicProps));
+            return $$targetItem;
+          });
+
+          console.log('activeCId', activeCId);
+
+          let storedItem = store.get(`${activeCId}`);
+          console.log('storedItem', storedItem);
+          if (!storedItem) {
+            store.set(`${activeCId}`, $$updatedItem.get('component').toJS());
+          } else {
+            let target = _.merge(storedItem, $$updatedItem.getIn(['component', 'props']).toJS());
+            console.log('target', target);
+            console.log("$$updatedItem.get('component').toJS()", $$updatedItem.getIn(['component', 'props']).toJS());
+            store.set(`${activeCId}`, target);
+          }
+
+          window.store = store;
+
+          debugger;
+
+          console.log(`setting model::${activeCId}`, store.get(`${activeCId}`));
+
+          let $$newLayout = $$layouts.set(index, $$updatedItem);
+
+          console.log('newLayout in UPDATE_COMPONENT_BASIC_PROPS');
+          return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
+        }
+
+        case 'REMOVE_COMPONENT': {
+          let {
+            id,
+            tabIndex,
+            position,
+          } = action.payload;
+
+          tabIndex = tabIndex || $$state.get('activeTabIndex');
+          position = position || $$state.get('activePosition');
+
+          let $$layouts = $$state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
+
+          let index = $$layouts.findIndex((item) => {
+            let itemId = item.getIn(['component', 'props', 'id']);
+            return itemId == id;
+          });
+
+          let $$newLayout = $$layouts.delete(index);
+
+          return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
 
         case 'UPDATE_ACTIVE_CID': {
@@ -86,11 +200,13 @@ export const mainLayoutReducer = (state = $$initState, action) => {
             id,
           } = action.payload;
 
-          return state.set('activeCId', id);
+          console.log('UPDATE_ACTIVE_CID', id);
+
+          return $$state.set('activeCId', id);
         }
 
         case 'SET_MODAL_VISIBILITY': {
-        	return state.set('editModalVisible', action.payload);
+        	return $$state.set('editModalVisible', action.payload);
         }
 
         case 'UPDATE_COLLAPSED': {
@@ -99,10 +215,16 @@ export const mainLayoutReducer = (state = $$initState, action) => {
                 mode,
             } = action.payload;
 
-            return state.set('collapsed', collapsed)
+            return $$state.set('collapsed', collapsed)
                         .set('mode', mode);
         }
-        default: return state;
+
+        case 'UPDATE_CONFIG_MODEL': {
+
+          console.log('UPDATE_CONFIG_MODEL', action.payload);
+          return $$state.set('configModel', Immutable.fromJS(action.payload));
+        }
+        default: return $$state;
     }
 };
 
@@ -244,4 +366,111 @@ function convertComponentModel2Config(componentModel) {
     basicProps,
     dataSource,
   };
+}
+
+
+
+function generateComponentTpl(componentType) {
+  const componentId = _.uniqueId(`${componentType}_`);
+  const gridId = _.uniqueId(`grid_${componentType}_`);
+  return {
+    grid: getDefaultComponentGrid(gridId, componentType),
+    component: {
+      type: componentType, 
+      props: getDefaultComponentProps(componentId, componentType),
+    }
+  };
+}
+
+/**
+ * [getDefaultComponentGrid 根据不同的组件生成不一样的默认布局]
+ * @param  {[type]} gridId        [description]
+ * @param  {[type]} componentType [description]
+ * @return {[type]}               [description]
+ */
+function getDefaultComponentGrid(gridId, componentType) {
+  
+  return {
+      i: gridId, 
+      x: 0, 
+      y: 0, 
+      w: 3, 
+      h: 16, 
+      miW: 2,
+      minH: 12,
+  };
+}
+
+
+
+function getDefaultComponentProps(componentId, componentType) {
+  const defaultComponentPropsMap = {
+    'IFDropdown': (componentId) => {
+      let dropdownTemplateModel = _.merge({
+        basicProps: defaultBasicProps,
+      }, {
+        id: componentId,
+        basicProps: {
+          inputValue: {
+            label: {
+              value: `下拉框${componentId}`,
+            }
+          },
+        },
+        dataSource: [],
+      });
+
+      return dropdownTemplateModel;
+    },
+    'IFLabel': (componentId) => {
+      let labelTemplateModel = _.merge({
+        basicProps: defaultBasicProps,
+      }, {
+        id: componentId,
+        basicProps: {
+          inputValue: {
+            label: {
+              value: `标签${componentId}`,
+            }
+          },
+        },
+      });
+
+      console.log('labelTemplateModel', labelTemplateModel);
+
+      return labelTemplateModel;
+    }
+  };
+
+  if (componentType in defaultComponentPropsMap) {
+    return defaultComponentPropsMap[componentType](componentId);
+  } else {
+    return { 
+      id: componentId,
+      visibility: true,
+      locked: false,
+      label: `组件${componentId}`,
+      dataSource: [],
+    };
+  }
+}
+
+
+/**
+ * [predictComponentPositionById 根据组件id]
+ * @param  {[type]} id [description]
+ * @return {[type]}    [description]
+ */
+function predictComponentPositionById(id, position) {
+  if (typeof position !== 'undefined') return position;
+
+  switch(id) {
+    case 'IFButtonSubmit':
+    case 'IFButtonReset':
+      return 'footer';
+    case 'IFSmartTable':
+      return 'body';
+    default:
+      return 'header';
+  }
 }

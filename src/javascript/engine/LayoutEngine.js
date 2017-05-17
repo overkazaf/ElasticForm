@@ -59,9 +59,19 @@ class ComponentsView extends Component {
 		};
 
 		let showEditModal = (id, component, tabIndex = 0, position) => {
+
+			console.error('showing modal', id, component, tabIndex, position);
+
 			dispatch({
 				type: 'SET_MODAL_VISIBILITY',
 				payload: true,
+			});
+
+			dispatch({
+				type: 'UPDATE_ACTIVE_CID',
+				payload: {
+					id,
+				},
 			});
 
 			dispatch({
@@ -122,11 +132,11 @@ class ComponentsView extends Component {
 	      		let clazz = id == activeElemId ? 'draggable-item active' : 'draggable-item';
 
 	      		return (
-	      			<div onClick={setActiveEl.bind(that, props.id)} key={grid.i} className={clazz}>
+	      			<div key={grid.i} className={clazz}>
 			          <span className="ctrl">
 			        		<i>
 			        			<Icon type="edit" 
-			        				onClick={showEditModal.bind(this, props.id, component, 0, position)}
+			        				onClick={showEditModal.bind(that, props.id, component, 0, position)}
 			        			/>
 			        		</i>
 			        		<i>

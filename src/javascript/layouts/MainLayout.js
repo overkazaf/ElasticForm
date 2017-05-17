@@ -45,14 +45,16 @@ class MainLayout extends Component {
       data,
       mode,
       editModalVisible,
+      configModel,
     } = props;
     
-    this.state = {
+    this.state = Immutable.fromJS({
       collapsed,
       data,
       mode,
+      configModel,
       editModalVisible,
-    };
+    });
   }
 
   onCollapse = (collapsed) => {
@@ -99,46 +101,33 @@ class MainLayout extends Component {
     // TODO：
     // if confirmAllFlag is setted to true, we apply all config panels
 
-    let activeConfigKey = configTable.__getActiveConfigTabKey();
+    console.log('configTable', configTable);
+
+    let activeConfigKey = configTable.selector.props.activeConfigTabKey;
+
     let model = configTable.__getDataModel.call(configTable);
 
-    if (activeConfigKey == 2) {
-      this.props.dispatch({
-        type: 'UPDATE_COMPONENT_DATA_SOURCE',
-        payload: {
-          dataSource: model,
-        },
-      });
-    } else {
-      this.props.dispatch({
-        type: 'UPDATE_COMPONENT_BASIC_PROPS',
-        payload: {
-          basicProps: model,
-        },
-      });
-    }
+    // if (activeConfigKey == 2) {
+    //   this.props.dispatch({
+    //     type: 'UPDATE_COMPONENT_DATA_SOURCE',
+    //     payload: {
+    //       dataSource: model,
+    //     },
+    //   });
+    // } else {
+    //   this.props.dispatch({
+    //     type: 'UPDATE_COMPONENT_BASIC_PROPS',
+    //     payload: {
+    //       basicProps: model,
+    //     },
+    //   });
+    // }
 
-    if (reopen) {
-      this.props.dispatch({
-        type: 'REEDIT_COMPONENT',
-      });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let {
-      data,
-      configModel,
-    } = nextProps;
-
-    this.setState({
-      data,
-      configModel,
-    });
-  }
-
-  componentWillUnmount() {
-    //store.destory();
+    // if (reopen) {
+    //   this.props.dispatch({
+    //     type: 'REEDIT_COMPONENT',
+    //   });
+    // }
   }
 
   render() {
@@ -147,11 +136,12 @@ class MainLayout extends Component {
       editModalVisible,
       dispatch,
       collapsed,
+      configModel,
+      data,
     } = this.props;
 
-    let {
-      data,
-    } = this.state;
+    console.log('render in MainLayout::configModel', configModel);
+    console.log('render in MainLayout::data', data);
 
     let mainHeaderStyleObj = { 
       background: 'rgba(0,0,0,0.75)', 
@@ -236,7 +226,8 @@ class MainLayout extends Component {
                 <div className="if-draggable-modal-body">
                   <ConfigTable 
                     ref="configTable" 
-                    onApply={this._confirmModalConfig.bind(this, false, true)}
+                    dispatch={dispatch}
+                    config={{configModel}}
                     />
                 </div>
                 <div className="if-draggable-modal-footer">

@@ -10,6 +10,8 @@ import {
 	Select,
 	Button,
 	Icon,
+	Slider,
+	InputNumber,
 } from 'antd';
 
 import { 
@@ -29,6 +31,7 @@ const ButtonGroup  = Button.Group;
 
 import JFormComponent from '../JFormComponent';
 import defaultBasicProps from './defaultBasicProps.js';
+import ApplyConfigButton from '../ApplyConfigButton.js';
 
 import _ from 'lodash';
 
@@ -58,6 +61,13 @@ class FormStatus extends JFormComponent {
 			mustInput,
 			autoSum,
 		} = this.state;
+
+		[
+			visibility,
+			locked,
+			mustInput,
+			autoSum,
+		] = [visibility,locked,mustInput,autoSum].map((item) => item.value);
 
 		let attributeArray = [
 			{id: 1, label: '可见', checkedChildren: '是', unCheckedChildren: '否', defaultChecked: true, checked: visibility, onChangeParam: 'visibility' },
@@ -173,9 +183,20 @@ class InputValue extends JFormComponent {
 		});
 	}
 
+	componentWillReceiveProps(nextProps) {
+		console.log('inputValue nextProps', nextProps);
+
+		this.setState(nextProps.options, () => {
+			console.log('this.state', this.state);
+		});
+	}
+
 	render() {
 		let that = this;
 		let {
+			carry,
+			link,
+			linkTarget,
 			placeholder,
 			defaultValue,
 			value,
@@ -183,6 +204,9 @@ class InputValue extends JFormComponent {
 		} = this.state;
 
 		let valuePropsContent = [
+			// carry,
+			// link,
+			// linkTarget,
 			label, 
 			placeholder, 
 			defaultValue, 
@@ -345,53 +369,89 @@ class ComponentTheme extends JFormComponent {
 			size,
 			theme,
 			layoutStyle,
+			fontColor,
+			backgroundColor,
 		} = this.state;
 
 		let componentThemeContent = [
-			size,
-			theme,
-			layoutStyle,
-		].map((item, index) => {
-			let {
-				id,
-				label,
-				title,
-				value,
-				options,
-			} = item;
-
-			let optionContent = options.map((opt, idx) => {
+			[
+				size,
+				theme,
+				layoutStyle,
+			],
+			[
+				fontColor,
+				backgroundColor,
+			]
+		].map((group, groupIndex) => {
+			let rowContent = group.map((item, itemIndex) => {
 				let {
 					id,
 					label,
+					title,
 					value,
-				} = opt;
+					options,
+				} = item;
 
-				return (
-					<Option key={`opt-${id}`} value={value}>{label}</Option>
-				)
+				if (id == 'fontColor' || id == 'backgroundColor') {
+					let colors = [
+					"#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", 
+					"#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", 
+					"#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", 
+					"#ff5722", "#795548", "#607d8b", "#aaaaaa", "#000000"];
+
+					let offset = itemIndex ? 1 : 0;
+
+					return (
+						<Col key={`color-${id}-${itemIndex}`} span={11} offset={offset}>
+							<FormItem label={label}>
+								<CompactPicker
+									color={value}
+									onChange={that.handleChange.bind(that, id)} />
+							</FormItem>
+						</Col>
+					)
+				} else {
+					let optionContent = options.map((opt, idx) => {
+						let {
+							id,
+							label,
+							value,
+						} = opt;
+
+						return (
+							<Option key={`opt-${id}`} value={value}>{label}</Option>
+						)
+					});
+					
+					return (
+						<Col key={`${id}-${itemIndex}`} span={8}>
+							<FormItem label={label}>
+								<Select 
+									title={title} 
+									value={value} 
+									onChange={that.handleChange.bind(that, id)}
+									style={{ width: '80%'}}>
+									{optionContent}
+								</Select>
+							</FormItem>
+						</Col>
+					)
+				}
 			});
 
 			return (
-				<Col key={`${id}-${index}`} span={8}>
-					<FormItem label={label}>
-						<Select 
-							title={title} 
-							value={value} 
-							onChange={that.handleChange.bind(that, id)}
-							style={{ width: '80%'}}>
-							{optionContent}
-						</Select>
-					</FormItem>
-				</Col>
+				<Row key={`row-${groupIndex}`} gutter={8}>
+					{rowContent}
+				</Row>
 			)
 		});
 
 		return (
-			<Row gutter={8}>
+			<div>
 				{componentThemeContent}
-			</Row>
-		)
+			</div>
+		);
 	}
 }
 
@@ -405,7 +465,7 @@ class FontStyles extends JFormComponent {
 	handleChange(key, id) {
 		switch(key) {
 			case 'fontStyle': {
-				let newState = _.cloneDeep(this.state.fontStyles);
+				let newState = _.cloneDeep(this.state.fontStyle);
 				newState.options = newState.options.map((opt) => {
 					if (opt.id === id) {
 						opt.checked = !opt.checked;
@@ -417,10 +477,20 @@ class FontStyles extends JFormComponent {
 					return item.checked;
 				});
 
+				newState.values = newState.values.map((item) => {
+					return `${item.id}:${item.value}`;
+				}).join('$');
+
+				console.log('newState', newState);
+
 				this.setState({
 					fontStyle: newState,
 				}, () => {
-					console.log('new state has been successfully setted', this.state);
+					this.updateModel(this.props.dispatch, {
+						rootModel: 'basicProps', 
+						modelName: 'fontStyles', 
+						model: this.state,
+					});
 				});
 
 				return;
@@ -431,7 +501,11 @@ class FontStyles extends JFormComponent {
 				this.setState({
 					[key]: newKeyState,
 				}, () => {
-					console.warn('state has been changed in colorChange', this.state);
+					this.updateModel(this.props.dispatch, {
+						rootModel: 'basicProps', 
+						modelName: 'fontStyles', 
+						model: this.state,
+					});
 				});
 
 				return;
@@ -445,9 +519,17 @@ class FontStyles extends JFormComponent {
 			fontStyle,
 			fontSize,
 			fontFamily,
+			lineHeight,
+			textAlign,
 		} = this.state;
 
-		let fontStyleContent = [fontStyle, fontSize, fontFamily].map((item, index) => {
+		let fontStyleContent = [
+			fontStyle, 
+			fontSize, 
+			fontFamily,
+			textAlign,
+			lineHeight,
+		].map((item, index) => {
 			  let { 
 			  	id,
 			  	label,
@@ -456,7 +538,11 @@ class FontStyles extends JFormComponent {
 			  	options,
 			  } = item;
 
+			  let content = 'text';
+			  console.log('options', options);
+
 				if (id === 'fontStyle') {
+					console.log('fontStyle');
 					let buttonContent = options.map((opt, idx) => {
 						let buttonKey = `${id}-${idx}`;
 						let { 
@@ -477,17 +563,19 @@ class FontStyles extends JFormComponent {
 							</Button>
 						)
 					});
-					return (
-						<Col key={`${id}-${index}`} span={8}>
-							<FormItem label={label}>
-								<ButtonGroup>
-                  {buttonContent}
-								</ButtonGroup>
-							</FormItem> 
-						</Col>
+					
+					content = <ButtonGroup>
+		                  {buttonContent}
+										</ButtonGroup>;
+				} else if (id === 'lineHeight') {
+					content = (
+						<div>
+							<Col span={16}><Slider defaultValue={1} step={0.1} min={0} max={5} onChange={that.handleChange.bind(that, 'lineHeight')} value={value} /></Col>
+							<Col span={4}><InputNumber style={{ width: '32px' }} onChange={that.handleChange.bind(that, 'lineHeight')} value={value} disabled /></Col>
+						</div>
 					)
+;
 				} else {
-
 					let optionContent = options.map((opt) => {
 						let { 
 							id,
@@ -499,22 +587,23 @@ class FontStyles extends JFormComponent {
 							<Option key={`opt-${id}`} value={value}>{label}</Option>
 						)
 					});
-
-					return (
-						<Col key={`${id}-${index}`} span={8}>
-							<FormItem label={label}>
-								<Select 
-									title={title} 
-									value={value} 
-									onChange={that.handleChange.bind(that, id)}
-									style={{ width: '80%'}}
-									>
-									{optionContent}
-								</Select>
-							</FormItem> 
-						</Col>
-					)
+					content = <Select 
+											title={title} 
+											value={value} 
+											onChange={that.handleChange.bind(that, id)}
+											style={{ width: '80%'}}
+											>
+											{optionContent}
+										</Select>;
 				}
+	
+				return (
+					<Col key={`${id}-${index}`} span={8}>
+						<FormItem label={label}>
+							{content}
+						</FormItem> 
+					</Col>
+				)
 		});
 
 		return (
@@ -525,145 +614,93 @@ class FontStyles extends JFormComponent {
 	}
 }
 
-class ComponentColorStyle extends JFormComponent {
-	constructor(props) {
-		super(props);
-
-		let {
-			options,
-		} = props;
-
-		this.state = _.cloneDeep(defaultBasicProps.componentColor);
-	}
-
-
-	handleChange(key, { hex }) {
-
-		let newKeyState = Object.assign(this.state[key], { value: hex });
-		this.setState({
-			[key]: newKeyState,
-		}, () => {
-			console.warn('state has been changed in colorChange', this.state);
-		});
-	}
-
-	render() {
-		let that = this;
-		let {
-			fontColor,
-			bgColor,
-		} = this.state;
-
-		let colorContent = [
-			fontColor,
-			bgColor,
-		].map((item, index) => {
-			let {
-				id,
-				label,
-				value,
-			} = item;
-
-			let colors = [
-			"#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", 
-			"#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", 
-			"#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", 
-			"#ff5722", "#795548", "#607d8b", "#aaaaaa", "#000000"];
-
-			let offset = index ? 1 : 0;
-
-			return (
-				<Col key={`color-${id}-${index}`} span={11} offset={offset}>
-					<FormItem label={label}>
-						<CompactPicker
-							color={value}
-							onChange={that.handleChange.bind(that, id)} />
-					</FormItem>
-				</Col>
-			)
-		});
-
-		return (
-			<Row gutter={8} style={{ display: 'block' }}>
-				{colorContent}
-			</Row>
-		)
-	}
-}
-
 /**
  * [PropsPanelMap 定义一个组件字典方便生成]
  * @type {Object}
  */
 const PropsPanelMap = {
-	FormStatus: (refName, options) => {
+	FormStatus: (refName, options, dispatch) => {
 		return (
-			<FormStatus ref={refName} options={options} />
+			<FormStatus ref={refName} options={options} dispatch={dispatch} />
 		)
 	},
-	ComponentTheme: (refName, options) => {
+	ComponentTheme: (refName, options, dispatch) => {
 		return (
-			<ComponentTheme ref={refName} options={options} />
+			<ComponentTheme ref={refName} options={options} dispatch={dispatch} />
 		)
 	},
-	ComponentColorStyle: (refName, options) => {
+
+	InputAlignCarry: (refName, options, dispatch) => {
 		return (
-			<ComponentColorStyle ref={refName} options={options} />
+			<InputAlignCarry ref={refName} options={options} dispatch={dispatch} />
 		)
 	},
-	InputAlignCarry: (refName, options) => {
+	InputValue: (refName, options, dispatch) => {
 		return (
-			<InputAlignCarry ref={refName} options={options} />
+			<InputValue ref={refName} options={options} dispatch={dispatch} />
 		)
 	},
-	InputValue: (refName, options) => {
+	InputDecoration: (refName, options, dispatch) => {
 		return (
-			<InputValue ref={refName} options={options} />
+			<InputDecoration ref={refName} options={options} dispatch={dispatch} />
 		)
 	},
-	InputDecoration: (refName, options) => {
+	FontStyles: (refName, options, dispatch) => {
 		return (
-			<InputDecoration ref={refName} options={options} />
-		)
-	},
-	FontStyles: (refName, options) => {
-		return (
-			<FontStyles ref={refName} options={options} />
+			<FontStyles ref={refName} options={options} dispatch={dispatch} />
 		)
 	}
-}
+};
+
 
 export default 
 class BasicProps extends Component {
 	constructor(props) {
 	  super(props);
 
-	  this.state = {
-	  	config: _.cloneDeep(defaultBasicProps),
-	  };
+	  this.state = _.cloneDeep(defaultBasicProps);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (!nextProps.config) {
-			return;
-		}
+		console.log('nextProps in BasicProps', nextProps);
 
-		let {
-			...newProps,
-		} = nextProps;
-
-		this.setState({
-			...newProps,
-		}, () => {
-			console.log('nextProps in BasicProps', nextProps);
+		this.setState(_.merge(this.state, nextProps.config), () => {
+			console.log('updated state in BasicProps', this.state);
 		});
 	}
 
+	onApply() {
+		console.log('==================onApply=================');
+
+		let dataModel = this.__getDataModel();
+
+		console.log('UPDATE_COMPONENT_BASIC_PROPS', dataModel);
+		this.props.dispatch({
+			type: 'UPDATE_COMPONENT_BASIC_PROPS',
+			payload: {
+				basicProps: dataModel,
+			},
+		});
+
+		this.props.dispatch({
+			type: 'REEDIT_COMPONENT',
+		});
+	}
+
+	__getDataModel() {
+		let dataModel = {};
+    Object.keys(this.refs).map((refKey) => {
+      dataModel[refKey] = this.refs[refKey].getFieldsValue();
+    });
+
+    return dataModel;
+	}
+
 	render() {
-		
-		let {
-			config,
-		} = this.state;
+		let that = this;
+		let configModel = this.state;
+
+		let { dispatch } = this.props;
 
 		let panelData = [
 			{
@@ -671,20 +708,12 @@ class BasicProps extends Component {
 				title: '组件风格',
 				children: [
 					{
-						id: 'InputAlignCarry',
-						ref: 'inputAlignCarry'
-					},
-					{
 						id: 'FontStyles',
 						ref: 'fontStyles'
 					},
 					{
 						id: 'ComponentTheme',
 						ref: 'componentTheme'
-					},
-					{
-						id: 'ComponentColorStyle',
-						ref: 'componentColor'
 					},
 				]
 			},
@@ -726,8 +755,9 @@ class BasicProps extends Component {
 					id,
 					ref,
 				} = configItem;
+				
 
-				return PropsPanelMap[id](ref, config[`${ref}`])
+				return PropsPanelMap[id](ref, configModel[`${ref}`], dispatch)
 			});
 
 			return (
@@ -738,9 +768,12 @@ class BasicProps extends Component {
 		});
 
 		return (
-			<Collapse defaultActiveKey={['1', '2', '3']}>
-				{panelContent}
-			</Collapse>
+			<div>
+				<Collapse defaultActiveKey={['1', '2', '3']}>
+					{panelContent}
+				</Collapse>
+				<ApplyConfigButton onApply={that.onApply.bind(that)} title={`应用基础设置`} />
+			</div>
 		)
 	}
 }
