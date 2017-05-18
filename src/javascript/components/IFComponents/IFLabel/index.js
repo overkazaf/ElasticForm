@@ -1,15 +1,12 @@
 import IFComponentBase from '../IFComponentBase/index.js';
-
+import Util from '../../../utils/Util.js';
 export default
 class IFLabel extends IFComponentBase {
-  
 
   render() {
     let {
       option,
     } = this.props;
-
-    console.warn('option in input label', option);
 
     let {
       basicProps: {
@@ -55,20 +52,6 @@ class IFLabel extends IFComponentBase {
       validations,
     } = option;
 
-    console.log('============== inside IFLabel ==================');
-
-
-    // let styleObj = {};
-    // styleObj['fontFamily'] = fontFamily;
-    // styleObj['fontSize'] = fontSize;
-    // styleObj['textAlign'] = textAlign;
-    // styleObj['color'] = fontColor || '#000';
-    // styleObj['backgroundColor'] = bgColor;
-    // styleObj['height'] = '100%';
-
-    // options.map((item) => {
-    //   styleObj[item.id] = item.value;
-    // });
 
     let keyArray = [
       'backgroundColor',
@@ -100,7 +83,6 @@ class IFLabel extends IFComponentBase {
       'linkTarget',
       'placeholder',
       'value',
-
     ];
 
     let kvObject = {};
@@ -150,9 +132,7 @@ class IFLabel extends IFComponentBase {
       'visibility',
     ];
 
-    let styleObj = buildStyleObjet(styleKeys, kvObject);
-
-    console.log('styleObj', styleObj);
+    let styleObj = Util.buildStyleObjet(styleKeys, kvObject);
 
     return (
       <div className="if-label" style={styleObj}>
@@ -162,45 +142,4 @@ class IFLabel extends IFComponentBase {
   }
 }
 
-function buildStyleObjet(keys, kvObject) {
-  let style = {};
-  keys.map((key) => {
-    let styleKey = key;
-    let styleValue = kvObject[key];
-    if (key === 'fontStyle') {
-      let values = styleValue ? styleValue.split('$') : "";
-  
-      console.log('values in buildStyleObjet', values);
 
-      values.length && values.map((kvPairs) => {
-        let [k, v] = kvPairs.split(':');
-        style[k] = v;
-      });
-    } else {
-      if (key === 'fontColor') {
-        styleKey = 'color';
-        styleValue = styleValue.hex;
-      }
-
-      if (key === 'backgroundColor') {
-        styleValue = styleValue.hex;
-      }
-
-      if (key === 'visibility') {
-        styleKey = 'display';
-        styleValue = styleValue ? '' : 'none';
-      }
-
-      style[styleKey] = styleValue;
-    }
-
-  });
-
-  return style;
-}
-
-function print(...args) {
-  args.map((item) => {
-    console.log(item);
-  });
-}

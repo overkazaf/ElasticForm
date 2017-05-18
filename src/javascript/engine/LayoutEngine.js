@@ -63,25 +63,28 @@ class ComponentsView extends Component {
 			console.error('showing modal', id, component, tabIndex, position);
 
 			dispatch({
-				type: 'SET_MODAL_VISIBILITY',
-				payload: true,
-			});
-
-			dispatch({
 				type: 'UPDATE_ACTIVE_CID',
 				payload: {
 					id,
 				},
 			});
 
-			dispatch({
-				type: 'EDIT_COMPONENT',
-				payload: {
-					id,
-					tabIndex,
-					position,
-				},
-			})
+			setTimeout(() => {
+				dispatch({
+					type: 'SET_MODAL_VISIBILITY',
+					payload: true,
+				});
+
+				dispatch({
+					type: 'EDIT_COMPONENT',
+					payload: {
+						id,
+						tabIndex,
+						position,
+					},
+				})
+			}, 50);
+
 		};
 
 		let removeComponent = (id, tabIndex, position) => {
@@ -93,16 +96,13 @@ class ComponentsView extends Component {
 					position,
 				},
 			})
-		};
 
-		let setActiveEl = (id) => {
 			dispatch({
-				type: 'UPDATE_ACTIVE_CID',
-				payload: {
-					id,
-				},
+				type: 'SET_MODAL_VISIBILITY',
+				payload: false,
 			});
 		};
+
 
 		return (
 			<ReactGridLayout 

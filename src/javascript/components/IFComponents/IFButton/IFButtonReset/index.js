@@ -3,49 +3,43 @@ import {
 } from 'antd';
 import Immutable from 'immutable';
 import IFButtonNormal from '../IFButtonNormal/index.js';
+import Util from '../../../../utils/Util.js';
 
 export default
 class IFButtonReset extends IFButtonNormal {
 	constructor(props) {
 	  super(props);
 
-	  console.log('props.option', props);
 	  this.state = {
-	  	option: Immutable.fromJS(props.option || {}),
+	  	option: props.option,
 	  	eventMap: {},
 	  };
 	}
 
 	render() {
-
+		
+		let model = Util.parseDataModel(this.props.option);
 		let {
-			option,
-			eventMap,
-		} = this.state;
+			size, theme, label, fontFamily, fontSize, lineHeight, textAlign, visibility, locked,
+			extraStyle,
+		} = model;
 
-		let {
-			label,
-			visibility,
-			locked,
-			theme,
-			size,
-			ghost,
-		} = option.toJS();
-
-		let {
-			onClick,
-		} = eventMap;
+		let fontStyleObj = {
+			fontSize,
+			fontFamily,
+			lineHeight,
+			...extraStyle,
+		};
 
 		return (
 			<Button 
-				ghost={!!ghost}
 			  size={size || 'large'}
-				type={theme || 'default'}
+				type={'default'}
 				disabled={!!locked}
-				onClick={onClick || null}
+				onClick={null}
 				style={{ width: '100%'}}
 			>
-				{label}
+				<span style={fontStyleObj}>{label}</span>
 			</Button>
 		)
 	}

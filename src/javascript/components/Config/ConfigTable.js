@@ -110,8 +110,14 @@ class ConfigTable extends Component {
       };
     }
 
+    __getDataModel() {
+      return this.state.configModel;
+    }
+
     componentWillReceiveProps(nextProps) {
-      console.log('nextProps in ConfigTable', nextProps);
+      console.log('componentWillReceiveProps(nextProps) in ConfigTable', nextProps);
+
+      if (!nextProps.config.configModel) return;
 
       this.setState({
         configModel: nextProps.config.configModel,
@@ -119,16 +125,17 @@ class ConfigTable extends Component {
     }
 
     handleDataSourceRadioChange = () => {      
-      // this.props.dispatch({
-      //   type: 'UPDATE_DATA_SOURCE_TYPE',
-      // });
+      let { dataSourceRadioValue } = this.state;
+      dataSourceRadioValue = dataSourceRadioValue == 2 ? 1 : 2;
+      this.setState({
+        dataSourceRadioValue,
+      });
     };
 
     onChange(activeConfigTabKey) {
-      // this.props.dispatch({
-      //   type: 'UPDATE_ACTIVE_CONFIG_KEY',
-      //   payload: activeConfigTabKey,
-      // });
+      this.setState({
+        activeConfigTabKey,
+      });
     }
 
     render() {
@@ -144,10 +151,6 @@ class ConfigTable extends Component {
         activeConfigTabKey,
       } = this.state;
 
-
-      console.log('config in ConfigTable', configModel);
-      console.log('state in ConfigTable', this.state);
-      
       let {
         basicProps,
         dataSource,
@@ -177,13 +180,10 @@ class ConfigTable extends Component {
               <div style={{ marginTop: '10px' }}>
                 {
                   dataSourceRadioValue == 1 ?
-                    <IFTransfer ref="dataSource"  dispatch={dispatch}/>:
+                    <IFTransfer ref="dataSource" dispatch={dispatch}/>:
                     <IFDynamicForm ref="dataSource" dispatch={dispatch}/>
                 }
               </div>
-
-              <ApplyConfigButton onApply={onApply} title="应用数据源设置" />
-
             </TabPane>
             <TabPane tab="过滤规则" key="3">
               <Row>

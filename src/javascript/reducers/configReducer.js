@@ -54,8 +54,6 @@ function getTargetItemByState(state, tabIndex, position, activeCId) {
 
   let $$layouts = state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
 
-  console.log('');
-
   let index = $$layouts.findIndex((item) => {
     let itemId = item.getIn(['component', 'props', 'id']);
     return itemId === activeCId;

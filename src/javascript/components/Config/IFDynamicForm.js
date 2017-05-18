@@ -6,6 +6,9 @@ import {
   Row,
   Col,
 } from 'antd';
+
+import ApplyConfigButton  from './ApplyConfigButton.js';
+
 const FormItem = Form.Item;
 
 let uuid = 0;
@@ -53,9 +56,11 @@ class DynamicFieldSet extends React.Component {
 
   handleSubmit = (e) => {
 
-    console.log('this.props in handleSubmit', this.props);
-
     e.preventDefault();
+    this.validateForm();
+  }
+
+  validateForm(callback) {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
@@ -69,8 +74,7 @@ class DynamicFieldSet extends React.Component {
 
         this.setState({
           dataSource,
-        });
-
+        }, callback);
 
         // dispatch({
         //   type: 'UPDATE_COMPONENT_DATASOURCE',
@@ -86,8 +90,26 @@ class DynamicFieldSet extends React.Component {
     return this.state.dataSource;
   }
 
+  onApply() {
+    console.log('==================onApply=================');
+    this.validateForm(() => {
+      let dataSource = this.getFleldsValue();
+
+      this.props.dispatch({
+        type: 'UPDATE_COMPONENT_DATA_SOURCE',
+        payload: {
+          dataSource,
+        },
+      });
+
+      // this.props.dispatch({
+      //   type: 'REEDIT_COMPONENT',
+      // });
+    });
+  }
 
   render() {
+    let that = this;
     const { getFieldDecorator, getFieldValue } = this.props.form;
 
     const formItemLayout = {
@@ -177,17 +199,17 @@ class DynamicFieldSet extends React.Component {
       );
     });
     return (
-      <Form ref="dataSourceConfig" onSubmit={this.handleSubmit.bind(this)}>
-        {formItems}
-        <FormItem {...addFormItemLayoutWithOutLabel}>
-          <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-            <Icon type="plus" /> 新增字典项
-          </Button>
-        </FormItem>
-        <FormItem {...addFormItemLayoutWithOutLabel}>
-          <Button type="primary" htmlType="submit" size="large" style={{ width: '60%' }}>应用字典配置</Button>
-        </FormItem>
-      </Form>
+      <div>
+        <Form>
+          {formItems}
+          <FormItem {...addFormItemLayoutWithOutLabel}>
+            <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+              <Icon type="plus" /> 新增字典项
+            </Button>
+          </FormItem>
+        </Form>
+        <ApplyConfigButton onApply={that.onApply.bind(that)} title={`应用数据源设置`} />
+      </div>
     );
   }
 }

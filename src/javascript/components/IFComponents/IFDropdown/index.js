@@ -16,7 +16,9 @@ class IFDropdown extends IFComponentBase {
 	
 	handleMenuClick({ key }) {
 
-	  let selectedOption = this.state.option.get('dataSource').toJS().filter((item, index) => {
+		console.log('this.state.option.dataSource', this.props.option.dataSource);
+
+	  let selectedOption = this.props.option.dataSource.filter((item, index) => {
 	  	return index == key;
 	  })[0];
 
@@ -31,12 +33,13 @@ class IFDropdown extends IFComponentBase {
 	}
 
 	render() {
-
 		let {
 			option,
-		} = this.state;
+		} = this.props;
 
-		let rawOption = option.toJS();
+		let rawOption = option;
+
+		console.log('rawOption.dataSource', rawOption.dataSource);
 
 		const menu = (
 		  <Menu 
@@ -52,19 +55,75 @@ class IFDropdown extends IFComponentBase {
 		);
 
 		let {
-			size,
-			theme,
+			basicProps: {
+				componentTheme: {
+	        backgroundColor,
+	        fontColor,
+	        layoutStyle,
+	        size,
+	        theme,
+	      },
+				inputValue: {
+	        carry,
+	        defaultValue,
+	        label,
+	        link,
+	        linkTarget,
+	        placeholder,
+	        value,
+	      },
+	      formStatus: {
+	      	visibility,
+	      	locked,
+	      },
+	      fontStyles: {
+          fontFamily,
+          fontStyle,
+          fontSize,
+          lineHeight,
+          textAlign,
+        },
+			},
 		} = rawOption;
 
+		[backgroundColor, size, theme, label, fontFamily, fontSize, lineHeight, textAlign, visibility, locked ] = 
+		[backgroundColor, size, theme, label, fontFamily, fontSize, lineHeight, textAlign, visibility, locked ].map(item => item.value);
+
+		[fontStyle] = [fontStyle].map(item => item.values);
+		
+		let extraStyle = {};
+		if (fontStyle) {
+			let pairs = fontStyle.split('$');
+			pairs.map((pair) => {
+				let [k, v] = pair.split(':');
+				extraStyle[k] = v;
+			});
+		}
+
+		let fontStyleObj = {
+			fontSize,
+			fontFamily,
+			lineHeight,
+			...extraStyle,
+		};
+
+		if(!visibility) {
+			return <div></div>;
+		}
+
 		return (
-			<Dropdown overlay={menu}>
+			<div style={{backgroundColor}}>
+				<Dropdown overlay={menu}>
 		      <Button 
-		      	size={'large'}
+		        disabled={!!locked}
+		      	size={size}
 		      	type={theme || 'default'}
-		      	style={{ width: '100%'}}>
-		        {rawOption.label} <Icon type="down" />
+		      	style={{ width: '100%', textAlign}}>
+		      	<span style={fontStyleObj}>{label}</span> 
+		        <Icon type="down" />
 		      </Button>
 		    </Dropdown>
+			</div>
 		)
 
 	}

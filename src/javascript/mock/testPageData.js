@@ -85,11 +85,12 @@ let layouts = {
             fontStyles: {
               fontStyle: {
                 isMultiple: true,
-                values: [
-                  'fontWeight:bold',
-                  'fontStyle:italic',
-                  'textDecoration:underline'
-                ].join('$'),
+                values: '',
+                // values: [
+                //   'fontWeight:bold',
+                //   'fontStyle:italic',
+                //   'textDecoration:underline'
+                // ].join('$'),
               },
               fontSize: {
                 value: '12px',

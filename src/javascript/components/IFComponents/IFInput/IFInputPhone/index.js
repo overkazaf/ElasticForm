@@ -6,6 +6,7 @@ import {
 	Form,
 	Icon,
 } from 'antd';
+import Util from '../../../../utils/Util.js';
 
 const FormItem = Form.Item;
 
@@ -14,48 +15,27 @@ class IFInputPhone extends IFComponentBase {
 	  super(props);
 	}
 
-	getDataModel() {
-
-	}
-
-	componentWillReceiveProps(nextProps) {
-		console.log('nextProps', nextProps);
-		let newState = Immutable.fromJS(Object.assign(this.state.option.toJS(), nextProps.option));
-
-		console.log(newState.toJS());
-		this.setState({
-			option: newState,
-		}, console.log(this.state.option.toJS()))
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return true;
-	}
-
 	render() {
 
+		let { getFieldDecorator } = this.props.form;
 		let {
 			option,
-			eventMap,
-		} = this.state;
-
-		let { getFieldDecorator } = this.props.form;
-
+		} = this.props;
+	
+		let model = Util.parseDataModel(option);
 		let {
-			id,
-			placeholder,
-			prefix,
-			suffix,
-			addonBefore,
-			addonAfter,
-			defaultValue,
-			value,
-			locked,
-			visibility,
-			size,
-			mustInput,
-			label,
-		} = option.toJS();
+			size, theme, label, fontFamily, fontSize, lineHeight, textAlign, visibility, locked, mustInput,
+			defaultValue, value, link, linkTarget, placeholder, carry,
+			addonBefore, addonAfter, prefix, suffix,
+			extraStyle,
+		} = model;
+
+		let fontStyleObj = {
+			fontSize,
+			fontFamily,
+			lineHeight,
+			...extraStyle,
+		};
 
 		if (!visibility) {
 			return <div style={{textAlign: 'center'}}><Icon type="eye" /></div>;
@@ -65,15 +45,15 @@ class IFInputPhone extends IFComponentBase {
 			<FormItem
 				label={label}
 			>
-				{getFieldDecorator('123', {
+				{getFieldDecorator(option.id, {
 	        rules: [
-	          { required: `${!!mustInput}`, message: 'Please select your phone number!' },
-	          { pattern: '/^{1}[3,4,5]{\d}9$/', message: 'Please input a valid phone number!' },
+	          { required: !!mustInput, message: '请输入手机号码' },
+	          { pattern: '/^{1}[3,4,5]{\d}9$/', message: '请输入合法的手机号码!' },
 	        ],
 	        initialValue: defaultValue || '',
 	      })(
 	        <Input 
-						 placeholder={placeholder || 'cell phone number'}
+						 placeholder={placeholder}
 						 addonBefore={addonBefore}
 						 addonAfter={addonAfter}
 						 suffix={suffix}

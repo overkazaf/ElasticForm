@@ -46,7 +46,9 @@ class FormStatus extends JFormComponent {
 
 	handleChange(stateKey) {
 		this.setState({
-			[stateKey]: !this.state[stateKey],
+			[stateKey]: {
+				value: !this.state[stateKey].value,
+			},
 		}, () => {
 			console.log('this.getFieldsValue', this.getFieldsValue());
 		});
@@ -117,11 +119,7 @@ class FormStatus extends JFormComponent {
 class InputAlignCarry extends JFormComponent {
 	constructor(props) {
 		super(props);
-
 		this.state = Object.assign({}, defaultBasicProps.inputAlignCarry);
-
-		console.log('this.state', this.state);
-		console.log('this.state', defaultBasicProps);
 	}
 	
 	handleChange(type, e) {
@@ -138,9 +136,6 @@ class InputAlignCarry extends JFormComponent {
 			textAlign,
 			carry,
 		} = this.state;
-
-		console.log('textAlign', textAlign);
-		console.log('carry', carry);
 
 		return (
 			<Row gutter={8}>
@@ -184,8 +179,6 @@ class InputValue extends JFormComponent {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('inputValue nextProps', nextProps);
-
 		this.setState(nextProps.options, () => {
 			console.log('this.state', this.state);
 		});
@@ -252,7 +245,6 @@ class InputDecoration extends JFormComponent {
 	}
 
 	handleChange(id, e) {
-		// console.log('handleChange in inputDecoration');
 		let currentState = this.state[id];
 		let { type } = currentState;
 		let newValue = type === 'input' ? e.target.value : e;
@@ -481,8 +473,6 @@ class FontStyles extends JFormComponent {
 					return `${item.id}:${item.value}`;
 				}).join('$');
 
-				console.log('newState', newState);
-
 				this.setState({
 					fontStyle: newState,
 				}, () => {
@@ -535,14 +525,12 @@ class FontStyles extends JFormComponent {
 			  	label,
 			  	title,
 			  	value,
+			  	values,
 			  	options,
 			  } = item;
 
 			  let content = 'text';
-			  console.log('options', options);
-
 				if (id === 'fontStyle') {
-					console.log('fontStyle');
 					let buttonContent = options.map((opt, idx) => {
 						let buttonKey = `${id}-${idx}`;
 						let { 
@@ -551,6 +539,22 @@ class FontStyles extends JFormComponent {
 							value,
 							checked,
 						} = opt;
+
+						if (values && values.length) {
+							// 修正options的checked状态
+							let kv = values.split('$');
+							kv.map((item, kvIndex) => {
+								let [key, value] = item.split(':');
+								let option = options.filter((ite) => {
+									return key == ite.id;
+								})[0];
+								
+								if (key === id) {
+									checked = true;
+									option.checked = true;
+								}
+							});
+						}
 						
 						// 区分选中和未选的按钮状态
 						let buttonType = !checked ? 'default' : 'primary';
@@ -662,8 +666,6 @@ class BasicProps extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('nextProps in BasicProps', nextProps);
-
 		this.setState(_.merge(this.state, nextProps.config), () => {
 			console.log('updated state in BasicProps', this.state);
 		});
@@ -671,7 +673,6 @@ class BasicProps extends Component {
 
 	onApply() {
 		console.log('==================onApply=================');
-
 		let dataModel = this.__getDataModel();
 
 		console.log('UPDATE_COMPONENT_BASIC_PROPS', dataModel);

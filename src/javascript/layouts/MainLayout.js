@@ -97,15 +97,20 @@ class MainLayout extends Component {
 
   _confirmModalConfig(confirmAllFlag = false, reopen = false) {
     let configTable = this.refs['configTable'];
+    let configRefs = configTable.refs;
 
+    window.configTable = configTable;
+    for (let ref in configRefs) {
+      let model = ref.__getDataModel();
+    }
+
+    // window.configTable = configTable;
     // TODO：
     // if confirmAllFlag is setted to true, we apply all config panels
 
-    console.log('configTable', configTable);
+    // let activeConfigKey = configTable.selector.props.activeConfigTabKey;
 
-    let activeConfigKey = configTable.selector.props.activeConfigTabKey;
-
-    let model = configTable.__getDataModel.call(configTable);
+    // let model = configTable.__getDataModel.call(configTable);
 
     // if (activeConfigKey == 2) {
     //   this.props.dispatch({
@@ -139,9 +144,6 @@ class MainLayout extends Component {
       configModel,
       data,
     } = this.props;
-
-    console.log('render in MainLayout::configModel', configModel);
-    console.log('render in MainLayout::data', data);
 
     let mainHeaderStyleObj = { 
       background: 'rgba(0,0,0,0.75)', 
@@ -229,10 +231,6 @@ class MainLayout extends Component {
                     dispatch={dispatch}
                     config={{configModel}}
                     />
-                </div>
-                <div className="if-draggable-modal-footer">
-                  <Button size="large" onClick={this.handleOk.bind(this)} type="primary">保存所有配置</Button>
-                  <Button size="large" onClick={this.handleCancel.bind(this)} type="default">取消</Button>
                 </div>
               </div>
               </div>

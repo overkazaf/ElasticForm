@@ -3,8 +3,9 @@ import IFComponentBase from '../../IFComponentBase/index.js';
 import {
 	InputNumber,
 	Form,
+	Icon,
 } from 'antd';
-
+import Util from '../../../../utils/Util.js';
 
 const FormItem = Form.Item;
 
@@ -14,52 +15,36 @@ class IFInputNumber extends IFComponentBase {
 	  super(props);
 	}
 
-	getDataModel() {
-
-	}
-
 	render() {
 
 		let {
 			option,
-			eventMap,
-		} = this.state;
-
+		} = this.props;
+	
+		let model = Util.parseDataModel(option);
 		let {
-			placeholder,
-			prefix,
-			suffix,
-			addonBefore,
-			addonAfter,
-			defaultValue,
-			value,
-			locked,
-			visibility,
-			mustInput,
-			label,
-			size,
-			min,
-			max,
-			step,
-		} = option.toJS();
+			size, theme, label, fontFamily, fontSize, lineHeight, textAlign, visibility, locked, mustInput,
+			defaultValue, value, link, linkTarget, placeholder, carry,
+			addonBefore, addonAfter, prefix, suffix,
+			extraStyle,
+		} = model;
 
 		if (!visibility) {
-			return <div></div>;
+			return <div style={{textAlign: 'center'}}><Icon type="eye" /></div>;
 		}
 	
-		console.log('disabled', locked);
-
 		return (
 			<FormItem
 				label={label}
 				required={!!mustInput}
 			>
 				<InputNumber 
-					 min={min || -Infinity}
-					 max={max || Infinity}
-					 step={step || 1}
+					 min={-Infinity}
+					 max={Infinity}
+					 prefix={prefix}
+					 step={1}
 					 disabled={!!locked}
-					 size={size || 'large'}
+					 size={size}
 					 value={value}
 					 defaultValue={defaultValue}
 					 style={{ width: '100%' }}

@@ -10,7 +10,7 @@ class IFComponentBase extends Component {
 	  super(props);
 	
 	  this.state = {
-	  	option: Immutable.fromJS(props.option),
+	  	option: props.option,
 	  	eventMap: {},
 	  };
 	}
@@ -35,11 +35,9 @@ class IFComponentBase extends Component {
 		let valueObj = {};
 
 		array.map((field) => {
-			console.log(`this.getFieldValue(${field})`, this.getFieldValue(field));
 			valueObj[field] = this.getFieldValue(field);
 		});
 
-		console.log('getFieldsValue');
 		return valueObj;
 	}
 
@@ -54,11 +52,11 @@ class IFComponentBase extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		let newState = Immutable.fromJS(Object.assign(this.state.option.toJS(), nextProps.option));
+		let newState = Object.assign(this.state.option, nextProps.option);
 
 		this.setState({
 			option: newState,
-		}, console.log(this.state.option.toJS()))
+		}, console.log(this.state.option))
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

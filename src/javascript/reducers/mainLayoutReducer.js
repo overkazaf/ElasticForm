@@ -29,6 +29,7 @@ console.log('data in mainLayoutReducer', data);
 
 
 export const mainLayoutReducer = ($$state = $$initState, action) => {
+    console.log(`calling mainLayoutReducer::${action.type}`, action);
     switch (action.type) {
         case 'ADD_COMPONENT': {
           let {
@@ -41,6 +42,8 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
 
           let $$newList = $$state.getIn(['data', 'panes', tabIndex, 'layouts', position]);
           let component = generateComponentTpl(id);
+
+          console.log('adding component::', component);
           let $$updatedList = $$newList.unshift(Immutable.fromJS(component));
 
           return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$updatedList);
@@ -58,6 +61,8 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
         		let newItem = item.set('grid', Immutable.fromJS(layouts[index]));
         		return newItem;
         	});
+
+          console.log('$$newLayout', $$newLayout.toJS());
 
         	return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
@@ -77,19 +82,21 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
           
           let targetConfigModel = store.get(`${id}`);
 
+          console.log('$$newItem', $$newItem.toJS());
           console.log(`${id}:::::targetConfigModel::before`, targetConfigModel);
 
           if (!targetConfigModel) {
-            let componentModel = $$newItem.getIn(['component']).toJS();
+            let componentModel = $$newItem.getIn(['component', 'props']).toJS();
             console.log('componentModel', componentModel);
 
-            targetConfigModel = convertComponentModel2Config(componentModel);
+            targetConfigModel = _.merge({basicProps: defaultBasicProps}, componentModel);
             console.log(`${id}  convertComponentModel2Config -> targetConfigModel` , targetConfigModel);
-            store.set(`${id}`, targetConfigModel);
+            //store.set(`${id}`, targetConfigModel);
           }
 
 
           console.log(`setting model::${id}`, store.get(`${id}`));
+          console.log(`targetConfigModel::${id}`, targetConfigModel);
 
         	return $$state.set('activeCId', id)
                       .set('activePosition', position)
@@ -123,6 +130,8 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
             return Immutable.fromJS(rawItem);
           });
 
+          console.log('dataSource', dataSource);
+
           let $$newLayout = $$layouts.set(index, $$updatedItem);
           return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
@@ -153,13 +162,13 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
           let storedItem = store.get(`${activeCId}`);
           console.log('storedItem', storedItem);
           if (!storedItem) {
-            store.set(`${activeCId}`, $$updatedItem.get('component').toJS());
+            store.set(`${activeCId}`, $$updatedItem.getIn(['component', 'props']).toJS());
           } else {
             let target = _.merge(storedItem, $$updatedItem.getIn(['component', 'props']).toJS());
-            console.log('target', target);
-            console.log("$$updatedItem.get('component').toJS()", $$updatedItem.getIn(['component', 'props']).toJS());
             store.set(`${activeCId}`, target);
           }
+
+          console.log(`store.get(${activeCId})`, store.get(`${activeCId}`));
 
           window.store = store;
 
@@ -331,44 +340,6 @@ function combineModel(component, formModel) {
   return newComponentDS;
 }
 
-function getBasicPropsByModel(model) {
-  let {
-    type,
-    props: {
-      basicProps,
-    },
-  } = model;
-
-  console.log('defaultBasicProps', defaultBasicProps);
-  console.log('basicProps', basicProps);
-  console.log('mergedProps', _.merge(defaultBasicProps, basicProps));
-
-  switch(type) {
-    case 'IFLabel':
-      return _.merge(defaultBasicProps, basicProps);
-  }
-
-}
-
-function getDataSourceByModel(model) {
-  // TODO
-  return {};
-}
-
-function convertComponentModel2Config(componentModel) {
-
-  let basicProps = getBasicPropsByModel(componentModel);
-  let dataSource = getDataSourceByModel(componentModel);
-
-  console.log('conversion', basicProps);
-
-  return {
-    basicProps,
-    dataSource,
-  };
-}
-
-
 
 function generateComponentTpl(componentType) {
   const componentId = _.uniqueId(`${componentType}_`);
@@ -389,70 +360,131 @@ function generateComponentTpl(componentType) {
  * @return {[type]}               [description]
  */
 function getDefaultComponentGrid(gridId, componentType) {
-  
-  return {
+  let extraOption = {};
+
+  switch(componentType) {
+    case 'IFInputPhone':
+      extraOption = {
+        h: 15, 
+        minH: 2,
+      }
+      break;
+  }
+
+  return _.merge({
       i: gridId, 
       x: 0, 
       y: 0, 
       w: 3, 
-      h: 16, 
+      h: 9, 
       miW: 2,
-      minH: 12,
-  };
+      minH: 2,
+  }, extraOption);
 }
 
 
 
 function getDefaultComponentProps(componentId, componentType) {
+  const defaultCreationFn = (componentId, componentName='组件', options = {}) => {
+    let templateModel = _.merge({
+      basicProps: defaultBasicProps,
+    }, {
+      id: componentId,
+      basicProps: {
+        inputValue: {
+          label: {
+            value: `${componentName}${componentId}`,
+          }
+        },
+      },
+      dataSource: [],
+    });
+
+    return _.merge(templateModel, options);
+  };
+
   const defaultComponentPropsMap = {
-    'IFDropdown': (componentId) => {
-      let dropdownTemplateModel = _.merge({
-        basicProps: defaultBasicProps,
-      }, {
-        id: componentId,
-        basicProps: {
-          inputValue: {
-            label: {
-              value: `下拉框${componentId}`,
-            }
-          },
-        },
-        dataSource: [],
-      });
+    'IFDropdown': defaultCreationFn,
+    'IFLabel': defaultCreationFn,
+    'IFButtonSubmit': defaultCreationFn,
+    'IFButtonReset': defaultCreationFn,
+    'IFInputPhone': defaultCreationFn,
+    'IFInputNumber': defaultCreationFn,
+  };
 
-      return dropdownTemplateModel;
-    },
-    'IFLabel': (componentId) => {
-      let labelTemplateModel = _.merge({
-        basicProps: defaultBasicProps,
-      }, {
-        id: componentId,
-        basicProps: {
-          inputValue: {
-            label: {
-              value: `标签${componentId}`,
-            }
-          },
-        },
-      });
+  let extraOption ={};
 
-      console.log('labelTemplateModel', labelTemplateModel);
+  const compNameMap = {
+    'IFDropdown': '下拉框',
+    'IFLabel': '标签',
+    'IFButtonSubmit': '提交按钮',
+    'IFButtonReset': '重置按钮',
+    'IFInputPhone': '手机号码',
+    'IFInputNumber': '数字',
+  };
 
-      return labelTemplateModel;
+
+  let basicProps = {
+    fontStyles: {
+      fontSize: {
+        value: '14px'
+      },
+      textAlign: {
+        value: 'center',
+      }
     }
   };
 
-  if (componentType in defaultComponentPropsMap) {
-    return defaultComponentPropsMap[componentType](componentId);
-  } else {
-    return { 
-      id: componentId,
-      visibility: true,
-      locked: false,
-      label: `组件${componentId}`,
-      dataSource: [],
-    };
+  switch (componentType) {
+    case 'IFDropdown': {
+      extraOption = {
+        basicProps,
+      };
+      break;
+    }
+    case 'IFButtonReset': {
+      extraOption = {
+        ..._.merge(basicProps, {
+          componentTheme: {
+            theme: {
+              value: 'default',
+            },
+          }
+        })
+      }
+      break;
+    }
+    case 'IFButtonSubmit': {
+      extraOption = {
+        ..._.merge(basicProps, {
+          componentTheme: {
+            theme: {
+              value: 'primary',
+            },
+          }
+        })
+      }
+      break;
+    }
+    case 'IFInputPhone': {
+      extraOption = {
+        ..._.merge(basicProps, {
+          formStatus: {
+            mustInput: {
+              value: false,
+            }
+          }
+        })
+      }
+      break;
+    }
+    default: 
+      console.log('using default config when building new component');
   }
+
+  console.log('extraOption', extraOption);
+
+  return defaultComponentPropsMap[componentType](componentId, compNameMap[componentType], extraOption);
 }
 
 

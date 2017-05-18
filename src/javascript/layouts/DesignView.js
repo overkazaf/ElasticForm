@@ -44,8 +44,6 @@ class DesignView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps in DesignView', nextProps);
-
     this.setState({
       panes: nextProps.data.panes || [],
     });
