@@ -103,6 +103,17 @@ class ComponentsView extends Component {
 			});
 		};
 
+		let setActiveEl = (props) => {
+			console.log('dispatching');
+			dispatch({
+				type: 'UPDATE_ACTIVE_ELEMENT',
+				payload: {
+					id: props.id,
+					elementProps: props,
+				},
+			});
+		};
+
 
 		return (
 			<ReactGridLayout 
@@ -132,7 +143,7 @@ class ComponentsView extends Component {
 	      		let clazz = id == activeElemId ? 'draggable-item active' : 'draggable-item';
 
 	      		return (
-	      			<div key={grid.i} className={clazz}>
+	      			<div onClick={setActiveEl.bind(that, props)} key={grid.i} className={clazz}>
 			          <span className="ctrl">
 			        		<i>
 			        			<Icon type="edit" 

@@ -364,6 +364,8 @@ function getDefaultComponentGrid(gridId, componentType) {
 
   switch(componentType) {
     case 'IFInputPhone':
+    case 'IFInputNumber':
+    case 'IFInputNormal':
       extraOption = {
         h: 15, 
         minH: 2,
@@ -410,17 +412,19 @@ function getDefaultComponentProps(componentId, componentType) {
     'IFButtonReset': defaultCreationFn,
     'IFInputPhone': defaultCreationFn,
     'IFInputNumber': defaultCreationFn,
+    'IFInputNormal': defaultCreationFn,
   };
 
   let extraOption ={};
 
   const compNameMap = {
     'IFDropdown': '下拉框',
-    'IFLabel': '标签',
+    'IFLabel': '标签文字',
     'IFButtonSubmit': '提交按钮',
     'IFButtonReset': '重置按钮',
     'IFInputPhone': '手机号码',
     'IFInputNumber': '数字',
+    'IFInputNormal': '普通文本',
   };
 
 
@@ -466,6 +470,7 @@ function getDefaultComponentProps(componentId, componentType) {
       }
       break;
     }
+    case 'IFInputNormal':
     case 'IFInputPhone': {
       extraOption = {
         ..._.merge(basicProps, {

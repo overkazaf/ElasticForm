@@ -6,6 +6,7 @@ import {
 	Form,
 	Icon,
 } from 'antd';
+import Util from '../../../../utils/Util.js';
 
 const FormItem = Form.Item;
 
@@ -19,28 +20,20 @@ class IFInputNormal extends IFComponentBase {
 
 		let {
 			option,
-			eventMap,
-		} = this.state;
-
+		} = this.props;
+	
+		let model = Util.parseDataModel(option);
 		let {
-			placeholder,
-			prefix,
-			suffix,
-			addonBefore,
-			addonAfter,
-			defaultValue,
-			value,
-			locked,
-			visibility,
-			size,
-			mustInput,
-			label,
-		} = option.toJS();
+			size, theme, label, fontFamily, fontSize, lineHeight, textAlign, visibility, locked, mustInput,
+			defaultValue, value, link, linkTarget, placeholder, carry,
+			addonBefore, addonAfter, prefix, suffix,
+			extraStyle,
+		} = model;
 
 		if (!visibility) {
 			return <div style={{textAlign: 'center'}}><Icon type="eye" /></div>;
 		}
-
+	
 		return (
 			<FormItem
 				label={label}

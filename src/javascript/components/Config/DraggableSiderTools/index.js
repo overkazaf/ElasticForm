@@ -1,5 +1,5 @@
 import { Component } from 'react';
-
+import { connect } from 'react-redux';
 import {
 	Input,
 	Icon,
@@ -9,6 +9,7 @@ import {
 } from 'antd';
 
 import Draggable from 'react-draggable';
+import _ from 'lodash';
 
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
@@ -16,52 +17,76 @@ const TabPane = Tabs.TabPane;
 
 import indexStyle from './index.scss';
 
-export default
+
+function buildItem({
+	key, value, type = 'text',
+}) {
+	let target = {
+		key: _.uniqueId('property_'),
+		name: key,
+		value: value,
+	};
+
+	console.log('target', target);
+	return target;
+}
+
+function buildDataSource(model) {
+	if(!model) return [buildItem({
+		key: '组件信息', 
+		value: '暂无',
+	})];
+
+	let {
+		basicProps: {
+			// componentTheme: {
+			// 	backgroundColor,
+			// 	fontColor,
+			// 	size,
+			// 	theme,
+			// 	layoutStyle,
+			// },	
+			// formStatus: {
+			// 	locked,
+			// 	visibility,
+			// 	mustInput,
+			// 	autoSum,
+			// }, 
+		},
+		dataSource,
+		eventList,
+		validations,
+		filterRules
+	} = model;
+
+	let dataSourceArray = [];
+	
+	dataSourceArray.push(buildItem({
+		key: '组件ID', 
+		value: model.id,
+	}));
+	dataSourceArray.push(buildItem({
+		key: '组件名', 
+		value: model.name,
+	}));
+
+	dataSourceArray.push(buildItem({
+		key: '描述', 
+		value: '暂无描述',
+	}));
+
+	dataSourceArray.push(buildItem({
+		key: '背景色', 
+		value: '#666',
+	}));
+
+	return dataSourceArray;
+}
+
 class DraggableSiderTools extends Component {
 
-	constructor(props) {
-		super(props);
-		
-	}
-
-
-	render() {
-		const dataSource = [{
-		  key: '1',
-		  name: '表ID',
-		  value: 'IntelliForm-0001',
-		},
-		{
-		  key: '2',
-		  name: '标题',
-		  value: '测试表一',
-		},
-		{
-		  key: '3',
-		  name: '表单描述',
-		  value: '这一是个测试用表'
-		},
-		{
-		  key: '4',
-		  name: '数据源',
-		  value: 'NIL',
-		},
-		{
-		  key: '5',
-		  name: '事件列表',
-		  value: 'EVENT_LIST:xxxyyy',
-		},
-		{
-		  key: '6',
-		  name: '规则列表',
-		  value: 'EVENT_LIST:xxxyyy',
-		},
-		{
-		  key: '7',
-		  name: '下推方案',
-		  value: 'EVENT_LIST:xxxyyy',
-		},
-		];
+	buildPropertyPanelTable(model) {
+		let dataSource = Object.keys(model).length ? buildDataSource(model) : [];
 
 		const columns = [{
 		  title: '属性',
@@ -72,6 +97,23 @@ class DraggableSiderTools extends Component {
 		  dataIndex: 'value',
 		  key: 'value',
 		}];
+
+		return {
+			dataSource,
+			columns,
+		};
+	}
+
+	render() {
+		
+		let {
+			model,
+		} = this.props;
+
+		let {
+			dataSource,
+			columns,
+		} = this.buildPropertyPanelTable(model);
 
 		let tableContainerStyleObj = {
       padding: '5px', 
@@ -143,3 +185,9 @@ class DraggableSiderTools extends Component {
 		)
 	}
 }
+
+const mapStateToProps = (store) => {
+	return store.get('toolboxReducer').toJS();
+};
+
+export default connect(mapStateToProps)(DraggableSiderTools);

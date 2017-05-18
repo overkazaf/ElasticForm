@@ -704,22 +704,9 @@ class BasicProps extends Component {
 		let { dispatch } = this.props;
 
 		let panelData = [
+			
 			{
 				key: '1',
-				title: '组件风格',
-				children: [
-					{
-						id: 'FontStyles',
-						ref: 'fontStyles'
-					},
-					{
-						id: 'ComponentTheme',
-						ref: 'componentTheme'
-					},
-				]
-			},
-			{
-				key: '2',
 				title: '输入框属性',
 				children: [
 					{
@@ -729,6 +716,20 @@ class BasicProps extends Component {
 					{
 						id: 'InputDecoration',
 						ref: 'inputDecoration'
+					},
+				]
+			},
+			{
+				key: '2',
+				title: '组件风格',
+				children: [
+					{
+						id: 'FontStyles',
+						ref: 'fontStyles'
+					},
+					{
+						id: 'ComponentTheme',
+						ref: 'componentTheme'
 					},
 				]
 			},
@@ -770,7 +771,7 @@ class BasicProps extends Component {
 
 		return (
 			<div>
-				<Collapse defaultActiveKey={['1', '2', '3']}>
+				<Collapse defaultActiveKey={['1']}>
 					{panelContent}
 				</Collapse>
 				<ApplyConfigButton onApply={that.onApply.bind(that)} title={`应用基础设置`} />

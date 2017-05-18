@@ -28,13 +28,14 @@ class ComponentSider extends Component {
 				name: '常用组件',
 				icon: 'rocket',
 				children: [
-					{ name: '文本', key: 'IFLabel' },
+					{ name: '标签文字', key: 'IFLabel' },
 					{ name: '下拉框', key: 'IFDropdown' },
 					{ name: '手机号', key: 'IFInputPhone', icon: 'mobile'},
 					{ name: '表单提交按钮', key: 'IFButtonSubmit'},
 					{ name: '表单重置按钮', key: 'IFButtonReset'},
 
 
+					{ name: '普通文本', key: 'IFInputNormal'},
 					{ name: '数字', key: 'IFInputNumber', icon: 'pay-circle'},
 					{ name: '单价', key: 'IFInputPrice', icon: 'pay-circle-o'},
 					{ name: '邮箱', key: 'IFInputMail', icon: 'mail' },

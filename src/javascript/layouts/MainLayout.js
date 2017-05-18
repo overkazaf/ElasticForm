@@ -20,6 +20,7 @@ import {
 } from 'antd';
 
 import ConfigTable from '../components/Config/ConfigTable.js';
+import StatusBar from './StatusBar/index.js';
 import Draggable from 'react-draggable';
 import Storage from '../utils/Storage.js'
 
@@ -187,7 +188,7 @@ class MainLayout extends Component {
               />
             </div>
             <Footer style={{ textAlign: 'center' }}>
-              StatusBar: IntelliForm ©2017 Created by overkazaf
+              <StatusBar />
             </Footer>
           </Content>
           <Sider

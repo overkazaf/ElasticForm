@@ -42,6 +42,7 @@ class IFInputNumber extends IFComponentBase {
 					 min={-Infinity}
 					 max={Infinity}
 					 prefix={prefix}
+					 suffix={suffix}
 					 step={1}
 					 disabled={!!locked}
 					 size={size}
