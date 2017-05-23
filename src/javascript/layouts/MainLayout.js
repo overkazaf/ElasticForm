@@ -97,13 +97,13 @@ class MainLayout extends Component {
   }
 
   _confirmModalConfig(confirmAllFlag = false, reopen = false) {
-    let configTable = this.refs['configTable'];
-    let configRefs = configTable.refs;
+    // let configTable = this.refs['configTable'];
+    // let configRefs = configTable.refs;
 
-    window.configTable = configTable;
-    for (let ref in configRefs) {
-      let model = ref.__getDataModel();
-    }
+    // window.configTable = configTable;
+    // for (let ref in configRefs) {
+    //   let model = ref.__getDataModel();
+    // }
 
     // window.configTable = configTable;
     // TODO：
@@ -235,7 +235,7 @@ class MainLayout extends Component {
                     dispatch={dispatch}
                     components={components}
                     config={{configModel}}
-                    />
+                  />
                 </div>
               </div>
               </div>

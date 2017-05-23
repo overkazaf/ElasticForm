@@ -63,233 +63,284 @@ let getActionTypes = () => {
   };
   
   Object.keys(actionDict).map((key, index) => {
-    types.push(<Option key={`ACTION-${key}`}>{actionDict[key]}</Option>);
+    types.push(<Option key={`ACTION_${key}`}>{actionDict[key]}</Option>);
   });
 
   return types;
 }
 
+/**
+ * [ActionModel 动作模型实体]
+ * @Author   JohnNong
+ * @Email    overkazaf@gmail.com
+ * @Github   https://github.com/overkazaf
+ * @DateTime 2017-05-23T16:32:15+0800
+ * @param    {Object}                     options [可选参数]
+ */
+function ActionModel(options = {}) {
+	return Object.assign({
+		type: '',
+		expr: '',
+		target: [],
+	}, options);
+}
+
 
 export default
 class Advanced extends Component {
-		constructor(props) {
-			super(props);
+	constructor(props) {
+		super(props);
 
-			this.state = {
-				components: props.components,
-				selectedEventList: [],
-				eventMap: {
+		this.state = {
+			components: props.components,
+			selectedEventList: [],
+			eventMap: {
+			},
+		};
+	}
 
-				},
-			};
+	componentWillReceiveProps(nextProps) {
+		let { components } = nextProps;
+
+		console.log('components inside Advanced received', components);
+
+		this.setState({
+			components,
+		});
+	}
+
+	handleTransferSelect(selectedEventList) {
+		let eventMap = {};
+		selectedEventList.map((eventItem) => {
+			eventMap[eventItem.key] = [
+				new ActionModel()
+			];
+		});
+
+		this.setState({
+			selectedEventList,
+			eventMap,
+		});
+	}
+
+	addActionToEvent(eventKey) {
+		let {
+			eventMap,
+		} = this.state;
+		
+		let actionList = eventMap[eventKey];	
+		actionList.push({
+			type: '',
+			expr: '',
+			target: [],
+		});
+		let newEventMap = Object.assign(eventMap, {
+			[eventKey]: actionList,
+		});
+		this.setState({
+			eventMap: newEventMap,
+		});
+	}
+
+	removeEventAction(eventKey, actionIndex) {
+		let { eventMap } = this.state;
+		let newEventMap = Object.assign({}, eventMap);
+		
+		if (newEventMap[eventKey].length === 1) {
+			return;
 		}
+			
+		newEventMap[eventKey].splice(actionIndex, 1);
+		
+		this.setState({
+			eventMap: newEventMap,
+		});
+	}
 
-		handleTransferSelect(selectedEventList) {
-			let eventMap = {};
-			selectedEventList.map((eventItem) => {
-				eventMap[eventItem.key] = [{}];
-			});
+	updateEventActionModel(eventKey, actionIndex, obj = {}) {
 
-			this.setState({
-				selectedEventList,
-				eventMap,
-			});
-		}
-
-		addActionToEvent(eventKey) {
+		let updateFn = () => {
 			let {
 				eventMap,
 			} = this.state;
-			
-			let actionList = eventMap[eventKey];	
-			actionList.push({});
-			let newEventMap = Object.assign(eventMap, {
-				[eventKey]: actionList,
-			});
-			this.setState({
-				eventMap: newEventMap,
-			});
-		}
 
-		removeEventAction(eventKey, actionIndex) {
-			let { eventMap } = this.state;
 			let newEventMap = Object.assign({}, eventMap);
-			
-			if (newEventMap[eventKey].length === 1) {
-				return;
-			}
-				
-			newEventMap[eventKey].splice(actionIndex, 1);
-			
+			let targetActionEl = newEventMap[eventKey].filter((item, index) => {
+				return index === actionIndex;
+			})[0];
+
+			console.log('targetActionEl', targetActionEl);
+			console.log('obj', obj);
+
+			targetActionEl = _.merge(targetActionEl, obj);
+
+			console.log('targetActionEl', targetActionEl);
+
+
 			this.setState({
 				eventMap: newEventMap,
+			}, () => {
+				console.log(+(new Date()) + 'event action model updated', newEventMap);
 			});
-		}
+		};
 
-		updateEventModel(eventKey, actionIndex, obj) {
+		_.throttle(updateFn, 100);
+		// updateFn();
+	}
+
+	validateActionTypes(eventKey, actionIndex, actionType) {
+		this.updateEventActionModel(eventKey, actionIndex, {
+			type: actionType,
+		});
+	}
+
+	selectTargetElements(eventKey, actionIndex, elems) {
+		this.updateEventActionModel(eventKey, actionIndex, {
+			target: [elems],
+		});
+	}
+
+	updateEventExpr(eventKey, actionIndex, { target }) {
+		this.updateEventActionModel(eventKey, actionIndex, {
+			expr: target.value,
+		});
+	}
+
+	buildOptionChildren(allComponents) {
+		return _.flatten(allComponents, true).map((item, index) => {
 			let {
-				eventMap,
-			} = this.state;
-
-			
-		}
-
-		validateActionTypes(eventKey, actionIndex, actionType) {
-			console.log('eventKey, actionIndex, actionType', eventKey, actionIndex, actionType);
-		}
-
-		changeTargetElements(eventKey, actionIndex, elems) {
-			console.log('changeTargetElements', ...elems);
-		}
-
-		updateEventExpr(eventKey, actionIndex, { target }) {
-			console.log('eventKey, actionIndex, target.value', eventKey, actionIndex, target.value);
-		}
-
-		buildOptionChildren(allComponents) {
-			let componentArray = _.flatten(allComponents, true);
-
-			return componentArray.map((item, index) => {
-				let {
-					id,
-					name,
-				} = item;
-
-				return (
-					<Option key={`component-${id}`} value={id}>{name}</Option>
-				)
-			});
-		}
-
-		render() {
-			let that = this;
-			let { 
-				selectedEventList,
-				eventMap,
-				components,
-			} = this.state;
-
-			let handleTransferSelect = (selected) => {
-				this.handleTransferSelect(selected);
-			};
-
-			let allComponents = _.flatten(Object.keys(components).map((key) => {
-				return components[key].map((item, index) => {
-					return item.component.props;
-				}); 
-			}), true);
-
-			let optionChildren = this.buildOptionChildren(allComponents);
-
-			let actionContent = () => {
-				return selectedEventList.map((evtItem, index) => {
-					let {
-						key, 
-						title,
-						description,
-					} = evtItem;
-
-					let addAction = () => {
-						that.addActionToEvent(key);
-					};
-
-					let removeCurrent = (index) => {
-						that.removeEventAction(key, index);
-					};
-								
-					let actionListContent = eventMap[key].map((item, index) =>{
-						let ctrlFlag = eventMap[key].length === index + 1;
-						return (
-							<Row key={`action-list-item-${index}`}>
-								<Col span={3}>
-		            　<FormItem label="动作类型">
-		                <Select
-		                  mode="select"
-		                  size={'large'}
-		                  onChange={that.validateActionTypes.bind(that, key, index)}
-		                  placeholder="请选择动作类型"
-		                  defaultValue={[]}
-		                  style={{ width: '100%' }}
-		                >
-		                  {getActionTypes().filter((item) => {
-		                  	return true;
-												//return !(item.key in selectedActionKeys);
-		                  })}
-		                </Select>
-		              </FormItem>
-		            </Col>
-		            <Col span={5} offset={1}>
-		            　<FormItem label="事件表达式">
-		                <Input 
-											onChange={that.updateEventExpr.bind(that, key, index)}
-		                	placeholder="表达式" />
-		              </FormItem>
-		            </Col>
-
-		            <Col span={6} offset={1}>
-		           　　<FormItem label="目标元素">  
-		                <Select
-		                  onChange={that.changeTargetElements.bind(that, key, index)}
-		                  mode="tags"
-		                  size={'large'}
-		                  placeholder="请选择目标组件"
-		                  defaultValue={[]}
-		                  style={{ width: '100%' }}
-		                >
-		                  {optionChildren}
-		                </Select>
-		              </FormItem>
-		            </Col>
-		            {
-		            	ctrlFlag ? 
-		            	<Col span={6} offset={1}>
-			            　<FormItem label="操作">  
-					            <Button disabled={eventMap[key].length === 1} onClick={removeCurrent.bind(null, index)} size="small" type="danger" style={{ marginRight: '10px'}}>
-												<Icon type="minus-circle-o" /> Remove
-					            </Button>
-					            <Button disabled={eventMap[key].length >= 5} onClick={addAction} size="small" type="primary">
-												<Icon type="plus-circle-o" /> Add
-					            </Button>
-			              </FormItem>
-			            </Col> :
-			            null
-		            }
-	            </Row>
-						)
-					});
-
-					return (
-						<div key={`row-${index}`} gutter={8}>
-							<div>
-	              <b>{key} -- ({description})</b>
-	              <Popover
-	                placement="right" 
-	                content={getEventPopoverContent.bind(that, `${key}`)} 
-	                title="事件配置提示"
-	              >                  
-	                <Icon type="question-circle" />
-	              </Popover>
-	            </div>
-	            {actionListContent}
-						</div>
-					)
-				});
-			};
+				id,
+				name,
+			} = item;
 
 			return (
+				<Option key={`component-${id}-${index}`}>{name}</Option>
+			)
+		});
+	}
+
+	applyAdvanceConfig() {
+		let {
+			eventMap,
+		} = this.state;
+
+		console.log('eventMap in applyAdvanceConfig', eventMap);
+	}
+
+	render() {
+		let that = this;
+		let { 
+			selectedEventList,
+			eventMap,
+			components,
+		} = this.state;
+
+		let handleTransferSelect = (selected) => {
+			this.handleTransferSelect(selected);
+		};
+
+		let allComponents = _.flatten(Object.keys(components).map((key) => {
+			return components[key].map((item, index) => {
+				return item.component.props;
+			}); 
+		}), true);
+
+		let optionChildren = this.buildOptionChildren(allComponents);
+
+		let actionContent = () => {
+			return selectedEventList.map((evtItem, index) => {
+				let {
+					key, 
+					title,
+					description,
+				} = evtItem;
+
+				let addAction = () => {
+					that.addActionToEvent(key);
+				};
+
+				let removeCurrent = (index) => {
+					that.removeEventAction(key, index);
+				};
+							
+				let actionListContent = eventMap[key].map((item, index) =>{
+					let ctrlFlag = eventMap[key].length === index + 1;
+					return (
+						<Row key={`action-list-item-${index}`}>
+							<Col span={3}>
+				            　<FormItem label="动作类型">
+				                <Select
+				                  mode="select"
+				                  size={'large'}
+				                  onChange={that.validateActionTypes.bind(that, key, index)}
+				                  placeholder="请选择动作类型"
+				                  defaultValue={[]}
+				                  style={{ width: '100%' }}
+				                >
+				                  {getActionTypes().filter((item) => {
+				                  	return true;
+									//return !(item.key in selectedActionKeys);
+				                  })}
+				                </Select>
+				              </FormItem>
+				            </Col>
+				            <Col span={5} offset={1}>
+				            　<FormItem label="事件表达式">
+				                <Input onChange={that.updateEventExpr.bind(that, key, index)} placeholder="表达式" />
+				              </FormItem>
+				            </Col>
+
+				            <Col span={6} offset={1}>
+				           　　<FormItem label="目标元素">  
+				                <Select
+				                  mode="tags"
+								  style={{ width: '100%' }}
+				                >
+				                  {optionChildren}
+				                </Select>
+				              </FormItem>
+				            </Col>
+				            {
+				            	ctrlFlag ? 
+				            	<Col span={6} offset={1}>
+					            　<FormItem label="操作">  
+							            <Button disabled={eventMap[key].length === 1} onClick={removeCurrent.bind(null, index)} size="small" type="danger" style={{ marginRight: '10px'}}>
+											<Icon type="minus-circle-o" /> Remove
+							            </Button>
+							            <Button disabled={eventMap[key].length >= 5} onClick={addAction} size="small" type="primary">
+											<Icon type="plus-circle-o" /> Add
+							            </Button>
+					              </FormItem>
+					            </Col> :
+					            null
+				            }
+			            </Row>
+					)
+				});
+
+				return (
+					<div key={`row-${index}`}>
+						<div>
+			              <b>{key} -- ({description})</b>
+			            </div>
+			            {actionListContent}
+					</div>
+				)
+			});
+		};
+
+		return (
 			<div>
 				<Collapse defaultActiveKey={['1', '2']}>
-          <Panel header="事件设置" key="1">
-            <IFEventTransfer 
-						  onSelect={handleTransferSelect}
-            />
-          </Panel>
-          <Panel header="动作设置" key="2">
-            {actionContent()}       
-          </Panel>
-        </Collapse>
-        <ApplyConfigButton onApply={null} title="应用高级设置"/>
+		          <Panel header="事件设置" key="1">
+		            <IFEventTransfer onSelect={handleTransferSelect} />
+		          </Panel>
+		          <Panel header="动作设置" key="2">
+		            {actionContent()}       
+		          </Panel>
+		        </Collapse>
+		        <ApplyConfigButton onApply={this.applyAdvanceConfig.bind(this)} title="应用高级设置"/>
 			</div>
-			)
-		}
+		)
+	}
 }

@@ -62,12 +62,21 @@ class ConfigTable extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
+      let {
+        config: {
+          configModel,
+        },
+        components,
+      } = nextProps;
+
       console.log('componentWillReceiveProps(nextProps) in ConfigTable', nextProps);
 
-      if (!nextProps.config.configModel) return;
+      if (!configModel) return;
 
       this.setState({
-        configModel: nextProps.config.configModel,
+        configModel,
+        components,
       });
     }
 

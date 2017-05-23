@@ -122,12 +122,13 @@ class ComponentSider extends Component {
 
 		return (
 			<Menu 
+			  defaultSelectedKeys={[`IFLabel`]}
 			  key={uuid}
-				onClick={handleMenuClick}
-				theme="dark" 
-				mode={"inline"}>
-	        {siderMenus}
-	    </Menu>
+			  onClick={handleMenuClick}
+			  theme="dark" 
+			  mode={"inline"}>
+	        	{siderMenus}
+	    	</Menu>
 		)
 	}
 }

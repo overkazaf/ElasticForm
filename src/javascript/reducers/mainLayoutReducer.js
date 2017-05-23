@@ -392,6 +392,7 @@ function getDefaultComponentProps(componentId, componentType) {
       basicProps: defaultBasicProps,
     }, {
       id: componentId,
+      name: `${componentName}_${componentId}`,
       basicProps: {
         inputValue: {
           label: {
