@@ -22,12 +22,11 @@ import {
   CirclePicker,
 } from 'react-color';
 
-import { connect } from 'react-redux';
 import _ from 'lodash';
 import IFDynamicForm from './IFDynamicForm.js';
 import IFTransfer from './IFTransfer.js';
-import IFEventTransfer from './IFEventTransfer.js';
 import BasicProps from './BasicProps/BasicProps.js';
+import Advanced from './Advanced/index.js';
 
 import defaultBasicProps from './BasicProps/defaultBasicProps.js';
 
@@ -37,54 +36,6 @@ const Panel = Collapse.Panel;
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
 const Option = Select.Option;
-
-const children = [];
-for (let i = 10; i < 16; i++) {
-  children.push(<Option key={i.toString(16) + i}>组件{i}</Option>);
-}
-
-const getEventPopoverContent = () => {
-  return (
-    <div>
-      <b>事件表达式说明：</b>
-      <ul>
-        <li>以 <Tag color='#df2311'>_$组件id</Tag>代替组件值, 如<Tag color='green'>_$comp1</Tag></li>
-        <li>程序会对表达式进行合法性校验</li>
-      </ul>
-      <hr />
-      <div>
-        样例： _$comp1 * _$comp2
-      </div>
-    </div>
-  );
-};
-
-let getActionTypes = () => {
-  let types = [];
-  let actionDict = {
-    'SHOW_ELEM': '显示元素',
-    'HIDE_ELEM': '隐藏元素',
-    'MATH_CALC': '数学运算',
-    'BRING_DATA_SOURCE': '携带数据源',
-    'UPDATE_VALUE': '更新值',
-    'LOCK_ELEM': '锁定元素',
-    'UNLOCK_ELEM': '解锁元素',
-    'VALIDATE_FORM': '校验表单',
-    'SUBMIT_FORM': '提交表单',
-    'JUMP_TO_LINK': '跳转链接',
-    'DAIL': '拨打电话',
-    'SEND_EMAIL': '发送邮件',
-    'ALERT': '警告信息',
-    'NOTIFICATION': '通知信息',
-    'MESSAGE': '提醒消息',
-  };
-  
-  Object.keys(actionDict).map((key, index) => {
-    types.push(<Option key={`ACTION-${key}`}>{actionDict[key]}</Option>);
-  });
-
-  return types;
-}
 
 import ApplyConfigButton from './ApplyConfigButton.js';
 import Immutable from 'immutable';
@@ -96,8 +47,8 @@ class ConfigTable extends Component {
       
       this.state = {
         dataSourceRadioValue: 2, // 1为从已有数据源中选择，2为批量自定义数据源
-        activeConfigTabKey: "1",
-        
+        activeConfigTabKey: "4",
+        components: props.components,
         // shared models
         configModel: Object.assign({
           basicProps: {},
@@ -108,10 +59,6 @@ class ConfigTable extends Component {
           advanced: {},
         }, props.dataModel),
       };
-    }
-
-    __getDataModel() {
-      return this.state.configModel;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -146,6 +93,7 @@ class ConfigTable extends Component {
       } = this.props;
 
       let {
+        components,
         configModel,
         dataSourceRadioValue,
         activeConfigTabKey,
@@ -257,81 +205,9 @@ class ConfigTable extends Component {
               </Row>
             </TabPane>
             <TabPane tab="高级设置" key="4">
-              <Collapse defaultActiveKey={['2']}>
-                <Panel header="事件设置" key="1">
-                  <IFEventTransfer />
-                </Panel>
-                <Panel header="动作设置" key="2">
-                  <Row gutter={8}>
-                    <div>
-                      <b>onLoad -- (加载完成事件)</b>
-                      <Popover
-                        placement="right" 
-                        content={getEventPopoverContent()} 
-                        title="配置提示"
-                      >                  
-                        <Icon type="question-circle" />
-                      </Popover>
-                    </div>
-                    <Col span={4}>
-                    　<FormItem label="动作类型">
-                        <Select
-                          mode="select"
-                          size={'large'}
-                          placeholder="Please select action type"
-                          defaultValue={[]}
-                          style={{ width: '100%' }}
-                        >
-                          {getActionTypes()}
-                        </Select>
-                      </FormItem>
-                    </Col>
-                    <Col span={6} offset={1}>
-                    　<FormItem label="事件表达式">
-                        <Input placeholder="表达式" />
-                      </FormItem>
-                    </Col>
-                    <Col span={6} offset={1}>
-                   　　<FormItem label="目标元素">  
-                        <Select
-                          mode="tags"
-                          size={'large'}
-                          placeholder="Please select target complments"
-                          defaultValue={[]}
-                          style={{ width: '100%' }}
-                        >
-                          {children}
-                        </Select>
-                      </FormItem>
-                    </Col>
-                    <Col span={4} offset={1}>
-                    　<FormItem label="操作">
-                        <Select
-                          size={'large'}
-                          placeholder="select operation"
-                          defaultValue={[]}
-                          style={{ width: '100%' }}
-                        >
-                          {
-                            [
-                              <Option key="option-add">新增动作</Option>,
-                              <Option key="option-remove">移除动作</Option>,
-                            ]
-                          }
-                        </Select>
-                      </FormItem>
-                    </Col>
-                  </Row>
-                  
-                  <Row gutter={6}>
-                    <Col span={4}>
-                      <Button type="primary">
-                        应用事件设置
-                      </Button>
-                    </Col>
-                  </Row>
-                </Panel>
-              </Collapse>
+              <Advanced 
+                components={components}
+              />
             </TabPane>
             
             <TabPane tab="校验规则" key="6">

@@ -154,11 +154,14 @@ class MainLayout extends Component {
     };    
 
     let viewContainerStyleObj = { 
-      margin: 2, 
+      margin: 2,  
       maxWidth: 980, 
       minHeight: 560, 
       overflow: 'auto',
     };
+
+    console.log('data', data);
+    let components = data.panes[0].layouts;
 
     return (
       <Layout>
@@ -230,6 +233,7 @@ class MainLayout extends Component {
                   <ConfigTable 
                     ref="configTable" 
                     dispatch={dispatch}
+                    components={components}
                     config={{configModel}}
                     />
                 </div>

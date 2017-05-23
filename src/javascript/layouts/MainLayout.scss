@@ -16,7 +16,9 @@
 
 	.if-draggable-modal-body {
 		min-height: 300px;
+		max-height: 600px;
 		margin-bottom: 10px;
+    overflow: auto;
 	}
 
 	.if-draggable-modal-footer {
