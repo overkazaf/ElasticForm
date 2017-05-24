@@ -184,8 +184,8 @@ class Advanced extends Component {
 			});
 		};
 
-		_.throttle(updateFn, 100);
-		// updateFn();
+		// _.throttle(updateFn, 100);
+		updateFn();
 	}
 
 	validateActionTypes(eventKey, actionIndex, actionType) {
@@ -195,6 +195,7 @@ class Advanced extends Component {
 	}
 
 	selectTargetElements(eventKey, actionIndex, elems) {
+		console.log('updateEventActionModel', eventKey, actionIndex, elems);
 		this.updateEventActionModel(eventKey, actionIndex, {
 			target: [elems],
 		});
@@ -295,6 +296,7 @@ class Advanced extends Component {
 				                <Select
 				                  mode="tags"
 								  style={{ width: '100%' }}
+								  onChange={that.selectTargetElements.bind(that, key, index)}
 				                >
 				                  {optionChildren}
 				                </Select>
