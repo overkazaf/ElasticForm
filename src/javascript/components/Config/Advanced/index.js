@@ -13,6 +13,7 @@ import {
 } from 'antd';
 
 import _ from 'lodash';
+import Util from '../../../utils/Util.js';
 import IFEventTransfer from './IFEventTransfer.js';
 import ApplyConfigButton from '../ApplyConfigButton.js';
 
@@ -63,7 +64,7 @@ let getActionTypes = () => {
   };
   
   Object.keys(actionDict).map((key, index) => {
-    types.push(<Option key={`ACTION_${key}`}>{actionDict[key]}</Option>);
+    types.push(<Option key={`ACTION:${key}`}>{actionDict[key]}</Option>);
   });
 
   return types;
@@ -86,6 +87,112 @@ function ActionModel(options = {}) {
 }
 
 
+
+/**
+ * [EventMapping 事件映射的数据结构]
+ * @type {Object}
+ */
+const EventMapping = {
+	onLoad: {
+        key: 'onLoad',
+        title: `onLoad`,
+        description: `加载`,
+        chosen: false
+    },
+    onClick: {
+        key: 'onClick',
+        title: `onClick`,
+        description: `点击`,
+        chosen: false
+    },
+    onFocus: {
+        key: 'onFocus',
+        title: `onFocus`,
+        description: `获得焦点`,
+        chosen: false
+    },
+    onBlur: {
+        key: 'onBlur',
+        title: `onBlur`,
+        description: `失去焦点`,
+        chosen: false
+    },
+    onChange: {
+        key: 'onChange',
+        title: `onChange`,
+        description: `值更新`,
+        chosen: false
+    },
+    onInput: {
+        key: 'onInput',
+        title: `onInput`,
+        description: `正在输入`,
+        chosen: false
+    },
+    onSubmit: {
+        key: 'onSubmit',
+        title: `onSubmit`,
+        description: `表单提交`,
+        chosen: false
+    },
+    onDoubleClick: {
+        key: 'onDoubleClick',
+        title: `onDoubleClick`,
+        description: `双击`,
+        chosen: false
+    },
+    onKeyPress: {
+        key: 'onKeyPress',
+        title: `onKeyPress`,
+        description: `按键下压`,
+        chosen: false
+    },
+    onKeyUp: {
+        key: 'onKeyUp',
+        title: `onKeyUp`,
+        description: `按键抬起`,
+        chosen: false
+    },
+    onKeyDown: {
+        key: 'onKeyDown',
+        title: `onKeyDown`,
+        description: `按键按下`,
+        chosen: false
+    },
+    onMouseUp: {
+        key: 'onMouseUp',
+        title: `onMouseUp`,
+        description: `鼠标抬起`,
+        chosen: false
+    },
+    onMouseDown: {
+        key: 'onMouseDown',
+        title: `onMouseDown`,
+        description: `鼠标按下`,
+        chosen: false
+    }
+};
+
+function eventListToMap(list) {
+	let map = {};
+	list.map((evtItem) => {
+		let {
+			eventType,
+			actionList,
+		} = evtItem;
+
+		if (!map[eventType]) {
+			map[eventType] = [];
+		}
+
+		actionList.map((action) => {
+			map[eventType].push(action);
+		});
+	});
+
+	return map;
+}
+
 export default
 class Advanced extends Component {
 	constructor(props) {
@@ -100,12 +207,31 @@ class Advanced extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		let { components } = nextProps;
+		console.log('componentWillReceiveProps in Advanced', nextProps);
+		let { 
+			components,
+			eventList,
+		} = nextProps;
 
-		console.log('components inside Advanced received', components);
+		let eventMap = eventListToMap(eventList);
+		let selectedEventList = eventList.map((evtItem) => {
+			let {
+				eventType,
+			} = evtItem;
+			return _.merge(EventMapping[eventType], {
+				chosen: true,
+			});
+		});
+
+		console.log('eventMap', eventMap);
+		console.log('selectedEventList', selectedEventList);
 
 		this.setState({
 			components,
+			eventMap,
+			selectedEventList,
+		}, () => {
+			console.log('this.state', this.state);
 		});
 	}
 
@@ -169,18 +295,20 @@ class Advanced extends Component {
 				return index === actionIndex;
 			})[0];
 
-			console.log('targetActionEl', targetActionEl);
-			console.log('obj', obj);
-
-			targetActionEl = _.merge(targetActionEl, obj);
-
-			console.log('targetActionEl', targetActionEl);
-
-
+			targetActionEl = Util.overrideObj(targetActionEl, obj);
+			console.log('targetActionEl inside updateEventActionModel', targetActionEl);
+			
 			this.setState({
 				eventMap: newEventMap,
 			}, () => {
-				console.log(+(new Date()) + 'event action model updated', newEventMap);
+				// console.log(+(new Date()) + 'event action model updated', newEventMap);
+
+				// this.props.dispatch({
+				// 	type: 'UPDATE_ADVANCED_CONFIG',
+				// 	payload: {
+				// 		eventMap: newEventMap,
+				// 	},
+				// });
 			});
 		};
 
@@ -197,7 +325,7 @@ class Advanced extends Component {
 	selectTargetElements(eventKey, actionIndex, elems) {
 		console.log('updateEventActionModel', eventKey, actionIndex, elems);
 		this.updateEventActionModel(eventKey, actionIndex, {
-			target: [elems],
+			target: [...elems],
 		});
 	}
 
@@ -225,7 +353,12 @@ class Advanced extends Component {
 			eventMap,
 		} = this.state;
 
-		console.log('eventMap in applyAdvanceConfig', eventMap);
+		this.props.dispatch({
+			type: 'UPDATE_ADVANCED_CONFIG',
+			payload: {
+				eventMap,
+			},
+		});
 	}
 
 	render() {
@@ -266,6 +399,13 @@ class Advanced extends Component {
 							
 				let actionListContent = eventMap[key].map((item, index) =>{
 					let ctrlFlag = eventMap[key].length === index + 1;
+					console.log('actionItem', item);
+					let {
+						type,
+						expr,
+						target,
+					} = item;
+
 					return (
 						<Row key={`action-list-item-${index}`}>
 							<Col span={3}>
@@ -273,6 +413,7 @@ class Advanced extends Component {
 				                <Select
 				                  mode="select"
 				                  size={'large'}
+				                  value={type}
 				                  onChange={that.validateActionTypes.bind(that, key, index)}
 				                  placeholder="请选择动作类型"
 				                  defaultValue={[]}
@@ -287,7 +428,11 @@ class Advanced extends Component {
 				            </Col>
 				            <Col span={5} offset={1}>
 				            　<FormItem label="事件表达式">
-				                <Input onChange={that.updateEventExpr.bind(that, key, index)} placeholder="表达式" />
+				                <Input 
+				                	value={expr || ''}
+				                	onChange={that.updateEventExpr.bind(that, key, index)} 
+				                	placeholder="表达式" 
+				                />
 				              </FormItem>
 				            </Col>
 
@@ -295,6 +440,7 @@ class Advanced extends Component {
 				           　　<FormItem label="目标元素">  
 				                <Select
 				                  mode="tags"
+				                  defaultValue={target||[]}
 								  style={{ width: '100%' }}
 								  onChange={that.selectTargetElements.bind(that, key, index)}
 				                >
@@ -335,7 +481,13 @@ class Advanced extends Component {
 			<div>
 				<Collapse defaultActiveKey={['1', '2']}>
 		          <Panel header="事件设置" key="1">
-		            <IFEventTransfer onSelect={handleTransferSelect} />
+		            <IFEventTransfer 
+		                eventData={Object.keys(EventMapping).map((eventKey) => {
+							return EventMapping[eventKey];
+		                })}
+		                selectedEventList={selectedEventList}
+		            	onSelect={handleTransferSelect} 
+		            />
 		          </Panel>
 		          <Panel header="动作设置" key="2">
 		            {actionContent()}       

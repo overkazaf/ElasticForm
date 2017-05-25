@@ -25,13 +25,10 @@ import GL from '../components/Test/GL.js';
 let ResponsiveReactGridLayout = ReactGridLayout.Responsive;
 
 
+let activeElemId = null;
 class ComponentsView extends Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			activeElemId: null,
-		};
 	}
 
 	render() {
@@ -42,8 +39,6 @@ class ComponentsView extends Component {
 			dispatch,
 			position,
 		} = this.props;
-
-		let { activeElemId } = this.state;
 
 		let gridLayout = layouts.map(layout => layout.grid);
 
@@ -112,6 +107,8 @@ class ComponentsView extends Component {
 					elementProps: props,
 				},
 			});
+
+			activeElemId = props.id
 		};
 
 
@@ -137,10 +134,9 @@ class ComponentsView extends Component {
 	      		let {
 	      			type,
 	      			props,
-	      			id,
 	      		} = component;
 
-	      		let clazz = id == activeElemId ? 'draggable-item active' : 'draggable-item';
+	      		let clazz = props.id === activeElemId ? 'draggable-item active' : 'draggable-item';
 
 	      		return (
 	      			<div onClick={setActiveEl.bind(that, props)} key={grid.i} className={clazz}>
@@ -198,7 +194,12 @@ class LayoutEngine {
 							layouts={header}
 							dispatch={dispatch}
 							position={'header'}
-							/>
+						/>
+						<ComponentsView 
+							layouts={body}
+							dispatch={dispatch}
+							position={'body'}
+						/>
 					</Content>
 					<Footer style={{ background: '#e7e7e7'}}>
 						<ComponentsView 

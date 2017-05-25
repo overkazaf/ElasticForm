@@ -18,12 +18,11 @@
 		border: 1px solid #ddd;
 		box-sizing: border-box;
 
+		
 		&:hover {
-			transition: all .3s ease-in-out;
-			background: #eeffaa;
+			background: #fffc00;
 			border: 1px solid #666;
 			
-
 			.ctrl {
 				display: block;
 			}
@@ -31,6 +30,11 @@
 			.react-resizable-handle {
 				opacity: 1;
 			}
+		}
+		
+		&.active {
+			background: #eeffaa;
+			border: 1px solid #fffc00;
 		}
 
 		.ctrl {

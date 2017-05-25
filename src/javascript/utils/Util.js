@@ -112,4 +112,18 @@ export default class Util {
 			extraStyle,
 		}
 	}
+
+	static overrideObject(src = {}, option = {}, deep = false) {
+		if (Object.keys(obj).length) {
+			for (let key in obj) {
+				if (!deep) {
+					src[key] = obj[key];
+				} else {
+					src[key] = Util.overrideObject(src[key], obj[key]);
+				}
+			}
+		}
+
+		return src;
+	}
 }

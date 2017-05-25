@@ -21,12 +21,12 @@ const $$initState = Immutable.fromJS({
     configModel: {
       basicProps: defaultBasicProps,
       dataSource: [],
+      eventList: [],
+      validations: [],
+      filterRules: [],
     },
     data,
 });
-
-console.log('data in mainLayoutReducer', data);
-
 
 export const mainLayoutReducer = ($$state = $$initState, action) => {
     console.log(`calling mainLayoutReducer::${action.type}`, action);
@@ -82,21 +82,12 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
           
           let targetConfigModel = store.get(`${id}`);
 
-          console.log('$$newItem', $$newItem.toJS());
-          console.log(`${id}:::::targetConfigModel::before`, targetConfigModel);
-
           if (!targetConfigModel) {
             let componentModel = $$newItem.getIn(['component', 'props']).toJS();
-            console.log('componentModel', componentModel);
-
-            targetConfigModel = _.merge({basicProps: defaultBasicProps}, componentModel);
-            console.log(`${id}  convertComponentModel2Config -> targetConfigModel` , targetConfigModel);
-            //store.set(`${id}`, targetConfigModel);
+            targetConfigModel = _.merge({
+              basicProps: defaultBasicProps,
+            }, componentModel);
           }
-
-
-          console.log(`setting model::${id}`, store.get(`${id}`));
-          console.log(`targetConfigModel::${id}`, targetConfigModel);
 
         	return $$state.set('activeCId', id)
                       .set('activePosition', position)
@@ -136,6 +127,57 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
           return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
         }
 
+        case 'UPDATE_ADVANCED_CONFIG': {
+          const {
+            eventMap,
+          } = action.payload;
+
+          let eventList = Object.keys(eventMap).map((evtName, idx) => {
+            let actionList = eventMap[evtName];
+
+            let list = actionList.map((action) => {
+              let {
+                type,
+                target,
+                expr,
+              } = action;
+
+              return {
+                type,
+                target,
+                expr,
+              };
+            });
+
+            return {
+              eventType: evtName,
+              actionList: list,
+            }
+          });
+
+          // 更新当前组件的事件列表
+          const tabIndex = $$state.get('activeTabIndex');
+          const position = $$state.get('activePosition');
+          const activeCId = $$state.get('activeCId');
+
+          let {
+            $$newItem,
+            $$layouts,
+            index,
+          } = getTargetItemByState($$state, tabIndex, position, activeCId);
+
+          let $$updatedItem = $$newItem.updateIn(['component', 'props'], function(item) {
+            let rawItem = Object.assign(item.toJS(), { eventList });
+            return Immutable.fromJS(rawItem);
+          });
+
+          console.log('eventList updated', eventList);
+          console.log('updatedItem updated', $$updatedItem.toJS());
+
+          let $$newLayout = $$layouts.set(index, $$updatedItem);
+          return $$state.setIn(['data', 'panes', tabIndex, 'layouts', position], $$newLayout);
+        }
+
         case 'UPDATE_COMPONENT_BASIC_PROPS': {
           const {
             basicProps,
@@ -169,11 +211,6 @@ export const mainLayoutReducer = ($$state = $$initState, action) => {
           }
 
           console.log(`store.get(${activeCId})`, store.get(`${activeCId}`));
-
-          window.store = store;
-
-          debugger;
-
           console.log(`setting model::${activeCId}`, store.get(`${activeCId}`));
 
           let $$newLayout = $$layouts.set(index, $$updatedItem);
@@ -342,7 +379,7 @@ function combineModel(component, formModel) {
 
 
 function generateComponentTpl(componentType) {
-  const componentId = _.uniqueId(`${componentType}_`);
+  const componentId = _.uniqueId(`component_${componentType}_`);
   const gridId = _.uniqueId(`grid_${componentType}_`);
   return {
     grid: getDefaultComponentGrid(gridId, componentType),
@@ -384,19 +421,22 @@ function getDefaultComponentGrid(gridId, componentType) {
   }, extraOption);
 }
 
-
-
 function getDefaultComponentProps(componentId, componentType) {
   const defaultCreationFn = (componentId, componentName='组件', options = {}) => {
     let templateModel = _.merge({
       basicProps: defaultBasicProps,
+      dataSource: {},
+      eventList: [],
+      validations: [],
+      filterRules: [],
+      pushDownProfile: [],
     }, {
       id: componentId,
       name: `${componentName}_${componentId}`,
       basicProps: {
         inputValue: {
           label: {
-            value: `${componentName}${componentId}`,
+            value: `${componentName}`,
           }
         },
       },
@@ -416,7 +456,7 @@ function getDefaultComponentProps(componentId, componentType) {
     'IFInputNormal': defaultCreationFn,
   };
 
-  let extraOption ={};
+  let extraOption = {};
 
   const compNameMap = {
     'IFDropdown': '下拉框',
@@ -428,16 +468,15 @@ function getDefaultComponentProps(componentId, componentType) {
     'IFInputNormal': '普通文本',
   };
 
-
   let basicProps = {
     fontStyles: {
       fontSize: {
-        value: '14px'
+        value: '14px',
       },
       textAlign: {
         value: 'center',
-      }
-    }
+      },
+    },
   };
 
   switch (componentType) {

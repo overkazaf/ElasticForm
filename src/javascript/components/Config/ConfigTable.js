@@ -216,6 +216,8 @@ class ConfigTable extends Component {
             <TabPane tab="高级设置" key="4">
               <Advanced 
                 components={components}
+                dispatch={dispatch}
+                eventList={eventList}
               />
             </TabPane>
             

@@ -213,8 +213,9 @@ let props = {
 			label: '字体',
 			type: 'Select',
 			title: '请选择字体',
-			value: 'sans serif',
+			value: 'default',
 			options: [
+				{id: 'ff1', label: '默认字体', value: 'default'},
 				{id: 'ff1', label: 'sans serif', value: 'sans serif'},
 				{id: 'ff2', label: '微软雅黑', value: 'Microsoft Yahei'},
 				{id: 'ff3', label: '黑体', value: 'Heiti'},
