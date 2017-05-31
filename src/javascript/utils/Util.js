@@ -84,7 +84,6 @@ export default class Util {
         } = option;
 
         console.log('=================inside Util.js==================');
-        console.log('mustInput', mustInput);
 
         [size, theme, label, fontFamily, fontSize, lineHeight, textAlign, visibility, locked, mustInput, autoSum,
             defaultValue, value, link, linkTarget, placeholder, carry,
@@ -132,12 +131,12 @@ export default class Util {
     }
 
     static overrideObject(src = {}, option = {}, deep = false) {
-        if (Object.keys(obj).length) {
-            for (let key in obj) {
+        if (Object.keys(option).length) {
+            for (let key in option) {
                 if (!deep) {
-                    src[key] = obj[key];
+                    src[key] = option[key];
                 } else {
-                    src[key] = Util.overrideObject(src[key], obj[key]);
+                    src[key] = Util.overrideObject(src[key], option[key]);
                 }
             }
         }

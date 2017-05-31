@@ -11,6 +11,8 @@ let SubMenu = Menu.SubMenu;
 import menuStyle from './index.scss';
 import { connect } from 'react-redux';
 
+import Immutable from 'immutable';
+
 const menuArray = [
 	{
 		name: '文件(Files)', 
@@ -124,7 +126,14 @@ const menuArray = [
 class MenuBar extends Component {
 	constructor(props) {
 	  super(props);
-	
+
+	  console.log('props', props);
+	  this.props.dispatch({
+			type: 'UPDATE_PAGE_DATA',
+			payload: {
+				page: props.page,
+			},
+		});
 	}
 
 	handleMenuClick({ key, item, keyPath, domEvent }) {
@@ -139,8 +148,14 @@ class MenuBar extends Component {
 		});
 	}
 
+	componentWillReceiveProps(nextProps) {
+		console.log('nextProps in MenuBar', this.props, nextProps);
+	}
+
 	render() {
 		let that = this;
+
+		console.log('this.props in menubar', this.props);
 
 		// FIXME:
 		// change this function to a DFS create fn
@@ -202,9 +217,15 @@ class MenuBar extends Component {
 	}
 }
 
-const mapStateToProps = (store, ...args) => {
-	console.log('...args in MenuBar reducer');
-	return store.get('menubarReducer').toJS();
+const mapStateToProps = ($$state) => {
+	console.log('store in MenuBar', $$state.toJS(0));
+	global.store = $$state;
+	
+	console.log("$$state.get('mainLayoutReducer').get('data').toJS().panes[0]", $$state.get('mainLayoutReducer').get('data').toJS().panes[0]);
+
+	return {
+		page: $$state.get('mainLayoutReducer').get('data').toJS().panes[0],
+	};
 }
 
 export default connect(mapStateToProps)(MenuBar);

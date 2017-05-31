@@ -32,8 +32,6 @@ class IFEventTransfer extends Component {
     // }
     // 
       
-    console.log('Initial props in IFEventTransfer.js', props);
-
     this.state = {
       eventData: props.eventData,
       targetKeys: [],

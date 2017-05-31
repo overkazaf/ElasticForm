@@ -260,9 +260,11 @@ class Advanced extends Component {
 			expr: '',
 			target: [],
 		});
+		
 		let newEventMap = Object.assign(eventMap, {
 			[eventKey]: actionList,
 		});
+
 		this.setState({
 			eventMap: newEventMap,
 		});
@@ -285,7 +287,7 @@ class Advanced extends Component {
 
 	updateEventActionModel(eventKey, actionIndex, obj = {}) {
 
-		let updateFn = () => {
+		let updateFn = (eventKey, actionIndex, obj) => {
 			let {
 				eventMap,
 			} = this.state;
@@ -295,7 +297,7 @@ class Advanced extends Component {
 				return index === actionIndex;
 			})[0];
 
-			targetActionEl = Util.overrideObj(targetActionEl, obj);
+			targetActionEl = Util.overrideObject(targetActionEl, obj);
 			console.log('targetActionEl inside updateEventActionModel', targetActionEl);
 			
 			this.setState({
@@ -313,7 +315,7 @@ class Advanced extends Component {
 		};
 
 		// _.throttle(updateFn, 100);
-		updateFn();
+		updateFn(eventKey, actionIndex, obj);
 	}
 
 	validateActionTypes(eventKey, actionIndex, actionType) {
@@ -441,8 +443,8 @@ class Advanced extends Component {
 				                <Select
 				                  mode="tags"
 				                  defaultValue={target||[]}
-								  style={{ width: '100%' }}
-								  onChange={that.selectTargetElements.bind(that, key, index)}
+												  style={{ width: '100%' }}
+												  onChange={that.selectTargetElements.bind(that, key, index)}
 				                >
 				                  {optionChildren}
 				                </Select>

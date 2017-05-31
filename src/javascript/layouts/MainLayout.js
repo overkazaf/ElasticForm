@@ -238,7 +238,7 @@ class MainLayout extends Component {
                   />
                 </div>
               </div>
-              </div>
+            </div>
         </Draggable>
         </Layout>
       </Layout>
@@ -247,6 +247,7 @@ class MainLayout extends Component {
 }
 
 const mapStateToProps = ($$state, ownProps) => {
+  console.log('store in MainLayout', $$state.toJS());
   return $$state.get('mainLayoutReducer').toJS();
 }
 

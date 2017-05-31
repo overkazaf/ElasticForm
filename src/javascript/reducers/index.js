@@ -9,11 +9,11 @@ import { mainLayoutReducer } from './mainLayoutReducer';
 
 const rootReducer = combineReducers({
 	configReducer,
-	menubarReducer,
 	componentSiderReducer,
 	toolboxReducer,
 	statusBarReducer,
 	mainLayoutReducer,
+	menubarReducer,
 });
 
 export default rootReducer;

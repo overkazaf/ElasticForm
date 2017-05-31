@@ -534,7 +534,7 @@ function getDefaultComponentProps(componentId, componentType) {
 
 
 /**
- * [predictComponentPositionById 根据组件id]
+ * [predictComponentPositionById 根据组件id确定其位置]
  * @param  {[type]} id [description]
  * @return {[type]}    [description]
  */
