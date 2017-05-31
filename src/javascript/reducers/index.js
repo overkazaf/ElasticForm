@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux-immutable';
-import { controlReducer } from './controlReducer';
+import { menubarReducer } from './menubarReducer';
 import { configReducer } from './configReducer';
 import { componentSiderReducer } from './componentSiderReducer';
 import { toolboxReducer } from './toolboxReducer';
@@ -9,7 +9,7 @@ import { mainLayoutReducer } from './mainLayoutReducer';
 
 const rootReducer = combineReducers({
 	configReducer,
-	controlReducer,
+	menubarReducer,
 	componentSiderReducer,
 	toolboxReducer,
 	statusBarReducer,

@@ -30,7 +30,7 @@ class ComponentSider extends Component {
 				children: [
 					{ name: '标签文字', key: 'IFLabel' },
 					{ name: '下拉框', key: 'IFDropdown' },
-					{ name: '手机号', key: 'IFInputPhone', icon: 'mobile'},
+					{ name: '手机号码', key: 'IFInputPhone', icon: 'mobile'},
 					{ name: '表单提交按钮', key: 'IFButtonSubmit'},
 					{ name: '表单重置按钮', key: 'IFButtonReset'},
 
