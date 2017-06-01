@@ -125,18 +125,29 @@ const menuArray = [
 
 class MenuBar extends Component {
 	constructor(props) {
-	  super(props);
+		super(props);
 
-	  console.log('props', props);
-	  this.props.dispatch({
-			type: 'UPDATE_PAGE_DATA',
+		this.props.dispatch({
+			type: 'PAGE_DATA_UPDATE',
 			payload: {
-				page: props.page,
+				page: Immutable.fromJS(props.page),
 			},
 		});
 	}
 
 	handleMenuClick({ key, item, keyPath, domEvent }) {
+		this.props.dispatch({
+			type: 'SET_MODAL_VISIBILITY',
+			payload: false,
+		});
+
+		this.props.dispatch({
+			type: 'PAGE_DATA_UPDATE',
+			payload: {
+				page: Immutable.fromJS(this.props.page),
+			}
+		});
+
 		this.props.dispatch({
 			type: 'MENUBAR_COMMAND',
 			payload: {
@@ -148,15 +159,26 @@ class MenuBar extends Component {
 		});
 	}
 
-	componentWillReceiveProps(nextProps) {
-		console.log('nextProps in MenuBar', this.props, nextProps);
+	/**
+	 * [_interUpdateExportFormData 异步更新待导出的页面数据结构]
+	 * @Author   JohnNong
+	 * @Email    overkazaf@gmail.com
+	 * @Github   https://github.com/overkazaf
+	 * @DateTime 2017-06-01T14:38:54+0800
+	 * @param    {Number}                     interval [description]
+	 * @return   {[type]}                              [description]
+	 */
+	_interUpdateExportFormData(interval = 10000) {
+		this.props.dispatch({
+			type: 'PAGE_DATA_UPDATE',
+			payload: {
+				page: Immutable.fromJS(this.props.page),
+			}
+		});
 	}
 
 	render() {
 		let that = this;
-
-		console.log('this.props in menubar', this.props);
-
 		// FIXME:
 		// change this function to a DFS create fn
 		let dropdownContent = menuArray.map((item, index) => {
@@ -224,6 +246,7 @@ const mapStateToProps = ($$state) => {
 	console.log("$$state.get('mainLayoutReducer').get('data').toJS().panes[0]", $$state.get('mainLayoutReducer').get('data').toJS().panes[0]);
 
 	return {
+		curPage: $$state.get('menubarReducer').get('page').toJS(),
 		page: $$state.get('mainLayoutReducer').get('data').toJS().panes[0],
 	};
 }
