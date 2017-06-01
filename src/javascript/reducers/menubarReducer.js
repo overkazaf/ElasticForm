@@ -122,17 +122,12 @@ function execCommand(mode, $$state) {
     alert('mode::' + mode);
 	switch(mode) {
         case 'import': {
-
             importFile();
-
-
             break;
         }
 		case 'export': {
             let pageJson = $$state.get('page').toJS();
             exportFile(pageJson);
-
-
             break;
 		}
 	}

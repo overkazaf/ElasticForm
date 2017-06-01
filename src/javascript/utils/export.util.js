@@ -23,6 +23,10 @@ function pickTinyModel(json) {
 				component: {
 					type,
 					props: {
+						id,
+						name,
+						description,
+						ctrlType,
 						basicProps,
 						eventList,
 						dataSource,
@@ -38,6 +42,10 @@ function pickTinyModel(json) {
 				component: {
 					type,
 					props: {
+						id,
+						name,
+						description,
+						ctrlType,
 						basicProps: reduceProps,
 						eventList,
 						dataSource,
