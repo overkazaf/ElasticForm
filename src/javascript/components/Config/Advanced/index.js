@@ -345,7 +345,7 @@ class Advanced extends Component {
 			} = item;
 
 			return (
-				<Option key={`component-${id}-${index}`}>{name}</Option>
+				<Option key={`${id}`}>{name}</Option>
 			)
 		});
 	}

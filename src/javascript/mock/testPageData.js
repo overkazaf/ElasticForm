@@ -122,6 +122,7 @@ let data = {
   panes: [
     {
       id: 'IntelliForm-00001', // 设计器系统生成的id
+      fid: 'IntelliForm-00001', // 表单ID
       key: 'IntelliForm-00001', // 可自定义的id
       name: 'form1',　// 名字
       title: '测试表单一',
@@ -134,19 +135,11 @@ let data = {
       style: {
         width: 960,
       },
-      nextId: 'IntelliForm-00002', // 下推表单
+      nextFid: 'IntelliForm-00002', // 下推表单
       plugIns: [],
       basicProps: {},
       dataSource: [],
       eventList: [
-        {
-          eventType: 'onLoad',
-          options: {
-            action: 'BringDataSource',
-            expression: 'LOOKUP',
-            target: ['comp4']
-          }
-        }
       ],
       advanced: {},
       layouts,

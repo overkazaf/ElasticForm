@@ -60,9 +60,10 @@ class DesignView extends Component {
   add = () => {
     const panes = this.state.panes;
     const seq = ++this.newTabIndex;
-    const activeKey = `${_.uniqueId()}${seq}`;
+    const activeKey = `${_.uniqueId('IFD')}_${seq}`;
     const panelTpl = generateNewFormPanelTemplate({
       id: `IntelliForm-${seq}`,
+      fid: activeKey,
       key: activeKey,
       name: `${_.uniqueId('form')}`,
       title: `测试表单${seq}`,

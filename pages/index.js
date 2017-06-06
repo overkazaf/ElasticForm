@@ -33,7 +33,7 @@ class MainPage extends Component {
   }
 
   render() {
-
+    
     let { 
       isServer,
     } = this.props;

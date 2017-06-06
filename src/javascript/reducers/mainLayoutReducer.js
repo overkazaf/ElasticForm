@@ -379,8 +379,8 @@ function combineModel(component, formModel) {
 
 
 function generateComponentTpl(componentType) {
-  const componentId = _.uniqueId(`component_${componentType}_`);
-  const gridId = _.uniqueId(`grid_${componentType}_`);
+  const componentId = _.uniqueId(`C_${componentType}_`);
+  const gridId = _.uniqueId(`G_${componentType}_`);
   return {
     grid: getDefaultComponentGrid(gridId, componentType),
     component: {
@@ -421,6 +421,20 @@ function getDefaultComponentGrid(gridId, componentType) {
   }, extraOption);
 }
 
+/**
+ * [ctrlTypeMapping 记录控件类型]
+ * @type {Object}
+ */
+const ctrlTypeMapping = {
+  'IFDropdown': 'select',
+  'IFLabel': 'label',
+  'IFButtonSubmit': 'button',
+  'IFButtonReset': 'button',
+  'IFInputPhone': 'input',
+  'IFInputNumber': 'input',
+  'IFInputNormal': 'input',
+};
+
 function getDefaultComponentProps(componentId, componentType) {
   const defaultCreationFn = (componentId, componentName='组件', options = {}) => {
     let templateModel = _.merge({
@@ -433,6 +447,7 @@ function getDefaultComponentProps(componentId, componentType) {
     }, {
       id: componentId,
       name: `${componentName}_${componentId}`,
+      ctrlType: ctrlTypeMapping[componentType],
       basicProps: {
         inputValue: {
           label: {
